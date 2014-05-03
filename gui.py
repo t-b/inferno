@@ -43,7 +43,7 @@ def make_offsets():
 PCLAMP_BUTTON_OFFSETS = make_offsets()
 
 
-def get_windows():
+def getWindows():
     toplist=[]
     winlist=[]
 
@@ -53,13 +53,24 @@ def get_windows():
     wig.EnumWindows(enum_callback, toplist)
     return winlist
 
+def getWindowFromName(name):
+    return wui.FindWindow(None,name)
 
 def getLeftBottom(window):
     return window.GetWindowRect()[0::3] #left,top,right,bottom
-
 def getLeftTop(window):
     return window.GetWindowRect()[:2]
+     
+def getPclampWinLeftTop():
+    name=getPclampWinName()
+    window=getWindowFromName(name)
+    return getLeftTop(window)
 
+
+def getPclampWinName():
+    for i,name in getWindows():
+        if name.count('Clampex'):
+	    return name
 def clickMouse(x,y,slp=.1): #FIXME need a way to change focus back to the original window!
     """click ye mouse"""
     mX,mY=wig.GetCursorPos() #save the position so we can return to it
@@ -69,11 +80,23 @@ def clickMouse(x,y,slp=.1): #FIXME need a way to change focus back to the origin
     mouse_event(wic.MOUSEEVENTF_LEFTUP,x,y,0,0)
     SetCursorPos((mX,mY))
 
-def clickButton(WindowTop,WindowLeft,ButtonOffset):
+def clickButton(WindowLeftTop,ButtonOffset):
+    x=WindowLeftTop[0]+ButtonOffset[0]
+    y=WindowLeftTop[1]+ButtonOffset[1]
     clickMouse(x,y)
 
-def getWindowFromName(name):
-    return wui.FindWindow(None,name)
+def clickProtocol(protocolNumber):
+    lefttop=getPclampWinLeftTop()
+    offset=PCLAMP_BUTTON_OFFSETS[protocolNumber]
+    clickButton(leftTop,offset)
+
+def clickRecord():
+    lefttop=getPclampWinLeftTop()
+    offset=PCLAMP_BUTTON_OFFSETS['record']
+    clickButton(leftTop,offset)
+
+
+
 
 #offsets always reported in x,y
 SNAPSHOT_OFFSET_LB=120,35

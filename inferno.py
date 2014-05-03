@@ -18,7 +18,7 @@ print(args)
 import numpy as np
 from mcc import mccControl
 from functions import mccFuncs
-from gui import *
+from gui import getClampexWinName, clickProtocol, clickRecord
 
 #todo all multiclamps
 
@@ -42,15 +42,6 @@ class danteFuncs(mccFuncs):
         print()
         for line in lines:
             print(line)
-
-    def getClampexWinName(self):
-        for i,name in get_windows():
-            if name.count('Clampex'):
-                return name
-
-    def getClampexWindow(self):
-        self.cw=getWindowFromName(name)
-
     def click_protocol_button(self,button=None):
         pass
 
@@ -84,27 +75,7 @@ class danteFuncs(mccFuncs):
 def appendTrailToPickle(trialDict):
     return 0
 
-def formatDataRow(stateDict):
-    """ take the data structure and format it for viewing"""
-    lines=[ '%s\t%s\t%s\t%s\t%s' ] * 6 #creates a list of 5 empty strings we can format
-
-
-
-#output format
-
-#filename format YYYY_MM_DD_nnnn
-#protocol p1 p2 p3 p4 corrisponding to the buttons
-
-#Trial nnnn p1
-#headstage  1   2   3   4
-#cell id    a   b   c   d 
-#mode       vc  ic  vc  ic #map between mcc + channel and the digitizer input channel
-#holding    -70 OFF OFF -70 #OFF for holding disabled
-#bridge balance
-
-#structure for associating protocols to mcc settings
-
-def modeToUID(protocolNumber,PROTOCOL_MODE_DICT,HS_TO_UID_DICT):
+def makeUIDModeDict(protocolNumber,PROTOCOL_MODE_DICT,HS_TO_UID_DICT):
     modeDefs={'v':0,'i':1,'iez':2} #FIXME move this somwehre visible
     modeTup=PROTOCOL_MODE_DICT[ protocolNumber ]
     modes=[ modeDefs[modeName] for modeName in modeTup ]
@@ -112,6 +83,7 @@ def modeToUID(protocolNumber,PROTOCOL_MODE_DICT,HS_TO_UID_DICT):
     for i in range(len(modes)):
         uid = HS_TO_UID_DICT[ i+1 ] 
         uidModeDict[ uid ] = modes[ i ] #the tuple is just listed headstages 1 through 4 though it could be n now
+    return uidModeDict
 
 def makeHeadstageStateDict(uidStateDict):
     hsStateDict={}
@@ -123,39 +95,23 @@ def addCellToHeadStage(hsToCellDict,hsStateDict): #note this is an in place modi
     for hs,cell in hsToCellDict:
         hsStateDict[hs]['Cell']=cell
 
-def main():
-    from config import HS_TO_UID_DICT
-    from config import UID_TO_HS_DICT
-    from config import MCC_DLLPATH
-    from config import PROTOCOL_MODE_DICT
+def setModes(protocolNumber,mcc): #FIXME this is ugly...
+    uidModeDict=makeUIDModeDict(protocolNumber,PROTOCOL_MODE_DICT,HS_TO_UID_DICT):
+    for uid,mode in uidModeDict.items():
+        mcc.selectUniqueID(uid)
+        mcc.SetMode(mode)
 
-    #define our constants
-    #set variables from the command line
-    csvPath=args['--filepath']
-    protcolNumber=int(args['<protocol_id>'])
+def setMCCLoadProt(protocolNumber,mcc):
+    setModes(protocolNumber,mcc)
+    clickProtocol(protocolNumber)
 
-    hsToCellDict={ #FIXME somehow this seems redundant...
-        1:args['<HS1_cell_id>'],
-        2:args['<HS2_cell_id>'],
-        3:args['<HS3_cell_id>'],
-        4:args['<HS4_cell_id>'],
-    }
-    #cellToHsDict={v:k for k,v in hsToCellDict.items()}
-
-    #serialToCellDict={ HS_TO_SERIAL_DICT[headstage]:cell for headstage,cell in hsToCellDict }
-    #serialToStateDict={} #get it from mccControl
-    #stateToCellDict={} #FIXME make these in to functions so that it is readable ffs
-
-    
-    uidStateDict=mcc.getMCCState()
-    hsStateDict=makeHeadstageStateDict(uidStateDict)
-    addCellToHeadStage(hsToCellDict,hsStateDict)
-
-    filenameToExperimentTuple={} #this goes in the pickle 
-    { 'filename' : ( protocolNumber , { 'headstage':{'stateDict'}, } ), }
-    ['Cell','Mode','Holding','BridgeBalResist']
-
-    functions.uidSetMode(uid,mode)
+def getPclampFilename():
+    """ YYYY_MM_DD_NNNN.abf """ 
+    name=getPclampWinName()
+    print(name)
+    name=name[-19:]
+    print(name)
+    return name
 
 def makeTextFile(filenameToExperimentTuple,rowOrdering):
     lines=[]
@@ -171,26 +127,66 @@ def makeTextFile(filenameToExperimentTuple,rowOrdering):
                       linebase%('cell',1,2,3,4)
             )
 
+#output format
 
-    
+#filename format YYYY_MM_DD_nnnn
+#protocol p1 p2 p3 p4 corrisponding to the buttons
 
-    
+#Trial nnnn p1
+#headstage  1   2   3   4
+#cell id    a   b   c   d 
+#mode       vc  ic  vc  ic #map between mcc + channel and the digitizer input channel
+#holding    -70 OFF OFF -70 #OFF for holding disabled
+#bridge balance
+
+#structure for associating protocols to mcc settings
 
 
 
-    #make sure headstage numbers line up correctly!
+
+
+def main():
+    from config import HS_TO_UID_DICT
+    from config import MCC_DLLPATH
+    from config import PROTOCOL_MODE_DICT
+
+    #define our constants
+    #set variables from the command line
+    csvPath=args['--filepath']
+    protcolNumber = int(args['<protocol_id>'])
+    hsToCellDict = {
+        1:args['<HS1_cell_id>'],
+        2:args['<HS2_cell_id>'],
+        3:args['<HS3_cell_id>'],
+        4:args['<HS4_cell_id>'],
+    }
 
     #initialize the controllers and the 
     mcc=mccControl(MCC_DLLPATH)
 
 
-    #create an instance of danteFuncs using the controllers, csvFile, and 
-    fucntions=danteFuncs(mcc,csvFile,hsToCellDict)
+    #set the modes for each headstage and load the protocol
+    setMCCLoadProt(protocolNumber,mcc)
 
-    #run the protocol
-    functions.DOALLTHETHIGNS()
+    #save the state of each headstage and which cell is associated with it
+    uidStateDict=mcc.getMCCState()
 
+    hsStateDict = makeHeadstageStateDict(uidStateDict) #this is our data
 
+    addCellToHeadStage(hsToCellDict,hsStateDict)
+
+    #run pclamp
+    clickRecord()
+
+    #get the filename from the windown name! tada! wat a stuipd hack
+    sleep(.1) #give the window time to change
+    filename = getPclampFilename()
+
+    filenameToExperimentTuple={} #this goes in the pickle 
+    { filename : ( protocolNumber , hsStateDict  ) }
+
+    row_ordering=['Cell','Mode','Holding','BridgeBalResist']
+    
 
 
 if __name__ == '__main__':

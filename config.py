@@ -1,19 +1,18 @@
 MCC_DLLPATH = "C:/Program Files (x86)/Molecular Devices/MultiClamp 700B Commander/3rd Party Support/AxMultiClampMsg"
 
-HS_TO_UID_DICT = {
-1:'serial_',
-2:'serial_',
-3:'serial_',
-4:'serial_',
+HS_TO_UID_DICT = { #XXX CHECK MEEEEE!!
+1:'00830691_1',
+2:'00830691_2',
+
+3:'00830476_1',
+4:'00830476_2',
 }
 
-UID_TO_HS_DICT = { v:k for k,v in HS_TO_UID_DICT.items() }
-
-PROTOCOL_MODE_DICT = {
+PROTOCOL_MODE_DICT = { #can also use 'ize'
 1:('i','v','v','v'),
-2:('i','v','v','v'),
-3:('i','v','v','v'),
-4:('i','v','v','v'),
+2:('v','i','v','v'),
+3:('v','v','i','v'),
+4:('v','v','v','i'),
 5:('i','v','v','v'),
 6:('i','v','v','v'),
 7:('i','v','v','v'),
