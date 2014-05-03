@@ -13,8 +13,6 @@ class mccFuncs: #FIXME add a way to get the current V and I via... telegraph?
             raise
         self.mcc=mcc
 
-        self.headstage_state={ chan:0 for chan in range(mcc.mcNum)}
-        
         self.MCCstateDict={} #this is ALL the states collected ever
 
     def setGain(self,value=1):
@@ -44,6 +42,8 @@ class mccFuncs: #FIXME add a way to get the current V and I via... telegraph?
     def getMCCState(self): #FIXME this function and others like it should probably be called directly by dataman?
         print('hMCCmsg outer',self.mcc.hMCCmsg)
         def base(state):
+            state['Serial']:self.mcc.getSerial()
+            state['Channel']:self.mcc.getChannel()
             state['HoldingEnable']=self.mcc.GetHoldingEnable()
             state['Holding']=self.mcc.GetHolding()
             state['PrimarySignal']=self.mcc.GetPrimarySignal()
@@ -67,13 +67,11 @@ class mccFuncs: #FIXME add a way to get the current V and I via... telegraph?
         for uniqueID,tup in self.mcc.mcDict.items():
             self.mcc.selectUniqueID(uniqueID)
             channelDict['FULL_ID']=tup
-            channelDict['Serial']=tup[1] #FIXME
-            channelDict['Channel']=tup[-1]
             mode=self.mcc.GetMode() #in the event we want to do something fancy?
             channelDict['Mode']=mode
             base(channelDict)
-        stateDict[uniqueID]=channelDict
 
+        stateDict[uniqueID]=channelDict
         self.MCCstateDict[datetime.utcnow()]=stateDict
         return stateDict
 

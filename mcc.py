@@ -98,11 +98,22 @@ class mccControl:
             print('Multiclamp DLL not found! Check your install path!')
             raise
 
-    def uniqueID(self,mcTuple):
+    def uniqueID(self,mcTuple): #FIXME this needs to be priv?
         serial=val(mcTuple[1],c_char_p).decode('utf-8')
         channel=mcTuple[-1] #FIXME this tuple should really have a corrisponding class...
-        mcid='%s_%s'%(serial,channel)
+        serial=serial.strip('(').rstrip(')')
+        mcid='%s_%s'%(serial,channel) #UID DEFINITION RIGHTHERE XXX
         return mcid
+
+    def getSerial(self):
+        mcTuple=self.mcDict[self.currentUniqueID]
+        serial=val(mcTuple[1],c_char_p).decode('utf-8')
+        serial=serial.strip('(').rstrip(')')
+        return serial
+
+    def getChannel(self)
+        mcTuple=self.mcDict[self.currentUniqueID]
+        return mcTuple[-1] #FIXME this tuple should really have a corrisponding class...
 
     def getMCS(self,firstMC):
         """get all the multiclamps and store them in a list"""
@@ -136,7 +147,7 @@ class mccControl:
             if num <= (self.mcNum):
                 out = self.SelectMultiClamp(*self.mcList[num]) #FIXME errors be here
                 self.mcCurrent=num
-                self.currentSerial=self.uniqueID(self.mcList[num]) #FIXME mcDict?
+                self.currentUniqueID=self.uniqueID(self.mcList[num]) #FIXME mcDict?
                 return out
             else:
                 print("You don't have that many multiclamps!")
@@ -153,14 +164,14 @@ class mccControl:
        
         self.mcCurrent=None #FIXME get rid of all this list nonsense
         out = self.SelectMultiClamp(*mcTup)
-        self.currentSerial=uniqueID
+        self.currentUniqueID=uniqueID
         return out
 
     def selectNextMC(self):
         """Sets the currentMC to the next available in a loop"""
         num=(self.mcCurrent+1)%(self.mcNum)
         self.mcCurrent=num
-        self.currentSerial=self.uniqueID(self.mcList[num]) #FIXME mcDict?
+        self.currentUniqueID=self.uniqueID(self.mcList[num]) #FIXME mcDict?
         return self.SelectMultiClamp(*self.mcList[self.currentMC])
 
     """everything below interfaces with the MCC SDK API through ctypes"""
