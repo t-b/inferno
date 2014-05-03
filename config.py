@@ -1,3 +1,5 @@
+PICKLEPATH  = "patch_experiment_data.pickle"
+CSVPATH     = "patch_experiment_data.csv"
 MCC_DLLPATH = "C:/Program Files (x86)/Molecular Devices/MultiClamp 700B Commander/3rd Party Support/AxMultiClampMsg"
 
 HS_TO_UID_DICT = { #XXX CHECK MEEEEE!!
@@ -24,3 +26,36 @@ PROTOCOL_MODE_DICT = { #can also use 'ize'
 13:('i','v','v','v'),
 14:('i','v','v','v'),
 }
+
+ROW_ORDER = [ #these should match the names of keys of the state dict
+'Cell',
+'Mode',
+'Holding',
+'BridgeBalResist',
+]
+
+ROW_NAMES = { #all the rows in the state dict, probs should validate
+'Cell':'Cell',
+'Mode':'Mode',
+
+'HoldingEnable':'HoldON',
+'Holding':'Hold',
+'PrimarySignal':'PS',
+'PrimarySignalGain':'PSGain',
+'PrimarySignalLPF':'PSLFP',
+'PipetteOffset':'POffset',
+
+'FastCompCap':'FCCap',
+'SlowCompCap':'SCCap',
+'FastCompTau':'FCTau',
+'SlowCompTau':'SCTau',
+'SlowCTX20Enable':'Tau20x',
+
+'BridgeBalEnable':'BBalON',
+'BridgeBalResist':'BBal',
+
+'Serial':'Serial',
+'Channel':'Channel',
+'FULL_ID':'DO NOT WANT',
+}
+

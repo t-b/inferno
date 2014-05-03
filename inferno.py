@@ -2,7 +2,8 @@
 """ For Dante
 Usage:
     inferno.py <HS1_cell_id> <HS2_cell_id> <HS3_cell_id> <HS4_cell_id> <protocol_id> [ --filepath=<path> ]
-    inferno.py -h | --help
+    inferno.py --makecsv=<source> <output>
+    inferno.py --help
 Options:
     -h --help                   print this
     -f --filepath=<path>        set which csv file to write to, IF NONE IT WILL USE HARDCODED FILE
@@ -15,6 +16,8 @@ from docopt import docopt
 args=docopt(__doc__) #do this early to prevent all the lags
 print(args)
 
+import os
+import pickle
 import numpy as np
 from mcc import mccControl
 from functions import mccFuncs
@@ -72,8 +75,6 @@ class danteFuncs(mccFuncs):
         }
         return None
 
-def appendTrailToPickle(trialDict):
-    return 0
 
 def makeUIDModeDict(protocolNumber,PROTOCOL_MODE_DICT,HS_TO_UID_DICT):
     modeDefs={'v':0,'i':1,'iez':2} #FIXME move this somwehre visible
@@ -96,7 +97,7 @@ def addCellToHeadStage(hsToCellDict,hsStateDict): #note this is an in place modi
         hsStateDict[hs]['Cell']=cell
 
 def setModes(protocolNumber,mcc): #FIXME this is ugly...
-    uidModeDict=makeUIDModeDict(protocolNumber,PROTOCOL_MODE_DICT,HS_TO_UID_DICT):
+    uidModeDict=makeUIDModeDict(protocolNumber,PROTOCOL_MODE_DICT,HS_TO_UID_DICT)
     for uid,mode in uidModeDict.items():
         mcc.selectUniqueID(uid)
         mcc.SetMode(mode)
@@ -113,19 +114,38 @@ def getPclampFilename():
     print(name)
     return name
 
-def makeTextFile(filenameToExperimentTuple,rowOrdering):
+def rowPrintLogic(row,StateDict): #FIXME UNITS!!!
+    if row == 'Holding':
+        if StateDict['HoldingEnable']:
+            out = StateDict[row]
+        else:
+            out = 'OFF'
+    elif row == 'BridgeBalResist':
+        if StateDict['BridgeBalEnable']:
+            out = StateDict[row]
+        else:
+            out = 'OFF'
+    else:
+        out = StateDict[row]
+
+    return out
+
+def makeText(data,ROW_ORDER,delimiter='\t'):
+    # for reference: { filename : ( protocolNumber , hsStateDict  ) }
     lines=[]
-    linebase='%s\t%s\t%s\t%s\t%s'
-    lines.append( linebase%('','HS1','HS2','HS3','HS4') )
-    for filename,(protocolNumber,headstageStateDict) in filenameToExperimentDict.items():
+    lines.append( delimiter.join( ('','HS1','HS2','HS3','HS4') ) )
+    for filename , ( protocolNumber , hsStateDict ) in data.items():
+
         trialNumber=filename[-7:-3]
+        lines.append( delimiter.join( (trialNumber , protocolNumber ,'','','') ) )
 
-        lines.append( linbebase%(trialNumber,protocolNumber,'','','') )
+        for row in ROW_ORDER:
+            values=[row]
+            for i in range(1,5):
+                values.append( rowPrintLogic( row,hsStateDict[i] ) )
 
-        for cell_id, stateDict in experimentDict.items():
-            lines.append(
-                      linebase%('cell',1,2,3,4)
-            )
+            lines.append( delimiter.join(values) )
+    return '\n'.join(lines)
 
 #output format
 
@@ -141,18 +161,57 @@ def makeTextFile(filenameToExperimentTuple,rowOrdering):
 
 #structure for associating protocols to mcc settings
 
+def checkPath(PATH):
+    if os.path.exists(PATH):
+        if not os.isfile(PATH):
+             raise IOError( 'Path is not a file!' )
+        else:
+            return None
+    else:
+        return None
+
+def openPickle(PICKLEPATH):
+    f = open(PICKLEPATH, 'rb')
+    saved_data = pickle.load(f)
+    f.close()
+    return saved_data
+
+def pickleIt(data,PICKLEPATH):
+    """" ALWAYS CHECK FOR PICKLEPATH FIRST!!!! """
+
+    if os.path.exists(PICKLEPATH):
+        saved_data = openPickle(PICKLEPATH)
+    else:
+        saved_data = {}
+
+    saved_data.update(data)
+    f = open(PICKLEPATH, 'xb') #FIXME is there a way to NOT thrash the disk AND risk data loss?
+    pickle.dump( saved_data , f )
+    f.close()
 
 
-
+def updateCSV(textData,CSVPATH):
+    if os.path.exists(CSVPATH):
+        f = open( CSVPATH , 'wt' )
+    else:
+        f = open( CSVPATH , 'xt' )
+    f.write(textData)
+    f.close()
 
 def main():
-    from config import HS_TO_UID_DICT
     from config import MCC_DLLPATH
+    from config import HS_TO_UID_DICT
     from config import PROTOCOL_MODE_DICT
+    from config import CSVPATH
+    from config import PICKPATH
+    from config import ROW_ORDER
+
+    checkPath(PICKLEPATH)
+    checkPath(CSVPATH)
 
     #define our constants
     #set variables from the command line
-    csvPath=args['--filepath']
+    CSVPATH=args['--filepath']
     protcolNumber = int(args['<protocol_id>'])
     hsToCellDict = {
         1:args['<HS1_cell_id>'],
@@ -182,10 +241,13 @@ def main():
     sleep(.1) #give the window time to change
     filename = getPclampFilename()
 
-    filenameToExperimentTuple={} #this goes in the pickle 
-    { filename : ( protocolNumber , hsStateDict  ) }
+    #save and display everything
+    data = { filename : ( protocolNumber , hsStateDict  ) } #INTO THE PICKLE
+    pickleIt(data,PICKLEPATH)
+    textData = makeText( data )
+    updateCSV(textData.replace('\t',',')
+    print(textData) 
 
-    row_ordering=['Cell','Mode','Holding','BridgeBalResist']
     
 
 
