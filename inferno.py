@@ -19,7 +19,7 @@ import numpy as np
 from mcc import mccControl
 from functions import mccFuncs
 from gui import *
-from config import SERIAL_TO_HS_DICT
+from config import HS_TO_SERIAL_DICT, SERIAL_TO_HS_DICT, MCC_DLLPATH, PROTOCOL_MODE_DICT
 
 #todo all multiclamps
 
@@ -106,7 +106,7 @@ def formatDataRow(stateDict):
 
 def main():
     #define our constants
-    mccDllPath=''
+    MCC_DLLPATH=''
 
     #set variables from the command line
     csvPath=args['--filepath']
@@ -121,7 +121,7 @@ def main():
     #make sure headstage numbers line up correctly!
 
     #initialize the controllers and the 
-    mcc=mccControl(mccDllPath)
+    mcc=mccControl(MCC_DLLPATH)
 
     #create an instance of danteFuncs using the controllers, csvFile, and 
     fucntions=danteFuncs(mcc,csvFile,hsToCellDict)

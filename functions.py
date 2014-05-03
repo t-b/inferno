@@ -15,7 +15,7 @@ class mccFuncs: #FIXME add a way to get the current V and I via... telegraph?
 
         self.headstage_state={ chan:0 for chan in range(mcc.mcNum)}
         
-        self.MCCstateDict={}
+        self.MCCstateDict={} #this is ALL the states collected ever
 
     def setGain(self,value=1):
         self.mcc.SetPrimarySignalGain(value)
@@ -63,22 +63,19 @@ class mccFuncs: #FIXME add a way to get the current V and I via... telegraph?
             state['BridgeBalResist']=self.mcc.GetBridgeBalResist()
 
         #modeDict={0:vc,1:ic,2:iez}
-        for i in range(self.mcc.mcNum):
-            self.mcc.selectMC(i)
-            state={} #FIXME: make this a dict with keys as the name of the value? eh would probs complicate
-            state['Channel']=i #might be suprflulous but it could simplify the code to read out stateList
-            state['FULL_ID']=self.mcc.mcList[i]
-            mode=self.mcc.GetMode()
-            state['mode']=mode
-            #modeDict[mode](state)
-            base(state)
-            stateList.append(state)
-            #print()
-            #print(state)
+        channelDict={} #FIXME: make this a dict with keys as the name of the value? eh would probs complicate
+        for uniqueID,tup in self.mcc.mcDict.items():
+            self.mcc.selectUniqueID(uniqueID)
+            channelDict['FULL_ID']=tup
+            channelDict['Serial']=tup[1] #FIXME
+            channelDict['Channel']=tup[-1]
+            mode=self.mcc.GetMode() #in the event we want to do something fancy?
+            channelDict['Mode']=mode
+            base(channelDict)
+        stateDict[uniqueID]=channelDict
 
-        self.MCCstateDict[datetime.utcnow()]=stateList
-        #print(stateList)
-        return stateList
+        self.MCCstateDict[datetime.utcnow()]=stateDict
+        return stateDict
 
     def printMCCstate(self):
         print(re.sub('\), ',')\r\n',str(self.MCCstateDict)))
@@ -214,7 +211,8 @@ class mccFuncs: #FIXME add a way to get the current V and I via... telegraph?
 def main():
     from mcc import mccControl
     from IPython import embed
-    mcc=mccFuncs(mccControl())
+    from config import MCC_DLLPATH
+    mcc=mccFuncs(mccControl(MCC_DLLPATH))
     embed()
 
 __all__=(

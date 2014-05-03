@@ -50,6 +50,7 @@ errdict={6000:'MCCMSG_ERROR_NOERROR', 6001:'MCCMSG_ERROR_OUTOFMEMORY',\
 
 class mccControl:
     def __init__(self,dllPath=None): #use this one for now
+        print(dllPath)
         self.mccDllPath='C:/Axon/MultiClamp 700B Commander/3rd Party Support/AxMultiClampMsg/'
         if dllPath:
             self.mccDllPath=dllPath
@@ -130,7 +131,7 @@ class mccControl:
         self.DestroyObject()
         print('hMCCmsg successfully removed, no memory leaks here!')
 
-    def selectMC(self,num):
+    def selectMC(self,num): #XXX deprecated
         try:
             if num <= (self.mcNum):
                 out = self.SelectMultiClamp(*self.mcList[num]) #FIXME errors be here
@@ -142,6 +143,18 @@ class mccControl:
                 return 0
         except AttributeError:
             return None
+
+    def selectUniqueID(self,uniqueID):
+        try:
+            mcTup=self.mcDict[uniqueID]
+        except KeyError:
+            print('I dont know where you got that uniqueID but it wasnt from here!')
+            raise KeyError
+       
+        self.mcCurrent=None #FIXME get rid of all this list nonsense
+        out = self.SelectMultiClamp(*mcTup)
+        self.currentSerial=uniqueID
+        return out
 
     def selectNextMC(self):
         """Sets the currentMC to the next available in a loop"""
@@ -724,7 +737,8 @@ def viewFuncs():
 
 def main():
     #viewFuncs()
-    mcc=Control()
+    from config import MCC_DLLPATH
+    mcc=mccControl(MCC_DLLPATH)
     new=[]
     for mc in mcc.mcList:
         new.append(val(mc[1],c_char_p))
