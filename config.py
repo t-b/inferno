@@ -10,21 +10,21 @@ HS_TO_UID_DICT = { #XXX CHECK MEEEEE!!
 4:'00830476_2',
 }
 
-PROTOCOL_MODE_DICT = { #can also use 'ize'
-1:('i','v','v','v'),
-2:('v','i','v','v'),
-3:('v','v','i','v'),
-4:('v','v','v','i'),
-5:('i','v','v','v'),
-6:('i','v','v','v'),
-7:('i','v','v','v'),
-8:('i','v','v','v'),
-9:('i','v','v','v'),
-10:('i','v','v','v'),
-11:('i','v','v','v'),
-12:('i','v','v','v'),
-13:('i','v','v','v'),
-14:('i','v','v','v'),
+PROTOCOL_MODE_DICT = { #conforms to MCC_MODE_DICT naming
+ 1:('IC','VC','VC','VC'),
+ 2:('VC','IC','VC','VC'),
+ 3:('IC','VC','VC','VC'),
+ 4:('VC','VC','VC','IC'),
+ 5:('IC','VC','VC','VC'),
+ 6:('IC','VC','VC','VC'),
+ 7:('IC','VC','VC','VC'),
+ 8:('IC','VC','VC','VC'),
+ 9:('IC','VC','VC','VC'),
+10:('IC','VC','VC','VC'),
+11:('IC','VC','VC','VC'),
+12:('IC','VC','VC','VC'),
+13:('IC','VC','VC','VC'),
+14:('IC','VC','VC','VC'),
 }
 
 ROW_ORDER = [ #these should match the names of keys of the state dict

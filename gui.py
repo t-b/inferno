@@ -37,7 +37,7 @@ def make_offsets():
     g2={ 1+n+G0_COUNT+G1_COUNT:( G2_START + BUTTON_WIDTH * n , PROT_Y_OFFSET) for n in range(G2_COUNT) }
     g3={ 1+n+G0_COUNT+G1_COUNT+G2_COUNT:( G3_START + BUTTON_WIDTH * n , PROT_Y_OFFSET) for n in range(G3_COUNT) }
 
-    offsetDict={ 'record':(355,70) }
+    offsetDict={ 'record':(350,65) }
     offsetDict.update(g0)
     offsetDict.update(g1)
     offsetDict.update(g2)
@@ -88,7 +88,7 @@ def clickMouse(x,y,timeDown=.1): #FIXME need a way to change focus back to the o
 def clickButton(WindowLeftTop,ButtonOffset):
     x=WindowLeftTop[0]+ButtonOffset[0]
     y=WindowLeftTop[1]+ButtonOffset[1]
-    clickMouse(x,y,timeDown=5)
+    clickMouse(x,y,timeDown=.1)
 
 def clickProtocol(protocolNumber):
     leftTop=getPclampWinLeftTop()

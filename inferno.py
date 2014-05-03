@@ -16,7 +16,7 @@ print(args)
 import os
 import pickle
 from time import sleep
-from mcc import mccControl
+from mcc import mccControl, MCC_MODE_DICT
 from functions import mccFuncs
 from gui import getPclampWinName, clickProtocol, clickRecord
 
@@ -29,7 +29,7 @@ from gui import getPclampWinName, clickProtocol, clickRecord
 #print text to terminal
 
 def makeUIDModeDict(protocolNumber,PROTOCOL_MODE_DICT,HS_TO_UID_DICT):
-    modeDefs={'v':0,'i':1,'iez':2} #FIXME move this somwehre visible
+    modeDefs = { v:k for k,v in MCC_MODE_DICT.items() }
     modeTup=PROTOCOL_MODE_DICT[ protocolNumber ]
     modes=[ modeDefs[modeName] for modeName in modeTup ]
     uidModeDict={}
@@ -67,35 +67,41 @@ def getPclampFilename():
     print(name)
     return name
 
-def rowPrintLogic(row,StateDict): #FIXME UNITS!!!
+def rowPrintLogic(row,StateDict,delim): #FIXME UNITS!!!
     if row == 'Holding':
         if StateDict['HoldingEnable']:
             out = StateDict[row]
+            if delim=='\t':
+                out='%2.2f'%out
         else:
             out = 'OFF'
     elif row == 'BridgeBalResist':
-        if StateDict['BridgeBalEnable']:
+        if StateDict['BridgeBalEnable'] and StateDict['Mode'] == 1:
             out = StateDict[row]
+            if delim=='\t':
+                out='%1.1e'%out
         else:
             out = 'OFF'
+    elif row == 'Mode':
+        out = MCC_MODE_DICT[ StateDict[row] ]
     else:
         out = StateDict[row]
 
     return out
 
-def makeText(data,ROW_ORDER,delimiter='\t'):
+def makeText(data,ROW_ORDER,ROW_NAMES,delimiter='\t'):
     # for reference: { filename : ( protocolNumber , hsStateDict  ) }
     lines=[]
-    lines.append( delimiter.join( ('','HS1','HS2','HS3','HS4') ) )
+    lines.append( delimiter.join( ('','HS1','HS2','HS3','HS4') ) ) #FIXME appending to the csv file...
     for filename , ( protocolNumber , hsStateDict ) in data.items():
 
-        trialNumber=filename[-7:-3]
-        lines.append( delimiter.join( (trialNumber , protocolNumber ,'','','') ) )
+        trialNumber=filename[-8:-4]
+        lines.append( delimiter.join( ('%s'%trialNumber , '%s'%protocolNumber ,'','','') ) )
 
         for row in ROW_ORDER:
-            values=[row]
+            values=[ ROW_NAMES[row] ]
             for i in range(1,5):
-                values.append( rowPrintLogic( row,hsStateDict[i] ) )
+                values.append( '%s'%rowPrintLogic( row,hsStateDict[i],delimiter ) )
 
             lines.append( delimiter.join(values) )
     return '\n'.join(lines)
@@ -134,21 +140,22 @@ def pickleIt(data,PICKLEPATH):
 
     if os.path.exists(PICKLEPATH):
         saved_data = openPickle(PICKLEPATH)
+        f = open(PICKLEPATH, 'wb') #this does not append
     else:
         saved_data = {}
+        f = open(PICKLEPATH, 'xb') #FIXME is there a way to NOT thrash the disk AND risk data loss?
 
     saved_data.update(data)
-    f = open(PICKLEPATH, 'xb') #FIXME is there a way to NOT thrash the disk AND risk data loss?
     pickle.dump( saved_data , f )
     f.close()
 
 
 def updateCSV(textData,CSVPATH):
     if os.path.exists(CSVPATH):
-        f = open( CSVPATH , 'wt' )
+        f = open( CSVPATH , 'at' )
     else:
         f = open( CSVPATH , 'xt' )
-    f.write(textData)
+    f.writelines(textData)
     f.close()
 
 def main():
@@ -169,6 +176,7 @@ def main():
     from config import HS_TO_UID_DICT
     from config import PROTOCOL_MODE_DICT
     from config import ROW_ORDER
+    from config import ROW_NAMES
 
     UID_TO_HS_DICT= { v:k for k,v in HS_TO_UID_DICT.items() }
 
@@ -216,8 +224,9 @@ def main():
     #save and display everything
     data = { filename : ( protocolNumber , hsStateDict  ) } #INTO THE PICKLE
     pickleIt(data,PICKLEPATH)
-    textData = makeText( data , ROW_ORDER )
-    updateCSV( textData.replace('\t',',') , CSVPATH )
+    textData = makeText( data , ROW_ORDER, ROW_NAMES )
+    csvData = makeText( data , ROW_ORDER, ROW_NAMES, ',' )
+    updateCSV( csvData , CSVPATH )
     print(textData) 
 
 

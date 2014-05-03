@@ -28,6 +28,8 @@ basically, switch between headstages/multiclamps and then call the functions you
 
 
 
+#mode defintion
+MCC_MODE_DICT={0:'VC',1:'IC',2:'IEZ'}
 
 #ptypes
 c_int_p=POINTER(c_int)
