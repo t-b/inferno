@@ -5,17 +5,6 @@ import os
 #import rpdb2
 #rpdb2.settrace()
 
-try:
-    from debug import TDB,ploc
-    tdb=TDB()
-    printD=tdb.printD
-    printFD=tdb.printFuncDict
-    tdbOff=tdb.tdbOff
-    #tdbOff()
-except:
-    printD=print
-    printFD=print
-
 #developed for api version 1.0.0.7
 
 #class based version of the mcc msg python wrapper
@@ -45,6 +34,7 @@ c_int_p=POINTER(c_int)
 c_uint_p=POINTER(c_uint)
 c_bool_p=POINTER(c_bool)
 c_double_p=POINTER(c_double)
+c_string_p=POINTER(c_char)
 
 #utility function for type casting and returning the value at a pointer
 def val(ptr, ptype):
@@ -94,77 +84,6 @@ class mccControl:
             printD(errdict[errval])
             return errval
 
-    def _errPrint(self):
-        """returns false if there was an error and prints it"""
-        #errval=val(self._pnError,c_int_p)
-        errval=val(self._pnError,c_int_p)
-        if errval==6000:
-            return errval
-        elif errval==6002:
-            #printD('self.polling=',self.polling)
-            if not self.polling:
-                printD('MCC not found, will poll until we find it!')
-                from threading import Thread
-                self.pollThread=Thread(target=self.pollForMCC)
-                self.polling=1
-                self.pollThread.start()
-                return errval
-            else:
-                return errval
-        else:
-            #printD(errdict[errval],context=3)
-            print(errdict[errval])
-            return errval
-
-#main class
-
-    def pollForMCC(self): #FIXME make it so we go here whenever we get a 6002
-        try:
-            #self.lock.acquire()
-            #printD('lock acquired')
-            #printD('self.polling=',self.polling)
-            while 1:
-                try:
-                    self.__init__()
-                    printD('MCC Found!')
-                    def test():
-                        printD(self.GetMode())
-                    from threading import Thread
-                    asdf=Thread(target=test)
-                    asdf.start()
-                    break
-                except IOError:
-                    sleep(4)
-                except:
-                    raise
-        finally:
-            self.polling=0 
-            #self.lock.release()
-
-
-    def wrapAll(self):
-        class wrap:
-            def __init__(self,wrapFunc,call):
-                self.wrapFunc=wrapFunc
-                self.do=call
-            def go(self,*args):
-                self.wrapFunc(self.do,*args)
-
-        def wrapFunc(func,*args):
-            #self.GetDLL()
-            self.CreateObject()
-            printD('i get here')
-            #self.getMCS() #must have this because we loose the pointers to the headstages
-            out=func(*args)
-            self.DestroyObject()
-            return out
-
-        mems=ins.getmembers(self)
-        excluded=['getDLL','getMCS','FindFirstMultiClamp','FindNextMultiClamp','wrapAll','cleanup', 'DestroyObject', 'CreateObject', '__init__','selectMC','selectNextMC','POST']
-        funcs=[func for func in mems if ins.ismethod(func[1]) and func[0] not in excluded]
-        for tup in funcs:
-            setattr(self,tup[0],wrap(wrapFunc,tup[1]).go)
-        
     def getDLL(self):
         try:
             olddir=os.getcwd()
@@ -178,36 +97,33 @@ class mccControl:
             print('Multiclamp DLL not found! Check your install path!')
             raise
 
+    def uniqueID(self,mcTuple):
+        serial=val(mcTuple[1],c_char_p).decode('utf-8')
+        channel=mcTuple[-1] #FIXME this tuple should really have a corrisponding class...
+        mcid='%s_%s'%(serial,channel)
+        return mcid
+
     def getMCS(self,firstMC):
         """get all the multiclamps and store them in a list"""
         #FIXME NO the problem is NOT with lossing the pointer to the SN, any pointer will do
         if type(firstMC)==tuple:
             #format for what this holds is: uModel, _pszSerialNum, uCOMPortID, uDeviceID, uChannelID
             self.mcList=[]
+            self.mcDict={}
             self.mcList.append(firstMC)
+            self.mcDict[self.uniqueID(firstMC)]=firstMC
             #printD(firstMC,val(firstMC[1],c_char_p))
             while 1:
                 nextMC=self.FindNextMultiClamp()
                 if nextMC:
                     self.mcList.append(nextMC)
+                    self.mcDict[self.uniqueID(nextMC)]=nextMC
                 else:
                     #print(self.mcNum,"multiclamps found!")
                     self.mcNum=len(self.mcList)
                     break
         else:
             print('No multiclamps found! MCC probably isnt on! Crashing!')
-
-
-    def POST(self):
-        print('hMCCmsg in POST',self.hMCCmsg)
-        from time import sleep
-        self.SetMode(1)
-        sleep(.5)
-        a=self.SetMode(0)
-        b=self.GetMode()
-        print('MCC POST',a,b==0)
-        #if b:
-            #raise FileNotFoundError
 
     def cleanup(self):
         """called in __exit__ to make sure we have no memory leeks"""
@@ -217,8 +133,10 @@ class mccControl:
     def selectMC(self,num):
         try:
             if num <= (self.mcNum):
+                out = self.SelectMultiClamp(*self.mcList[num]) #FIXME errors be here
                 self.mcCurrent=num
-                return self.SelectMultiClamp(*self.mcList[num]) #FIXME errors be here
+                self.currentSerial=self.uniqueID(self.mcList[num]) #FIXME mcDict?
+                return out
             else:
                 print("You don't have that many multiclamps!")
                 return 0
@@ -227,7 +145,9 @@ class mccControl:
 
     def selectNextMC(self):
         """Sets the currentMC to the next available in a loop"""
-        self.currentMC=(self.currentMC+1)%(self.mcNum)
+        num=(self.mcCurrent+1)%(self.mcNum)
+        self.mcCurrent=num
+        self.currentSerial=self.uniqueID(self.mcList[num]) #FIXME mcDict?
         return self.SelectMultiClamp(*self.mcList[self.currentMC])
 
     """everything below interfaces with the MCC SDK API through ctypes"""
@@ -272,11 +192,13 @@ class mccControl:
         _puDeviceID=byref(c_uint(0))
         _puChannelID=byref(c_uint(0)) #head stage, need a way to switch this quickly
         if self.aDLL.MCCMSG_FindNextMultiClamp(self.hMCCmsg, _puModel, _pszSerialNum, uBufSize, _puCOMPortID, _puDeviceID, _puChannelID, self._pnError):
-            outTup=(val(_puModel,c_uint_p),\
+            outTup=(
+                    val(_puModel,c_uint_p),\
                     _pszSerialNum,\
                     val(_puCOMPortID,c_uint_p),\
                     val(_puDeviceID,c_uint_p),\
-                    val(_puChannelID,c_uint_p))
+                    val(_puChannelID,c_uint_p)
+            )
             return outTup
         else:
             return 0

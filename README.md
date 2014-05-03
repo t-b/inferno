@@ -5,5 +5,6 @@ A command line tool for controlling MultiClampCommander and pClamp and saving da
 
 Dependencies
 ------------
-python 3.3.x
+x86 python 3.3.x (64bit WILL NOT WORK with the multiclamp dll!)
 docopt
+pywin32

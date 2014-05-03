@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.3
 """ For Dante
 Usage:
-    inferno.py <HS1_id> <HS2_id> <HS3_id> <HS4_id> [ --filepath=<path> ]
+    inferno.py <HS1_id> <HS2_id> <HS3_id> <HS4_id> <Protocol_id> [ --filepath=<path> ]
     inferno.py -h | --help
 Options:
     -h --help                   print this
@@ -16,23 +16,17 @@ args=docopt(__doc__) #do this early to prevent all the lags
 print(args)
 
 import numpy as np
-from rig.clx import clxControl
-from rig.mcc import mccControl
-from rig.functions import clxFuncs,mccFuncs
+from mcc import mccControl
+from functions import mccFuncs
+from gui import *
+from config import SERIAL_TO_HS_DICT
 
 #todo all multiclamps
 
-class danteFuncs(clxFuncs,mccFuncs):
-    def __init__(self,clx,mcc,csvFile,hsToCellDict):
+class danteFuncs(mccFuncs):
+    def __init__(self,mcc,csvFile,hsToCellDict):
         """ Some voodoo to get everything up and running without fixing other code """
-        class modestate:
-            """ hack to make kCtrlObj not a kCtrlObj """
-            charBuffer=None
-            setMode=lambda:None
-            keyThread=None
-            releaseKeyRequest=lambda:None
-
-        super().__init__(modestate,clx=clx,mcc=mcc)
+        super().__init__(mcc=mcc)
         self.csvFile=csvFile
         self.hsToCellDict=hsToCellDict
 
@@ -40,7 +34,7 @@ class danteFuncs(clxFuncs,mccFuncs):
     ### Put your functions below! see rig/functions.py for reference specifically mccFuncs and clxFuncs
     ###
 
-    def writeFile(stuff):
+    def writeData(self):
         ''' This is the function that writes the data we got to file '''
         #TODO format for this
 
@@ -48,32 +42,22 @@ class danteFuncs(clxFuncs,mccFuncs):
 
         return None
 
+    def printData(self):
+        print()
+        for line in lines:
+            print(line)
+
+    def getClampexWinName(self):
+        for i,name in get_windows():
+            if name.count('Clampex'):
+                return name
+
+    def getClampexWindow(self):
+        self.cw=getWindowFromName(name)
+
     def click_protocol_button(self,button=None):
-        #window name is 'Clampex - some shit'
-        #gonna have to enum windows
-        for i,n in get_windows():
-            if n.count('Clampex'):
-                name=n
-                break
-        #get the window position
-
-        #604,8
-        #y position of the row 148
-        #x width of buttons 656-683
-        #8 buttons starting at 670
-        #3 at 910
-        #3 at 1005
-        #3 at 1100
-
-
-        pass
-
+        
     def click_record(self):
-
-        #604,8 -> 953,76
-        #left and top
-        pass
-
 
 
 
@@ -93,17 +77,25 @@ class danteFuncs(clxFuncs,mccFuncs):
         #print text to terminal
 
         hsdict={
-            'labels'=['gen from output format?']
-            1={'cell id':'aa',}
+            'labels':['gen from output format?'],
+            1:{'cell id':'aa',}
         }
         return None
+
+
+def formatDataRow(stateDict):
+    """ take the data structure and format it for viewing"""
+    lines=[ '%s\t%s\t%s\t%s\t%s' ] * 6 #creates a list of 5 empty strings we can format
+
+
+
 
 #output format
 
 #filename format YYYY_MM_DD_nnnn
 #protocol p1 p2 p3 p4 corrisponding to the buttons
 
-#nnnn   p1
+#Trial nnnn p1
 #headstage  1   2   3   4
 #cell id    a   b   c   d 
 #mode       vc  ic  vc  ic #map between mcc + channel and the digitizer input channel
@@ -114,7 +106,6 @@ class danteFuncs(clxFuncs,mccFuncs):
 
 def main():
     #define our constants
-    clxDllPath=''
     mccDllPath=''
 
     #set variables from the command line
@@ -126,14 +117,14 @@ def main():
         4:args['<HS4_id>'],
     }
 
+
     #make sure headstage numbers line up correctly!
 
     #initialize the controllers and the 
-    clx=clxControl(clxDllPath)
     mcc=mccControl(mccDllPath)
 
     #create an instance of danteFuncs using the controllers, csvFile, and 
-    fucntions=danteFuncs(clx,mcc,csvFile,hsToCellDict)
+    fucntions=danteFuncs(mcc,csvFile,hsToCellDict)
 
     #run the protocol
     functions.DOALLTHETHIGNS()
