@@ -20,21 +20,25 @@ def make_offsets():
         but if something changes it could be useful """
     PROT_Y_OFFSET=140
     #x values
-    BUTTON_WIDTH=27
+    BUTTON_WIDTH=28
+    G0_START=68
     G1_START=305
     G2_START=400
     G3_START=495
     #number of buttons per group
-    G1_COUNT=8
+    G0_COUNT=8
+    G1_COUNT=3
     G2_COUNT=3
     G3_COUNT=3
 
-    g1={ 1+n:( G1_START + BUTTON_WIDTH * n , PROT_Y_OFFSET) for n in range(G1_COUNT) }
+    g0={ 1+n:( G0_START + BUTTON_WIDTH * n , PROT_Y_OFFSET) for n in range(G0_COUNT) }
+    g1={ 1+n+G0_COUNT:( G1_START + BUTTON_WIDTH * n , PROT_Y_OFFSET) for n in range(G1_COUNT) }
 
-    g2={ 1+n+G1_COUNT:( G2_START + BUTTON_WIDTH * n , PROT_Y_OFFSET) for n in range(G2_COUNT) }
-    g3={ 1+n+G1_COUNT+G2_COUNT:( G2_START + BUTTON_WIDTH * n , PROT_Y_OFFSET) for n in range(G3_COUNT) }
+    g2={ 1+n+G0_COUNT+G1_COUNT:( G2_START + BUTTON_WIDTH * n , PROT_Y_OFFSET) for n in range(G2_COUNT) }
+    g3={ 1+n+G0_COUNT+G1_COUNT+G2_COUNT:( G3_START + BUTTON_WIDTH * n , PROT_Y_OFFSET) for n in range(G3_COUNT) }
 
     offsetDict={ 'record':(355,70) }
+    offsetDict.update(g0)
     offsetDict.update(g1)
     offsetDict.update(g2)
     offsetDict.update(g3)
@@ -70,28 +74,29 @@ def getPclampWinLeftTop():
 def getPclampWinName():
     for i,name in getWindows():
         if name.count('Clampex'):
-	    return name
-def clickMouse(x,y,slp=.1): #FIXME need a way to change focus back to the original window!
+            return name
+
+def clickMouse(x,y,timeDown=.1): #FIXME need a way to change focus back to the original window!
     """click ye mouse"""
     mX,mY=wig.GetCursorPos() #save the position so we can return to it
     SetCursorPos((x,y))
     mouse_event(wic.MOUSEEVENTF_LEFTDOWN,x,y,0,0)
-    sleep(slp)
+    sleep(timeDown)
     mouse_event(wic.MOUSEEVENTF_LEFTUP,x,y,0,0)
     SetCursorPos((mX,mY))
 
 def clickButton(WindowLeftTop,ButtonOffset):
     x=WindowLeftTop[0]+ButtonOffset[0]
     y=WindowLeftTop[1]+ButtonOffset[1]
-    clickMouse(x,y)
+    clickMouse(x,y,timeDown=5)
 
 def clickProtocol(protocolNumber):
-    lefttop=getPclampWinLeftTop()
+    leftTop=getPclampWinLeftTop()
     offset=PCLAMP_BUTTON_OFFSETS[protocolNumber]
     clickButton(leftTop,offset)
 
 def clickRecord():
-    lefttop=getPclampWinLeftTop()
+    leftTop=getPclampWinLeftTop()
     offset=PCLAMP_BUTTON_OFFSETS['record']
     clickButton(leftTop,offset)
 
@@ -117,10 +122,11 @@ def takeScreenCap():
 
 def main():
     print(PCLAMP_BUTTON_OFFSETS)
+    left,top = getPclampWinLeftTop()
     for x,y in PCLAMP_BUTTON_OFFSETS.values():
-        x=x+100
-        y=y+100
-        clickMouse(x,y,slp=1)
+        x=x+left
+        y=y+top
+        clickMouse(x,y,1)
 
 
 if __name__ == '__main__':

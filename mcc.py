@@ -50,7 +50,7 @@ errdict={6000:'MCCMSG_ERROR_NOERROR', 6001:'MCCMSG_ERROR_OUTOFMEMORY',\
 
 class mccControl:
     def __init__(self,dllPath=None): #use this one for now
-        print(dllPath)
+        #print(dllPath)
         self.mccDllPath='C:/Axon/MultiClamp 700B Commander/3rd Party Support/AxMultiClampMsg/'
         if dllPath:
             self.mccDllPath=dllPath
@@ -111,7 +111,7 @@ class mccControl:
         serial=serial.strip('(').rstrip(')')
         return serial
 
-    def getChannel(self)
+    def getChannel(self):
         mcTuple=self.mcDict[self.currentUniqueID]
         return mcTuple[-1] #FIXME this tuple should really have a corrisponding class...
 

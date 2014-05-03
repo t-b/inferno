@@ -5,7 +5,7 @@ from sys import stdout,stdin
 from time import sleep
 
 class mccFuncs: #FIXME add a way to get the current V and I via... telegraph?
-    def __init__(self, mcc=None, **kwargs):
+    def __init__(self, mcc=None):
         try:
             if mcc.__class__.__name__ is not 'mccControl':
                 raise TypeError('wrong controller type')
@@ -61,17 +61,17 @@ class mccFuncs: #FIXME add a way to get the current V and I via... telegraph?
             #XXX ONLY RELEVANT FOR MODE 1 (IC)
             state['BridgeBalEnable']=self.mcc.GetBridgeBalEnable()
             state['BridgeBalResist']=self.mcc.GetBridgeBalResist()
+            state['DateTime']=datetime.now()
 
         #modeDict={0:vc,1:ic,2:iez}
-        channelDict={} #FIXME: make this a dict with keys as the name of the value? eh would probs complicate
-        for uniqueID,tup in self.mcc.mcDict.items():
+        stateDict={}
+        for uniqueID in self.mcc.mcDict:
+            channelDict={} #XXX does this work? that would be cool?
             self.mcc.selectUniqueID(uniqueID)
-            channelDict['FULL_ID']=tup
             mode=self.mcc.GetMode() #in the event we want to do something fancy?
             channelDict['Mode']=mode
             base(channelDict)
-
-        stateDict[uniqueID]=channelDict
+            stateDict[uniqueID]=channelDict
         self.MCCstateDict[datetime.utcnow()]=stateDict
         return stateDict
 
@@ -196,7 +196,6 @@ class mccFuncs: #FIXME add a way to get the current V and I via... telegraph?
         self.mcc.SetHoldingEnable(1)
         return self
     def cleanup(self):
-        super().cleanup()
         try:
             self.mcc.DestroyObject()
             print(self.mcc.__class__,'handler destroyed')

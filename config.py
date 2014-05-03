@@ -35,6 +35,7 @@ ROW_ORDER = [ #these should match the names of keys of the state dict
 ]
 
 ROW_NAMES = { #all the rows in the state dict, probs should validate
+'DateTime':'Time',
 'Cell':'Cell',
 'Mode':'Mode',
 
@@ -56,6 +57,5 @@ ROW_NAMES = { #all the rows in the state dict, probs should validate
 
 'Serial':'Serial',
 'Channel':'Channel',
-'FULL_ID':'DO NOT WANT',
 }
 

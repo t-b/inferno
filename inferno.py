@@ -2,15 +2,12 @@
 """ For Dante
 Usage:
     inferno.py <HS1_cell_id> <HS2_cell_id> <HS3_cell_id> <HS4_cell_id> <protocol_id> [ --filepath=<path> ]
-    inferno.py --makecsv=<source> <output>
+    inferno.py --makecsv=<pickle> <output>
     inferno.py --help
 Options:
     -h --help                   print this
     -f --filepath=<path>        set which csv file to write to, IF NONE IT WILL USE HARDCODED FILE
 """
-
-
-#may not even need rigioman if we can just load in clx and mcc dll handlers from a script, all we need is the filename and the cell ids
 
 from docopt import docopt
 args=docopt(__doc__) #do this early to prevent all the lags
@@ -18,99 +15,55 @@ print(args)
 
 import os
 import pickle
-import numpy as np
+from time import sleep
 from mcc import mccControl
 from functions import mccFuncs
-from gui import getClampexWinName, clickProtocol, clickRecord
+from gui import getPclampWinName, clickProtocol, clickRecord
 
-#todo all multiclamps
-
-class danteFuncs(mccFuncs):
-    ###
-    ### Put your functions below! see rig/functions.py for reference specifically mccFuncs and clxFuncs
-    ###
-    def uidSetMode(self,uid,mode):
-        self.mcc.selectUniqueID(uid)
-        self.mcc.SetMode(mode)
-
-    def writeData(self):
-        ''' This is the function that writes the data we got to file '''
-        #TODO format for this
-
-        #write to binary file, full mcc states, functions to get that back out to a csv
-
-        return None
-
-    def printData(self):
-        print()
-        for line in lines:
-            print(line)
-    def click_protocol_button(self,button=None):
-        pass
-
-    def click_record(self):
-        pass
-
-
-
-
-    def DOALLTHETHINGS(hsToCellDict,csvPath): #FIXME eh, given the structure of this program, just stuff these in at init
-        stuff=None
-        writeFile(csvPath)
-        print(csvPath,hsToCellDict)
-        #FIXME may need a way to stop execution in the middle???
-
-
-        #set the mode for each headstage NOTHING ELSE
-        #load protocol <- use the mouse click
-        #wait for key input or cancel
-        #record mcc state, protocol, and cell asociations
-        #run protocol <- use the mouse click
-        #get the new filename
-        #print text to terminal
-
-        hsdict={
-            'labels':['gen from output format?'],
-            1:{'cell id':'aa',}
-        }
-        return None
-
+#set the mode for each headstage NOTHING ELSE
+#load protocol <- use the mouse click
+#wait for key input or cancel
+#record mcc state, protocol, and cell asociations
+#run protocol <- use the mouse click
+#get the new filename
+#print text to terminal
 
 def makeUIDModeDict(protocolNumber,PROTOCOL_MODE_DICT,HS_TO_UID_DICT):
     modeDefs={'v':0,'i':1,'iez':2} #FIXME move this somwehre visible
     modeTup=PROTOCOL_MODE_DICT[ protocolNumber ]
     modes=[ modeDefs[modeName] for modeName in modeTup ]
     uidModeDict={}
-    for i in range(len(modes)):
-        uid = HS_TO_UID_DICT[ i+1 ] 
+    for i in range(len(modes)-1):
+        uid = HS_TO_UID_DICT[ i+1 ]
         uidModeDict[ uid ] = modes[ i ] #the tuple is just listed headstages 1 through 4 though it could be n now
     return uidModeDict
 
-def makeHeadstageStateDict(uidStateDict):
+def makeHeadstageStateDict(uidStateDict, UID_TO_HS_DICT):
     hsStateDict={}
-    for uid,state in uidStateDict.item():
+    for uid,state in uidStateDict.items():
         hsStateDict[ UID_TO_HS_DICT[uid] ] = state
     return hsStateDict
 
 def addCellToHeadStage(hsToCellDict,hsStateDict): #note this is an in place modification
-    for hs,cell in hsToCellDict:
+    for hs,cell in hsToCellDict.items():
         hsStateDict[hs]['Cell']=cell
 
-def setModes(protocolNumber,mcc): #FIXME this is ugly...
-    uidModeDict=makeUIDModeDict(protocolNumber,PROTOCOL_MODE_DICT,HS_TO_UID_DICT)
+def setModes(uidModeDict,mcc): #FIXME this is ugly...
     for uid,mode in uidModeDict.items():
         mcc.selectUniqueID(uid)
         mcc.SetMode(mode)
 
-def setMCCLoadProt(protocolNumber,mcc):
-    setModes(protocolNumber,mcc)
+def setMCCLoadProt(uidModeDict,protocolNumber,mcc):
+    setModes(uidModeDict,mcc)
     clickProtocol(protocolNumber)
 
 def getPclampFilename():
     """ YYYY_MM_DD_NNNN.abf """ 
     name=getPclampWinName()
+    if name is None:
+        raise IOError('pCLAMP is not on!')
     print(name)
-    name=name[-19:]
+    name=name[11:30] #FIXME should not hardcode this, also first run may not have full 30...
     print(name)
     return name
 
@@ -163,7 +116,7 @@ def makeText(data,ROW_ORDER,delimiter='\t'):
 
 def checkPath(PATH):
     if os.path.exists(PATH):
-        if not os.isfile(PATH):
+        if not os.path.isfile(PATH):
              raise IOError( 'Path is not a file!' )
         else:
             return None
@@ -199,20 +152,28 @@ def updateCSV(textData,CSVPATH):
     f.close()
 
 def main():
-    from config import MCC_DLLPATH
-    from config import HS_TO_UID_DICT
-    from config import PROTOCOL_MODE_DICT
-    from config import CSVPATH
-    from config import PICKPATH
-    from config import ROW_ORDER
+    #see if pclamp is on and get the old filename for error checking on the new filename
+    old_filename = getPclampFilename()
+    
+    #import and check config settings
+    from config import PICKLEPATH
+
+    CSVPATH=args['--filepath']
+    if not CSVPATH:
+        from config import CSVPATH
 
     checkPath(PICKLEPATH)
     checkPath(CSVPATH)
 
-    #define our constants
+    from config import MCC_DLLPATH
+    from config import HS_TO_UID_DICT
+    from config import PROTOCOL_MODE_DICT
+    from config import ROW_ORDER
+
+    UID_TO_HS_DICT= { v:k for k,v in HS_TO_UID_DICT.items() }
+
     #set variables from the command line
-    CSVPATH=args['--filepath']
-    protcolNumber = int(args['<protocol_id>'])
+    protocolNumber = int(args['<protocol_id>'])
     hsToCellDict = {
         1:args['<HS1_cell_id>'],
         2:args['<HS2_cell_id>'],
@@ -220,19 +181,27 @@ def main():
         4:args['<HS4_cell_id>'],
     }
 
-    #initialize the controllers and the 
+
+    #initialize the controller
     mcc=mccControl(MCC_DLLPATH)
+    mccF=mccFuncs(mcc)
+
+    #make the mode dict for the headstages
+    uidModeDict=makeUIDModeDict(protocolNumber,PROTOCOL_MODE_DICT,HS_TO_UID_DICT)
 
 
     #set the modes for each headstage and load the protocol
-    setMCCLoadProt(protocolNumber,mcc)
+    setMCCLoadProt(uidModeDict,protocolNumber,mcc)
 
     #save the state of each headstage and which cell is associated with it
-    uidStateDict=mcc.getMCCState()
+    uidStateDict=mccF.getMCCState()
+    mccF.cleanup() #make sure we get rid of the dllhandels
 
-    hsStateDict = makeHeadstageStateDict(uidStateDict) #this is our data
+    hsStateDict = makeHeadstageStateDict(uidStateDict,UID_TO_HS_DICT) #this is our data
 
     addCellToHeadStage(hsToCellDict,hsStateDict)
+    
+    print(hsStateDict)
 
     #run pclamp
     clickRecord()
@@ -241,14 +210,15 @@ def main():
     sleep(.1) #give the window time to change
     filename = getPclampFilename()
 
+    #TODO deal with fact that filename wont change if you stop the recording
+    #assert filename != old_filename, 'Warning! filename has not changed! Something is wrong!'
+
     #save and display everything
     data = { filename : ( protocolNumber , hsStateDict  ) } #INTO THE PICKLE
     pickleIt(data,PICKLEPATH)
-    textData = makeText( data )
-    updateCSV(textData.replace('\t',',')
+    textData = makeText( data , ROW_ORDER )
+    updateCSV( textData.replace('\t',',') , CSVPATH )
     print(textData) 
-
-    
 
 
 if __name__ == '__main__':
