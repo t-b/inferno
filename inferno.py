@@ -19,7 +19,7 @@ import pickle
 from time import sleep
 from mcc import mccControl, MCC_MODE_DICT
 from functions import mccFuncs
-from gui import getPclampWinName, clickProtocol, clickRecord
+from gui import getClampexWinName, clickProtocol, clickRecord
 
 #set the mode for each headstage NOTHING ELSE
 #load protocol <- use the mouse click
@@ -66,9 +66,9 @@ def setMCCLoadProt(uidModeDict,protocolNumber,mcc):
     setModes(uidModeDict,mcc)
     clickProtocol(protocolNumber)
 
-def getPclampFilename():
+def getClampexFilename():
     """ YYYY_MM_DD_NNNN.abf """ 
-    name=getPclampWinName()
+    name=getClampexWinName()
     if name is None:
         raise IOError('pCLAMP is not on!')
     print(name)
@@ -168,7 +168,7 @@ def updateCSV(textData,CSVPATH): #FIXME make sure the file is not already opened
 
 def main():
     #see if pclamp is on and get the old filename for error checking on the new filename
-    old_filename = getPclampFilename()
+    old_filename = getClampexFilename()
     
     #import and check config settings
     from config import PICKLEPATH
@@ -224,7 +224,7 @@ def main():
 
     #get the filename from the windown name! tada! wat a stuipd hack
     sleep(.1) #give the window time to change
-    filename = getPclampFilename()
+    filename = getClampexFilename()
 
     #TODO deal with fact that filename wont change if you stop the recording
     #assert filename != old_filename, 'Warning! filename has not changed! Something is wrong!'

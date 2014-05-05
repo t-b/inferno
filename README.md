@@ -8,7 +8,7 @@ Dependencies
 * docopt
 * pywin32
 
-* pClamp10
+* pClamp10 (Clampex)
 * MultiClampCommander (so far only tested with MultiClamp 700B)
 
 Configuration
@@ -36,7 +36,7 @@ All offsets are from the top left corner of the window in units of pixels.
 
 Usage
 -----
-The pClamp window MUST be visible in order to click the protocol buttons
+The Clampex window MUST be visible in order to click the protocol buttons
 (Dear Molecular Devices, great hardware. Your software sucks.).
 
 MultiClampCommander windows need to be opened but do not need to be visible.

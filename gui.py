@@ -48,6 +48,8 @@ PCLAMP_BUTTON_OFFSETS = make_offsets()
 
 
 def getWindows():
+    """ Get a list of all the windows. List of tuples (int, string)
+    the string is the window name. """
     toplist=[]
     winlist=[]
 
@@ -55,26 +57,27 @@ def getWindows():
         winlist.append((hwnd,wig.GetWindowText(hwnd)))
 
     wig.EnumWindows(enum_callback, toplist)
+
     return winlist
 
+def getClampexWinName():
+    for i,name in getWindows():
+        if name.count('Clampex'):
+ 
 def getWindowFromName(name):
     return wui.FindWindow(None,name)
+           return name
 
 def getLeftBottom(window):
     return window.GetWindowRect()[0::3] #left,top,right,bottom
+
 def getLeftTop(window):
     return window.GetWindowRect()[:2]
      
-def getPclampWinLeftTop():
-    name=getPclampWinName()
+def getClampexWinLeftTop():
+    name=getClampexWinName()
     window=getWindowFromName(name)
     return getLeftTop(window)
-
-
-def getPclampWinName():
-    for i,name in getWindows():
-        if name.count('Clampex'):
-            return name
 
 def clickMouse(x,y,timeDown=.1): #FIXME need a way to change focus back to the original window!
     """click ye mouse"""
@@ -91,38 +94,19 @@ def clickButton(WindowLeftTop,ButtonOffset):
     clickMouse(x,y,timeDown=.1)
 
 def clickProtocol(protocolNumber):
-    leftTop=getPclampWinLeftTop()
+    leftTop=getClampexWinLeftTop()
     offset=PCLAMP_BUTTON_OFFSETS[protocolNumber]
     clickButton(leftTop,offset)
 
 def clickRecord():
-    leftTop=getPclampWinLeftTop()
+    leftTop=getClampexWinLeftTop()
     offset=PCLAMP_BUTTON_OFFSETS['record']
     clickButton(leftTop,offset)
 
 
-
-
-#offsets always reported in x,y
-SNAPSHOT_OFFSET_LB=120,35
-
-
-
-def takeScreenCap():
-    #wintv=wig.FindWindow(None,"WinTV7")
-    wintv=wui.FindWindow(None,"WinTV7")
-    if not wintv:
-        raise IOError('WinTV7 not found! Is it on!?')
-    lb=getLeftBottom(wintv)
-    lo=SNAPSHOT_OFFSET_LB[0]
-    bo=SNAPSHOT_OFFSET_LB[1]
-    x=lb[0]+lo
-    y=lb[1]+bo
-    clickMouse(x,y,.001) #MAKE SURE THE WINDOW IS NOT COVERED!
-
 def main():
     print(PCLAMP_BUTTON_OFFSETS)
-    left,top = getPclampWinLeftTop()
+    left,top = getClampexWinLeftTop()
     for x,y in PCLAMP_BUTTON_OFFSETS.values():
         x=x+left
         y=y+top
