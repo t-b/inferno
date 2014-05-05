@@ -1,5 +1,5 @@
-Infero
-======
+Inferno
+=======
 A command line tool for controlling MultiClampCommander and Clampex and saving data.
 
 Dependencies
