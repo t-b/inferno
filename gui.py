@@ -63,10 +63,11 @@ def getWindows():
 def getClampexWinName():
     for i,name in getWindows():
         if name.count('Clampex'):
+            return name
  
 def getWindowFromName(name):
+    print(name)
     return wui.FindWindow(None,name)
-           return name
 
 def getLeftBottom(window):
     return window.GetWindowRect()[0::3] #left,top,right,bottom

@@ -12,7 +12,7 @@ Options:
 
 from docopt import docopt
 args=docopt(__doc__) #do this early to prevent all the lags
-print(args)
+#print(args)
 
 import os
 import pickle
@@ -71,9 +71,9 @@ def getClampexFilename():
     name=getClampexWinName()
     if name is None:
         raise IOError('pCLAMP is not on!')
-    print(name)
+    #print(name)
     name=name[11:30] #FIXME should not hardcode this, also first run may not have full 30...
-    print(name)
+    #print(name)
     return name
 
 def rowPrintLogic(row,StateDict,delim): #FIXME UNITS!!!

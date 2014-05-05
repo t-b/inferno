@@ -40,7 +40,7 @@ class mccFuncs: #FIXME add a way to get the current V and I via... telegraph?
         return self
 
     def getMCCState(self): #FIXME this function and others like it should probably be called directly by dataman?
-        print('hMCCmsg outer',self.mcc.hMCCmsg)
+        #print('hMCCmsg outer',self.mcc.hMCCmsg)
         def base(state):
             state['Serial']=self.mcc.getSerial()
             state['Channel']=self.mcc.getChannel()
@@ -198,7 +198,7 @@ class mccFuncs: #FIXME add a way to get the current V and I via... telegraph?
     def cleanup(self):
         try:
             self.mcc.DestroyObject()
-            print(self.mcc.__class__,'handler destroyed')
+            #print(self.mcc.__class__,'handler destroyed')
         except:
             pass
 
