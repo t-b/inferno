@@ -52,6 +52,7 @@ def setModes(uidModeDict,mcc): #FIXME this is ugly...
     for uid,mode in uidModeDict.items():
         mcc.selectUniqueID(uid)
         mcc.SetMode(mode)
+    sleep(1) #it takes about 1 second for MCC to update and the telegraph inputs to change
 
 def setMCCLoadProt(uidModeDict,protocolNumber,mcc):
     setModes(uidModeDict,mcc)

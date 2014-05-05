@@ -12,7 +12,7 @@ HS_TO_UID_DICT = { #XXX CHECK MEEEEE!!
 PROTOCOL_MODE_DICT = { #conforms to MCC_MODE_DICT naming
  1:('IC','VC','VC','VC'),
  2:('VC','IC','VC','VC'),
- 3:('IC','VC','VC','VC'),
+ 3:('VC','VC','IC','VC'),
  4:('VC','VC','VC','IC'),
  5:('IC','VC','VC','VC'),
  6:('IC','VC','VC','VC'),
