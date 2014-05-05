@@ -1,12 +1,13 @@
 #!/usr/bin/env python3.3
 """ For Dante
 Usage:
-    inferno.py <HS1_cell_id> <HS2_cell_id> <HS3_cell_id> <HS4_cell_id> <protocol_id> [ --filepath=<path> ]
+    inferno.py <HS1_cell_id> <HS2_cell_id> <HS3_cell_id> <HS4_cell_id> <protocol_id> [ --filepath=<path> --config=<path> ]
     inferno.py --makecsv=<pickle> <output>
     inferno.py --help
 Options:
     -h --help                   print this
     -f --filepath=<path>        set which csv file to write to, IF NONE IT WILL USE HARDCODED FILE
+    -c --config=<path>          select a config.py file other than default
 """
 
 from docopt import docopt
@@ -27,6 +28,13 @@ from gui import getPclampWinName, clickProtocol, clickRecord
 #run protocol <- use the mouse click
 #get the new filename
 #print text to terminal
+
+def loadConfig():
+    """ loads in all the data from the config file, this way you can have
+    multiple configs, or save your old configs """
+    #TODO
+    #make sure that len(value) in PROTOCOL_MODE_DICT matches
+    #len(HS_TO_UID_DICT)
 
 def makeUIDModeDict(protocolNumber,PROTOCOL_MODE_DICT,HS_TO_UID_DICT):
     modeDefs = { v:k for k,v in MCC_MODE_DICT.items() }
@@ -149,7 +157,6 @@ def pickleIt(data,PICKLEPATH):
     saved_data.update(data)
     pickle.dump( saved_data , f )
     f.close()
-
 
 def updateCSV(textData,CSVPATH): #FIXME make sure the file is not already opened!
     if os.path.exists(CSVPATH):
