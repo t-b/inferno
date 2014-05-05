@@ -66,7 +66,6 @@ def getClampexWinName():
             return name
  
 def getWindowFromName(name):
-    print(name)
     return wui.FindWindow(None,name)
 
 def getLeftBottom(window):
