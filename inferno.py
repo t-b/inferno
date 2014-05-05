@@ -33,7 +33,7 @@ def makeUIDModeDict(protocolNumber,PROTOCOL_MODE_DICT,HS_TO_UID_DICT):
     modeTup=PROTOCOL_MODE_DICT[ protocolNumber ]
     modes=[ modeDefs[modeName] for modeName in modeTup ]
     uidModeDict={}
-    for i in range(len(modes)-1):
+    for i in range(len(modes)):
         uid = HS_TO_UID_DICT[ i+1 ]
         uidModeDict[ uid ] = modes[ i ] #the tuple is just listed headstages 1 through 4 though it could be n now
     return uidModeDict
@@ -150,7 +150,7 @@ def pickleIt(data,PICKLEPATH):
     f.close()
 
 
-def updateCSV(textData,CSVPATH):
+def updateCSV(textData,CSVPATH): #FIXME make sure the file is not already opened!
     if os.path.exists(CSVPATH):
         f = open( CSVPATH , 'at' )
     else:
@@ -209,7 +209,7 @@ def main():
 
     addCellToHeadStage(hsToCellDict,hsStateDict)
     
-    print(hsStateDict)
+    #print(hsStateDict)
 
     #run pclamp
     clickRecord()
