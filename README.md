@@ -50,4 +50,5 @@ loosing cells due to misconfigured settings and takes time to develop properly.
 Known Issues
 ------------
 It takes time for values set in MultiClampCommander to propagate via telegraph
-to pClamp, ther
+to Clampex. We sleep(1) to prevent erros when loading Clampex protocol too soon.
+We have only tested with 4 headstages, it may take longer if you use more.
