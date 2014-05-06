@@ -12,7 +12,7 @@ Options:
 
 from docopt import docopt
 args=docopt(__doc__,options_first=True) #do this early to prevent all the lags
-print(args)
+#print(args)
 
 from time import sleep
 from mcc import mccControl

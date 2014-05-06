@@ -37,6 +37,8 @@ class dataio:
                     raise PermissionError('The file is open somewhere! Close that program first.')
 
         else:
+            if fileType == 'b':
+                self.saved_data = {} #if we the file doesnt exist there is no saved data!
             return open( PATH , 'x'+fileType )
 
     def loadPickle(self, PATH): #ick had to use this to prevent EOFErrors
@@ -64,22 +66,26 @@ class dataio:
         writePickle.close()
         self.pickleFile = self.openFile( self.PICKLEPATH, 'b' )
 
-    def loadCSV(self):
-        self.csvFile.seek(0)
-        return self.csvFile.read()
+    def loadCSV(self): #FIXME make this clean please
+        if self.csvFile.mode.count('+'):
+            self.csvFile.seek(0)
+            return self.csvFile.read()
+        elif self.csvFile.mode.count('r'):
+            return self.csvFile.read()
+        else:
+            return ''
+
 
     def updateCSV(self,textData):
         """ PREPEND YOUR STRINGS WITH NEWLINES OR SUFFER THE CONSEQUENCES """
-        while 1: #loop to see if we already have HS line
-            lines=self.loadCSV()
-            if lines.count('HS'):
-                if textData[0] != '\n':
-                    raise TypeError('textData MUST start with a newline!')
+        lines=self.loadCSV()
+        if lines.count('HS'):
+            if textData[0] != '\n':
+                raise TypeError('textData MUST start with a newline!')
+            else:
                 textData = '\n'+textData.split('\n',2)[2]
-                #FIXME do we need to jump to the end?
-                break
-            elif line == '': #end if we don't find any
-                break
+        else:
+            textData.strip('\n') #a new csv file so dont put a newline first
         self.csvFile.writelines(textData)
 
 def main():
