@@ -43,6 +43,8 @@ def clickButton(WindowLeftTop,ButtonOffset):
     y=WindowLeftTop[1]+ButtonOffset[1]
     clickMouse(x,y,timeDown=.1)
 
+def main():
+    clickButton( getLeftTop( getWindowFromName( getWindows()[0][1] ) ) , (100,100) )
 if __name__ == '__main__':
     main()
 

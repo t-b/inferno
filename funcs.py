@@ -4,7 +4,7 @@
 """
 
 from time import sleep
-from gui import getWindows, getWindowFromName, getTopLeft, clickButton
+from gui import getWindows, getWindowFromName, getLeftTop, clickButton
  
 #empirically determined offsets from the top left corner
 
@@ -55,12 +55,10 @@ def clickRecord():
     offset=PCLAMP_BUTTON_OFFSETS['record']
     clickButton(leftTop,offset)
 
-     
 def getClampexWinLeftTop():
     name=getClampexWinName()
     window=getWindowFromName(name)
     return getLeftTop(window)
-
 
 def makeUIDModeDict(protocolNumber,PROTOCOL_MODE_DICT,HS_TO_UID_DICT):
     modeDefs = { v:k for k,v in MCC_MODE_DICT.items() }
@@ -161,11 +159,11 @@ def makeText(data,ROW_ORDER,ROW_NAMES,OFF_STRING,delimiter='\t'):
     #holding    -70 OFF OFF -70 #OFF for holding disabled
     #bridge balance
 
-#structure for associating protocols to mcc settings
 def main():
     print(PCLAMP_BUTTON_OFFSETS)
     for offset in PCLAMP_BUTTON_OFFSETS.values():
-        clickButton(getClampexWinLeftTop(),offset)
+        #clickButton(getClampexWinLeftTop(),offset)
+        clickButton((0,0),offset)
 
 if __name__ == '__main__':
     main()
