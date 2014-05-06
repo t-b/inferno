@@ -13,7 +13,6 @@ class dataio:
         self.CSVPATH=CSVPATH
         self.csvFile= self.openFile(CSVPATH,'t') #FIXME probably should actually test this for bad inputs...
         self.pickleFile= self.openFile(PICKLEPATH,'b')
-        print(self.saved_data)
 
     def cleanup(self):
         self.csvFile.close()
@@ -31,7 +30,6 @@ class dataio:
                     mode = 'r'+fileType #we open in read mode to keep a lock
                 else:
                     raise TypeError('What kind of file is this?!')
-                print(mode)
                 try:
                     return open( PATH , mode )
                 except PermissionError:
@@ -50,7 +48,6 @@ class dataio:
                 self.saved_data={}
             else:
                 raise IOError('Your pickle file has data but we get an EOFError... anyway. Size = %s'%os.path.getsize(PATH) )
-            print(self.saved_data)
         finally:
             f.close()
 

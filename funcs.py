@@ -56,6 +56,11 @@ def clickRecord():
     offset=PCLAMP_BUTTON_OFFSETS['record']
     clickButton(leftTop,offset)
 
+def getClampexWinName():
+    for i,name in getWindows():
+        if name.count('Clampex'):
+            return name
+
 def getClampexWinLeftTop():
     name=getClampexWinName()
     window=getWindowFromName(name)

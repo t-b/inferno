@@ -1,8 +1,8 @@
 #!/usr/bin/env python3.3
 """ For Dante
 Usage:
-    inferno.py <HS1_cell_id> <HS2_cell_id> <HS3_cell_id> <HS4_cell_id> <protocol_id> [ --filepath=<path> --config=<path> ]
-    inferno.py --makecsv=[pickle] [output]
+    inferno.py <HS1_cell_id> <HS2_cell_id> <HS3_cell_id> <HS4_cell_id> <protocol_id> [ --filepath=<path> --config=<path> ] 
+    inferno.py makecsv [ <pickle> [ <output> ] ]
     inferno.py --help
 Options:
     -h --help                   print this
@@ -11,7 +11,7 @@ Options:
 """
 
 from docopt import docopt
-args=docopt(__doc__) #do this early to prevent all the lags
+args=docopt(__doc__,options_first=True) #do this early to prevent all the lags
 print(args)
 
 from time import sleep
@@ -36,7 +36,14 @@ def loadConfig():
     #TODO
     #make sure that len(value) in PROTOCOL_MODE_DICT matches
     #len(HS_TO_UID_DICT)
+
 def main():
+    if args['makecsv']:
+        print('making csv from binary data!')
+        print(args['<pickle>'])
+        print(args['<output>'])
+        return None
+
     #see if pclamp is on and get the old filename for error checking on the new filename
     old_filename = getClampexFilename()
     
@@ -47,7 +54,7 @@ def main():
     if not CSVPATH:
         from config import CSVPATH
 
-    dataman=dataio(PICKLEPATH,CSVPATH)
+    dataman=dataio(PICKLEPATH,CSVPATH) #open the csv and pickle
 
     from config import MCC_DLLPATH
     from config import HS_TO_UID_DICT
