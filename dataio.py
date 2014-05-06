@@ -11,47 +11,49 @@ class dataio:
     def __init__(self,PICKLEPATH,CSVPATH):
         self.PICKLEPATH=PICKLEPATH
         self.CSVPATH=CSVPATH
-        self.csvFile= self.openFile(CSVPATH,'t') #FIXME probably should actually test this for bad inputs...
-        self.pickleFile= self.openFile(PICKLEPATH,'b')
+        self.csvFile = self.openFile(CSVPATH,'t') #FIXME probably should actually test this for bad inputs...
+        self.pickleFile = self.openFile(PICKLEPATH,'b')
 
-    def cleanup(self):
-        self.csvFile.close()
-        self.pickleFile.close()
+    def __enter__(self):
+        return self 
 
     def openFile(self,PATH,fileType):
+        """ ALWAYS open READ """
         if os.path.exists(PATH):
             if not os.path.isfile(PATH):
                  raise IOError( 'Path is not a file!' )
             else:
-                if fileType == 't':
-                    mode = 'a+'+fileType
-                elif fileType == 'b':
-                    self.loadPickle(PATH)
-                    mode = 'r'+fileType #we open in read mode to keep a lock
-                else:
-                    raise TypeError('What kind of file is this?!')
-                try:
-                    return open( PATH , mode )
-                except PermissionError:
-                    self.cleanup()
-                    raise PermissionError('The file is open somewhere! Close that program first.')
-
+                if fileType == 'b':
+                    self.saved_data = self.loadPickle()
         else:
+            f = open( PATH , 'x'+fileType ) #create the file since it doesnt exist
+            f.close()
             if fileType == 'b':
-                self.saved_data = {} #if we the file doesnt exist there is no saved data!
-            return open( PATH , 'x'+fileType )
+                self.saved_data = {} #if the file doesnt exist there is no saved data!
 
-    def loadPickle(self, PATH): #ick had to use this to prevent EOFErrors
+        mode = 'r'+fileType
         try:
-            f = open( PATH , 'rb' )
-            self.saved_data=pickle.load( f )
+            return open( PATH , mode )
+        except PermissionError:
+            self.cleanup()
+            raise PermissionError('The file is open somewhere! Close that program first.')
+
+    def loadPickle(self):
+        try:
+            self.pickleFile.close()
+        except AttributeError:
+            pass #its ok this happens at first run
+        try:
+            f = open( self.PICKLEPATH , 'rb' )
+            return pickle.load( f )
         except EOFError:
-            if os.path.getsize(PATH) == 0:
-                self.saved_data={}
+            if os.path.getsize(self.PICKLEPATH) == 0:
+                return {}
             else:
                 raise IOError('Your pickle file has data but we get an EOFError... anyway. Size = %s'%os.path.getsize(PATH) )
         finally:
             f.close()
+            self.pickleFile = open( self.PICKLEPATH , 'rb' )
 
     def updatePickle(self,data):
         try:
@@ -61,20 +63,16 @@ class dataio:
             raise #prevent opening in write mode
 
         self.pickleFile.close()
-        writePickle = open( self.PICKLEPATH, 'wb' )
-        pickle.dump( self.saved_data , writePickle )
-        writePickle.close()
-        self.pickleFile = self.openFile( self.PICKLEPATH, 'b' )
+        with open( self.PICKLEPATH, 'wb' ) as writePickle:
+            pickle.dump( self.saved_data , writePickle )
+        self.pickleFile = open( self.PICKLEPATH, 'rb' )
 
-    def loadCSV(self): #FIXME make this clean please
-        if self.csvFile.mode.count('+'):
-            self.csvFile.seek(0)
-            return self.csvFile.read()
-        elif self.csvFile.mode.count('r'):
-            return self.csvFile.read()
-        else:
-            return ''
-
+    def loadCSV(self):
+        self.csvFile.close() 
+        with open ( self.CSVPATH , 'rt' ) as f:
+            output = f.read()
+        self.csvFile = open ( self.CSVPATH , 'rt' )
+        return output 
 
     def updateCSV(self,textData):
         """ PREPEND YOUR STRINGS WITH NEWLINES OR SUFFER THE CONSEQUENCES """
@@ -86,11 +84,48 @@ class dataio:
                 textData = '\n'+textData.split('\n',2)[2]
         else:
             textData.strip('\n') #a new csv file so dont put a newline first
-        self.csvFile.writelines(textData)
+
+        self.csvFile.close()
+        with open( self.CSVPATH , 'at' ) as csvWrite:
+            csvWrite.writelines(textData)
+        self.csvFile = open( self.CSVPATH , 'rt' )
+
+    def __exit__(self,type,value,traceback):
+        self.csvFile.close()
+        self.pickleFile.close()
+
+
 
 def main():
     from IPython import embed
-    d=dataio('pickletest.pickle','csvtest.csv')
+    from funcs import makeText #bloodly pywin32 being pulled in by this
+    from config import ROW_ORDER,ROW_NAMES,OFF_STRING
+
+    #d=dataio('pickletest.pickle','csvtest.csv')
+
+    sample_data = { 'asdf filename.abf':(1,{'things':'really?'}),
+                    'asdf filename2.abf':(1,{'things':'really?'}),
+                    'asdf filename3.abf':(1,{'things':'really?'}),
+                  }
+    update_data = {
+        'did this update work?':(2,{'ALL THE THINGS':'NOPE'}),
+        '2 did this update work?':(2,{'ALL THE THINGS':'NOPE'}),
+    }
+
+    with dataio('nrw.pickle','nrw.csv') as nrw , dataio('nwr.pickle','nwr.csv') as nwr:
+        print(nrw.loadCSV())
+        print(nrw.loadPickle())
+        nrw.updatePickle(sample_data)
+        nrw.updatePickle( makeText(sample_data,ROW_ORDER,ROW_NAMES,OFF_STRING,delimiter=',') )
+        nrw.updatePickle(update_data)
+        nrw.updatePickle( makeText(update_data,ROW_ORDER,ROW_NAMES,OFF_STRING,delimiter=',') )
+
+        nwr.updatePickle(sample_data)
+        nwr.updatePickle( makeText(sample_data,ROW_ORDER,ROW_NAMES,OFF_STRING,delimiter=',') )
+        print(nwr.loadCSV())
+        print(nwr.loadPickle())
+        nwr.updatePickle(update_data)
+        nwr.updatePickle( makeText(update_data,ROW_ORDER,ROW_NAMES,OFF_STRING,delimiter=',') )
 
     def csvTest():
         print(d.loadCSV())
@@ -115,9 +150,9 @@ def main():
         d.loadPickle('pickletest.pickle')
 
     #csvTest()
-    pickleTest()
+    #pickleTest()
 
-    d.cleanup()
+    #d.cleanup()
 
 if __name__ == '__main__':
     main()
