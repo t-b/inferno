@@ -94,7 +94,7 @@ def setMCCLoadProt(uidModeDict,protocolNumber,mcc):
 
 def getClampexFilename():
     """ YYYY_MM_DD_NNNN.abf """ 
-    def getClampexWinName()
+    def getClampexWinName():
         for i,name in getWindows():
             if name.count('Clampex'):
                 return name
@@ -164,7 +164,7 @@ def makeText(data,ROW_ORDER,ROW_NAMES,OFF_STRING,delimiter='\t'):
 #structure for associating protocols to mcc settings
 def main():
     print(PCLAMP_BUTTON_OFFSETS)
-    for offset in PCLAMP_BUTTON_OFFSETS.values()
+    for offset in PCLAMP_BUTTON_OFFSETS.values():
         clickButton(getClampexWinLeftTop(),offset)
 
 if __name__ == '__main__':

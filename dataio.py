@@ -25,7 +25,8 @@ class dataio:
                 if fileType == 't':
                     mode = 'a+'+fileType
                 elif fileType == 'b':
-                    mode = 'w+'+fileType #we rewrite the pickle
+                    self.loadPickle(PATH)
+                    mode = 'w'+fileType #we rewrite the pickle
                 else:
                     raise TypeError('What kind of file is this?!')
                 print(mode)
@@ -37,13 +38,15 @@ class dataio:
         else:
             return open( PATH , 'x'+fileType )
 
-    def loadPickle(self):
-        #saved_data = pickle.load( self.pickleFile )
-        self.pickleFile.seek(0)
-        return pickle.load( self.pickleFile )
+    def loadPickle(self, PATH): #ick had to use this to prevent EOFErrors
+        self.saved_data=pickle.load(open(PATH,'rb'))
+        print(self.saved_data)
+        #self.saved_data={}
 
     def updatePickle(self,data):
-        pickle.dump( self.loadPickle() , self.pickleFile )
+        self.saved_data.update(data)
+
+        pickle.dump( self.saved_data , self.pickleFile ) #FIXME this is oneoff for writing right now
 
     def loadCSV(self):
         self.csvFile.seek(0)
@@ -79,8 +82,14 @@ def main():
         print(d.loadCSV())
 
     def pickleTest():
-        print(d.loadPickle())
-        d.updatePickle('aaaaaaaaaaaaaaaaaaaa')
+        #embed()
+
+        #d.updatePickle({2:'aaaaaaaaaaaaaaaaaaaa'})
+        #d.updatePickle({4:'aaaaaabbbbbbbbbbb'})
+        #d.updatePickle({'4sdf':'aaaaaabbbbbbbbbbb','zzz':'testing!'})
+        d.updatePickle({1:'WILL IT WORK!?!'})
+
+        #print(d.loadPickle())
 
     #csvTest()
     pickleTest()

@@ -27,9 +27,7 @@ from funcs import addCellToHeadStage
 from funcs import clickRecord
 from funcs import makeText
 
-from dataio import checkPath
-from dataio import pickleIt
-from dataio import updateCSV
+from dataio import dataio
 
 
 def loadConfig():
@@ -49,8 +47,7 @@ def main():
     if not CSVPATH:
         from config import CSVPATH
 
-    checkPath(PICKLEPATH)
-    checkPath(CSVPATH)
+    dataman=dataio(PICKLEPATH,CSVPATH)
 
     from config import MCC_DLLPATH
     from config import HS_TO_UID_DICT
@@ -104,10 +101,10 @@ def main():
 
     #save and display everything
     data = { filename : ( protocolNumber , hsStateDict  ) } #INTO THE PICKLE
-    pickleIt(data,PICKLEPATH)
+    dataman.updatePickle(data)
     textData = makeText( data , ROW_ORDER, ROW_NAMES , OFF_STRING )
     csvData = makeText( data , ROW_ORDER, ROW_NAMES, OFF_STRING, ',' )
-    updateCSV( csvData , CSVPATH )
+    dataman.updateCSV( csvData )
     print(textData) 
 
 
