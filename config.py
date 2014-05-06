@@ -15,9 +15,9 @@ PROTOCOL_MODE_DICT = { #conforms to MCC_MODE_DICT naming
  3:('VC','VC','IC','VC'),
  4:('VC','VC','VC','IC'),
  5:('IC','VC','VC','VC'),
- 6:('IC','VC','VC','VC'),
- 7:('IC','VC','VC','VC'),
- 8:('IC','VC','VC','VC'),
+ 6:('VC','IC','VC','VC'),
+ 7:('VC','VC','IC','VC'),
+ 8:('VC','VC','VC','IC'),
  9:('IC','VC','VC','VC'),
 10:('IC','VC','VC','VC'),
 11:('IC','VC','VC','VC'),
@@ -36,7 +36,7 @@ ROW_ORDER = [ #these should match the names of keys of the state dict
 ROW_NAMES = { #all the rows in the state dict, probs should validate
 'DateTime':'Time',
 'Cell':'Cell',
-'Mode':'Mode',
+'Mode':'Mode', 
 
 'HoldingEnable':'HoldON',
 'Holding':'Hold',
