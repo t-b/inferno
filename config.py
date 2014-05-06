@@ -58,3 +58,4 @@ ROW_NAMES = { #all the rows in the state dict, probs should validate
 'Channel':'Channel',
 }
 
+OFF_STRING = "OFF"
