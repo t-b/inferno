@@ -15,7 +15,7 @@ args=docopt(__doc__) #do this early to prevent all the lags
 print(args)
 
 from time import sleep
-from mcc import mccControl, MCC_MODE_DICT
+from mcc import mccControl
 from functions import mccFuncs
 
 from funcs import getClampexFilename
@@ -106,6 +106,7 @@ def main():
     csvData = makeText( data , ROW_ORDER, ROW_NAMES, OFF_STRING, ',' )
     dataman.updateCSV( csvData )
     print(textData) 
+    dataman.cleanup()
 
 
 if __name__ == '__main__':

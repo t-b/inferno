@@ -9,10 +9,12 @@ class dataio:
     errors
     """
     def __init__(self,PICKLEPATH,CSVPATH):
-        #self.PICKLEPATH=PICKLEPATH
-        #self.CSVPATH=CSVPATH
-        self.csvFile= self.openFile(CSVPATH,'t')
+        self.PICKLEPATH=PICKLEPATH
+        self.CSVPATH=CSVPATH
+        self.csvFile= self.openFile(CSVPATH,'t') #FIXME probably should actually test this for bad inputs...
         self.pickleFile= self.openFile(PICKLEPATH,'b')
+        print(self.saved_data)
+
     def cleanup(self):
         self.csvFile.close()
         self.pickleFile.close()
@@ -26,27 +28,44 @@ class dataio:
                     mode = 'a+'+fileType
                 elif fileType == 'b':
                     self.loadPickle(PATH)
-                    mode = 'w'+fileType #we rewrite the pickle
+                    mode = 'r'+fileType #we open in read mode to keep a lock
                 else:
                     raise TypeError('What kind of file is this?!')
                 print(mode)
                 try:
                     return open( PATH , mode )
                 except PermissionError:
+                    self.cleanup()
                     raise PermissionError('The file is open somewhere! Close that program first.')
 
         else:
             return open( PATH , 'x'+fileType )
 
     def loadPickle(self, PATH): #ick had to use this to prevent EOFErrors
-        self.saved_data=pickle.load(open(PATH,'rb'))
-        print(self.saved_data)
-        #self.saved_data={}
+        try:
+            f = open( PATH , 'rb' )
+            self.saved_data=pickle.load( f )
+        except EOFError:
+            if os.path.getsize(PATH) == 0:
+                self.saved_data={}
+            else:
+                raise IOError('Your pickle file has data but we get an EOFError... anyway. Size = %s'%os.path.getsize(PATH) )
+            print(self.saved_data)
+        finally:
+            f.close()
 
     def updatePickle(self,data):
-        self.saved_data.update(data)
+        try:
+            self.saved_data.update(data)
+        except ValueError: #MUST have this here or we loose ALL the data in the file! (WTF)
+            print('The data you just passed in is not a dictionary!')
+            raise #prevent opening in write mode
 
-        pickle.dump( self.saved_data , self.pickleFile ) #FIXME this is oneoff for writing right now
+        self.pickleFile.close()
+        writePickle = open( self.PICKLEPATH, 'wb' )
+        pickle.dump( self.saved_data , writePickle )
+        writePickle.close()
+        self.pickleFile = self.openFile( self.PICKLEPATH, 'b' )
 
     def loadCSV(self):
         self.csvFile.seek(0)
@@ -87,14 +106,13 @@ def main():
         #d.updatePickle({2:'aaaaaaaaaaaaaaaaaaaa'})
         #d.updatePickle({4:'aaaaaabbbbbbbbbbb'})
         #d.updatePickle({'4sdf':'aaaaaabbbbbbbbbbb','zzz':'testing!'})
-        d.updatePickle({1:'WILL IT WORK!?!'})
+        #d.updatePickle({1:'WILL IT WORK!?!'})
+        #d.updatePickle('asdfasdfasdfasdfasdf')
 
-        #print(d.loadPickle())
+        d.loadPickle('pickletest.pickle')
 
     #csvTest()
     pickleTest()
-
-
 
     d.cleanup()
 

@@ -4,6 +4,7 @@
 """
 
 from time import sleep
+from mcc import MCC_MODE_DICT
 from gui import getWindows, getWindowFromName, getLeftTop, clickButton
  
 #empirically determined offsets from the top left corner
