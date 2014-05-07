@@ -94,17 +94,32 @@ class mccControl:
             print('Multiclamp DLL not found! Check your install path!')
             raise
 
+    def demoCheck(self,serial):
+        """ give demo mccs a unique id """
+        if serial == 'Demo':
+            uid_count = 1
+            for uniqueID in self.mcDict:
+                if uniqueID.count('Demo'):
+                    uid_count += .5
+            demo_count = uid_count // 2
+            return serial+'%s'%(demo_count+1)
+        else:
+            return serial
+
     def uniqueID(self,mcTuple): #FIXME this needs to be priv?
         serial=val(mcTuple[1],c_char_p).decode('utf-8')
         channel=mcTuple[-1] #FIXME this tuple should really have a corrisponding class...
         serial=serial.strip('(').rstrip(')')
+        serial = self.demoCheck(serial)
         mcid='%s_%s'%(serial,channel) #UID DEFINITION RIGHTHERE XXX
+        print(mcid)
         return mcid
 
     def getSerial(self):
         mcTuple=self.mcDict[self.currentUniqueID]
         serial=val(mcTuple[1],c_char_p).decode('utf-8')
         serial=serial.strip('(').rstrip(')')
+        serial = self.demoCheck(serial)
         return serial
 
     def getChannel(self):
@@ -139,6 +154,7 @@ class mccControl:
         print('hMCCmsg successfully removed, no memory leaks here!')
 
     def selectMC(self,num): #XXX deprecated
+        return None
         try:
             if num <= (self.mcNum):
                 out = self.SelectMultiClamp(*self.mcList[num]) #FIXME errors be here
@@ -155,14 +171,16 @@ class mccControl:
         try:
             mcTup=self.mcDict[uniqueID]
         except KeyError:
-            raise KeyError('I dont know where you got that uniqueID but it wasnt from here! Check your config!')
+            print(self.mcDict.keys())
+            raise KeyError('I dont know where you got uid "%s" but it wasnt from here! Check your config!'%uniqueID)
        
         self.mcCurrent=None #FIXME get rid of all this list nonsense
         out = self.SelectMultiClamp(*mcTup)
         self.currentUniqueID=uniqueID
         return out
 
-    def selectNextMC(self):
+    def selectNextMC(self): #XXX deprecated
+        return None
         """Sets the currentMC to the next available in a loop"""
         num=(self.mcCurrent+1)%(self.mcNum)
         self.mcCurrent=num

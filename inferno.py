@@ -50,33 +50,41 @@ def main():
         CSVPATH = args['--csvpath']
 
     #see if clampex is on, get the old filename (error check?)
-    old_filename = getClampexFilename()
+    #old_filename = getClampexFilename() #XXX not used at the moment
+
+    #set variables from the command line
+    cell_list=args['<HSn_cell_id>']
+    hsToCellDict = { n+1:cell_list[n] for n in range(len(cell_list)) }
+    print(hsToCellDict)
+
+    #get the total number of headstages for formatting
+    nHeadstages = len(HS_TO_UID_DICT)
+    #drop the headstages we do not need from saving
+    for hs in range(1,nHeadstages+1):
+        try:
+            if hsToCellDict[hs] == NO_CELL_STRING:
+                HS_TO_UID_DICT.pop(hs) #pop hs that we specify with no cell
+        except KeyError:
+            if hs <= nHeadstages: #pop hs not on cmd line
+                HS_TO_UID_DICT.pop(hs)
+
+    print('hs to uid',HS_TO_UID_DICT)
+    UID_TO_HS_DICT= { v:k for k,v in HS_TO_UID_DICT.items() }
+
+    #initialize the controller
+    mcc=mccControl(MCC_DLLPATH) #FIXME consolidate for cleaner dllhandle managment via with as
+    for uid in UID_TO_HS_DICT:
+        try:
+            mcc.mcDict[uid]
+        except KeyError:
+            print(mcc.mcDict.keys())
+            raise IOError('MultiClamp %s is not on! Exiting.'%uid)
+
+    mccF=mccFuncs(mcc)
 
     #open the csv and pickle, make sure they are valid and keep a lock on them
+    #needs to happen before we touch any of the settings on the mcc etc so gurantee a save
     with dataio(PICKLEPATH,CSVPATH) as dataman:
-
-        #set variables from the command line
-        cell_list=args['<HSn_cell_id>']
-        hsToCellDict = { n+1:cell_list[n] for n in range(len(cell_list)) }
-        print(hsToCellDict)
-
-        #get the total number of headstages for formatting
-        nHeadstages = len(HS_TO_UID_DICT)
-        #drop the headstages we do not need from saving
-        for hs in range(1,nHeadstages+1):
-            try:
-                if hsToCellDict[hs] == NO_CELL_STRING:
-                    HS_TO_UID_DICT.pop(hs) #pop hs that we specify with no cell
-            except KeyError:
-                if hs <= nHeadstages: #pop hs not on cmd line
-                    HS_TO_UID_DICT.pop(hs)
-
-        print('hs to uid',HS_TO_UID_DICT)
-        UID_TO_HS_DICT= { v:k for k,v in HS_TO_UID_DICT.items() }
-
-        #initialize the controller
-        mcc=mccControl(MCC_DLLPATH) #FIXME consolidate for cleaner dllhandle managment via with as
-        mccF=mccFuncs(mcc)
 
         if args['--protocol'] is not None:
             protocolNumber = int(args['--protocol'])
