@@ -94,15 +94,23 @@ class mccControl:
             print('Multiclamp DLL not found! Check your install path!')
             raise
 
-    def demoCheck(self,serial):
-        """ give demo mccs a unique id """
-        if serial == 'Demo':
-            uid_count = 1
-            for uniqueID in self.mcDict:
+    def demoCheck(self,serial,channel):
+        """ give demo mccs a unique id channle corrispondence will be wrong? """
+        if serial == 'Demo': #we know we have at least one demo channel
+            c1_count = 0
+            c2_count = 0
+            for uniqueID,tup in self.mcDict.items(): #have to deal with the fact that channels increment only AFTER the first run through
                 if uniqueID.count('Demo'):
-                    uid_count += .5
-            demo_count = uid_count // 2
-            return serial+'%s'%(demo_count+1)
+                    chan = tup[-1]
+                    if chan == 1:
+                        c1_count += 1
+                    elif chan == 2:
+                        c2_count += 1
+            if channel == 1:
+                demo_count = c1_count + 1
+            elif channel == 2:
+                demo_count = c2_count + 1
+            return serial+'%s'%demo_count
         else:
             return serial
 
@@ -110,17 +118,16 @@ class mccControl:
         serial=val(mcTuple[1],c_char_p).decode('utf-8')
         channel=mcTuple[-1] #FIXME this tuple should really have a corrisponding class...
         serial=serial.strip('(').rstrip(')')
-        serial = self.demoCheck(serial)
+        serial = self.demoCheck(serial,channel)
         mcid='%s_%s'%(serial,channel) #UID DEFINITION RIGHTHERE XXX
-        print(mcid)
         return mcid
 
     def getSerial(self):
-        mcTuple=self.mcDict[self.currentUniqueID]
-        serial=val(mcTuple[1],c_char_p).decode('utf-8')
-        serial=serial.strip('(').rstrip(')')
-        serial = self.demoCheck(serial)
-        return serial
+        #mcTuple=self.mcDict[self.currentUniqueID]
+        #serial=val(mcTuple[1],c_char_p).decode('utf-8')
+        #serial=serial.strip('(').rstrip(')')
+        #serial = self.demoCheck(serial) #FIXME this is not deterministic
+        return self.currentUniqueID.split('_')[0] #well ok...
 
     def getChannel(self):
         mcTuple=self.mcDict[self.currentUniqueID]

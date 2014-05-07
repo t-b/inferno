@@ -45,12 +45,11 @@ def main():
     #import and check config settings
     configTuple = parseConfig(args['--config'])
     PICKLEPATH, CSVPATH, MCC_DLLPATH, NO_CELL_STRING, OFF_STRING, ROW_ORDER, ROW_NAMES, HS_TO_UID_DICT, PROTOCOL_MODE_DICT, MODE_TO_UNIT_DICT, STATE_TO_UNIT_DICT = configTuple
-    print(configTuple)
     if args['--csvpath']:
         CSVPATH = args['--csvpath']
 
-    #see if clampex is on, get the old filename (error check?)
-    #old_filename = getClampexFilename() #XXX not used at the moment
+    #see if clampex is on
+    old_filename = getClampexFilename()
 
     #set variables from the command line
     cell_list=args['<HSn_cell_id>']

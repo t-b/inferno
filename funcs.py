@@ -108,7 +108,7 @@ def getClampexFilename():
     """ YYYY_MM_DD_NNNN.abf """ 
     name=getClampexWinName()
     if name is None:
-        raise IOError('pCLAMP is not on!')
+        raise IOError('Clampex is not on!')
     #print(name)
     name=name[11:30] #FIXME should not hardcode this, also first run may not have full 30...
     #print(name)
