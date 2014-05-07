@@ -12,8 +12,8 @@ CSVPATH = 'CSVPATH'
 MCC_DLLPATH = 'MCC_DLL_PATH'
 
 FORMATTING = 'FORMATTING'
-ROW_ORDER = 'ROW ORDER'
 OFF_STRING = 'OFF STRING'
+ROW_ORDER = 'ROW ORDER'
 
 ROW_NAMES = 'ROW NAMES'
 #TODO define the StateNames from mccControl?
@@ -32,31 +32,25 @@ def makeConfig(configdict,PATH):
 def parseConfig(PATH):
     cfg=configparser.ConfigParser()
     cfg.read(PATH)
-    for section in example_config: #validate all the sections
-        pass
-    outputDict={}
 
-    ROW_ORDER = cfg[FORMATTING][ROW_ORDER]
     PICKLEPATH = cfg[PATHS][PICKLEKPATH]
     CSVPATH = cfg[PATHS][CSVPATH]
-
     MCC_DLLPATH = cfg[PATHS][MCC_DLLPATH]
-    HS_TO_UID_DICT = { k:v for k,v in cfg[HS_TO_UID_DICT].items() }
+
+    OFF_STRING = cfg[FORMATTING][OFF_STRING]
+    ROW_ORDER = cfg[FORMATTING][ROW_ORDER]
+
+    ROW_NAMES = { k:v for k,v in cfg[ROW_NAMES].items() }
+    HS_TO_UID_DICT = { int(k):v for k,v in cfg[HS_TO_UID_DICT].items() }
     PROTOCOL_MODE_DICT = { int(k):v.split(' , ') for k,v in cfg[PROTOCOL_MODE_DICT].items() }
-
-    for section,valDict in cfg.items():
-        if section == HS_TO_UID_DICT:
-            pass
-        elif section == PROTOCOL_MODE_DICT:
-            pass
-
-        outputDict[section] = None
+    MODE_TO_UNIT_DICT = { k:v for k,v in cfg[MODE_TO_UNIT_DICT].items() }
+    STATE_TO_UNIT_DICT = { k:v for k,v in cfg[STATE_TO_UNIT_DICT].items() }
 
 
-    return outputDict
+    return PICKLEPATH, CSVPATH, MCC_DLLPATH, OFF_STRING, ROW_ORDER, ROW_NAMES, HS_TO_UID_DICT, PROTOCOL_MODE_DICT, MODE_TO_UNIT_DICT, STATE_TO_UNIT_DICT
 
 
-#used for default behavior
+#used for default behavior #FIXME I dont think this works this ways... I think it will add these values to EACH section... which is NOT what we want...
 default_config = {
 'DEFAULT':  {
             PICKLEPATH    : "patch_experiment_data.pickle", 

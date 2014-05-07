@@ -5,46 +5,24 @@ from mcc import MCC_MODE_DICT
 
 
 UNIT_DEFINITIONS = { #used under multiplication with the base unit
-'M' = 1E-6,
-'p' = 1E12,
-'m' = 1E3,
-'u' = 1E6,
+'G' : 1E-9,
+'M' : 1E-6,
+'K' : 1E-3,
+'m' : 1E3,
+'u' : 1E6,
+'n' : 1E9,
+'p' : 1E12,
 }
 
-MODE_TO_UNIT_DICT = {
-'IC':'p',
-'VC':'m',
-}
-
-STATE_TO_UNIT_DICT = {
-'DateTime':None,
-'Cell':None,
-'Mode':None, 
-
-'HoldingEnable':None,
-'Holding':None,
-'PrimarySignal':None,
-'PrimarySignalGain':None,
-'PrimarySignalLPF':None,
-'PipetteOffset':'m',
-
-'FastCompCap':'p',
-'SlowCompCap':'p',
-'FastCompTau':'u',
-'SlowCompTau':'u',
-'SlowCTX20Enable':None,
-
-'BridgeBalEnable':None,
-'BridgeBalResist':'M',
-
-'Serial':None,
-'Channel':None,
-}
-
-def formatUnits(StateVariable, value, StateDict):
+def formatUnit(StateVariable, value, StateDict):
     if StateVariable == 'Holding':
-        StateDict['Mode']
-    value * STATE_TO_UNIT_DICT[StateVariable]
+        multiple = UNIT_DEFINITIONS[ MODE_TO_UNIT_DICT[ MCC_MODE_DICT[ StateDict['Mode'] ] ] ] #lol oh god
+    else:
+        multiple = STATE_TO_UNIT_DICT[StateVariable]
+    if multiple == 'None':
+        return value
+    else:
+        return value * multiple
 
 def rowPrintLogic(row,StateDict,delim,OFF_STRING,UNITS): #FIXME UNITS!!!
     #get units

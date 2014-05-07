@@ -11,24 +11,26 @@ Usage:
 Options:
     -h --help                   print this
     -f --filepath=<path>        set which csv file to write to, IF NONE IT WILL USE HARDCODED FILE
-    -c --config=<path>          select a config.py file other than default
+    -c --config=<path>          set which config file to use [default: config.ini]
 """
 
 from docopt import docopt
-args=docopt(__doc__,options_first=True) #do this early to prevent all the lags
-#print(args)
+args=docopt(__doc__) #do this early to prevent all the lags
+print(args)
 
 from time import sleep
 from mcc import mccControl
 from functions import mccFuncs
 
-from funcs import getClampexFilename
-from funcs import makeUIDModeDict
-from funcs import setMCCLoadProt
-from funcs import clickProtocol
-from funcs import makeHeadstageStateDict
-from funcs import addCellToHeadStage
-from funcs import clickRecord
+from cfg import parseConfig
+
+#from funcs import getClampexFilename
+#from funcs import makeUIDModeDict
+#from funcs import setMCCLoadProt
+#from funcs import clickProtocol
+#from funcs import makeHeadstageStateDict
+#from funcs import addCellToHeadStage
+#from funcs import clickRecord
 
 from output import makeText
 
@@ -52,6 +54,7 @@ def main():
         return None
 
     #import and check config settings
+    CONFIGPATH = args['']
     try:
         from config import PICKLEPATH
         from config import MCC_DLLPATH
