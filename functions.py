@@ -39,7 +39,9 @@ class mccFuncs: #FIXME add a way to get the current V and I via... telegraph?
             self.mcc.SetPrimarySignalLPF(state['PrimarySignalLPF'])
         return self
 
-    def getMCCState(self): #FIXME this function and others like it should probably be called directly by dataman?
+    def getMCCState(self,uniqueIDs=None): #FIXME this function and others like it should probably be called directly by dataman?
+        if not uniqueIDs:
+            uniqueIDs = self.mcc.mcDict
         #print('hMCCmsg outer',self.mcc.hMCCmsg)
         def base(state):
             state['Serial']=self.mcc.getSerial()
@@ -65,7 +67,7 @@ class mccFuncs: #FIXME add a way to get the current V and I via... telegraph?
 
         #modeDict={0:vc,1:ic,2:iez}
         stateDict={}
-        for uniqueID in self.mcc.mcDict:
+        for uniqueID in uniqueIDs:
             channelDict={} #XXX does this work? that would be cool?
             self.mcc.selectUniqueID(uniqueID)
             mode=self.mcc.GetMode() #in the event we want to do something fancy?

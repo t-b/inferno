@@ -12,6 +12,7 @@ _CSVPATH = 'CSVPATH'
 _MCC_DLLPATH = 'MCC_DLLPATH'
 
 _FORMATTING = 'FORMATTING'
+_NO_CELL_STRING = 'NO CELL STRING'
 _OFF_STRING = 'OFF STRING'
 _ROW_ORDER = 'ROW ORDER'
 
@@ -37,21 +38,31 @@ def parseConfig(PATH):
     CSVPATH = cfg[_PATHS][_CSVPATH]
     MCC_DLLPATH = cfg[_PATHS][_MCC_DLLPATH]
 
+    NO_CELL_STRING = cfg[_FORMATTING][_NO_CELL_STRING]
     OFF_STRING = cfg[_FORMATTING][_OFF_STRING]
     ROW_ORDER = cfg[_FORMATTING][_ROW_ORDER].split('\n')
 
     ROW_NAMES = { k:v for k,v in cfg[_ROW_NAMES].items() }
     HS_TO_UID_DICT = { int(k):v for k,v in cfg[_HS_TO_UID_DICT].items() }
-    PROTOCOL_MODE_DICT = { int(k):v.split(' , ') for k,v in cfg[_PROTOCOL_MODE_DICT].items() }
+    PROTOCOL_MODE_DICT = { int(k):[s.strip().rstrip() for s in v.split(',')] for k,v in cfg[_PROTOCOL_MODE_DICT].items() }
     MODE_TO_UNIT_DICT = { k:v for k,v in cfg[_MODE_TO_UNIT_DICT].items() }
     STATE_TO_UNIT_DICT = { k:v for k,v in cfg[_STATE_TO_UNIT_DICT].items() }
 
+    nHeadstages = len(HS_TO_UID_DICT)
+    for tup in PROTOCOL_MODE_DICT.values():
+        if len(tup) > nHeadstages:
+            print('You specified more modes than you have deadstages. Inferno will use only as many as needed. Ignoring.')
+        elif len(tup) < nHeadstages:
+            raise ValueError('You have %s headstages but you only set modes for'
+                             ' %s of them! Check your config! It is OK to leave'
+                             ' modes blank but you need commas.'%(nHeadstages,len(tup)))
 
-    return PICKLEPATH, CSVPATH, MCC_DLLPATH, OFF_STRING, ROW_ORDER, ROW_NAMES, HS_TO_UID_DICT, PROTOCOL_MODE_DICT, MODE_TO_UNIT_DICT, STATE_TO_UNIT_DICT
 
+    return PICKLEPATH, CSVPATH, MCC_DLLPATH, NO_CELL_STRING, OFF_STRING, ROW_ORDER, ROW_NAMES, HS_TO_UID_DICT, PROTOCOL_MODE_DICT, MODE_TO_UNIT_DICT, STATE_TO_UNIT_DICT
 
 def makeConfig(configdict,PATH):
     cfg=configparser.ConfigParser()
+    cfg.optionxform=str
     cfg.read_dict(configdict)
     with open( PATH , 'w' ) as f:
         cfg.write(f)
@@ -98,9 +109,10 @@ _PROTOCOL_MODE_DICT :    { #conforms to MCC_MODE_DICT naming
                         }, 
 
 _FORMATTING :    {
-                _OFF_STRING  : 'OFF', 
+                _NO_CELL_STRING : 'xx',
+                _OFF_STRING     : 'OFF', 
                 #these should match the names of keys of the state dict
-                _ROW_ORDER   : 'Cell,\nMode,\nHolding,\nBridgeBalResist', 
+                _ROW_ORDER      : 'Cell,\nMode,\nHolding,\nBridgeBalResist', 
                 }, 
 
 _ROW_NAMES :   { #all the rows in the state dict, probs should validate
@@ -159,7 +171,14 @@ _STATE_TO_UNIT_DICT :  {
                     },
 }
 def main():
-    makeConfig(example_dict,'test.ini')
+    makeConfig(example_config,'test.ini')
+    badConfig = example_config #pretty sure this is by reference
+    badConfig[_PROTOCOL_MODE_DICT][1]='IC,VC,asdf,asdf'
+    makeConfig(badConfig,'bad.ini')
+    parseConfig('bad.ini')
+    badConfig[_PROTOCOL_MODE_DICT][1]='IC,VC,asdf'
+    makeConfig(badConfig,'bad.ini')
+    parseConfig('bad.ini')
 
 if __name__ == '__main__':
     main()

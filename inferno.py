@@ -33,15 +33,6 @@ from output import makeText
 
 from dataio import dataio
 
-
-def loadConfig():
-    """ loads in all the data from the config file, this way you can have
-    multiple configs, or save your old configs """
-
-    #TODO
-    #make sure that len(value) in PROTOCOL_MODE_DICT matches
-    #len(HS_TO_UID_DICT)
-
 def main():
     #enter make csv mode?
     if args['makecsv']:
@@ -52,7 +43,7 @@ def main():
 
     #import and check config settings
     configTuple = parseConfig(args['--config'])
-    PICKLEPATH, CSVPATH, MCC_DLLPATH, OFF_STRING, ROW_ORDER, ROW_NAMES, HS_TO_UID_DICT, PROTOCOL_MODE_DICT, MODE_TO_UNIT_DICT, STATE_TO_UNIT_DICT = configTuple
+    PICKLEPATH, CSVPATH, MCC_DLLPATH, NO_CELL_STRING, OFF_STRING, ROW_ORDER, ROW_NAMES, HS_TO_UID_DICT, PROTOCOL_MODE_DICT, MODE_TO_UNIT_DICT, STATE_TO_UNIT_DICT = configTuple
     print(configTuple)
     if args['--csvpath']:
         CSVPATH = args['--csvpath']
@@ -62,8 +53,6 @@ def main():
 
     #open the csv and pickle, make sure they are valid and keep a lock on them
     with dataio(PICKLEPATH,CSVPATH) as dataman:
-
-        UID_TO_HS_DICT= { v:k for k,v in HS_TO_UID_DICT.items() }
 
         #set variables from the command line
         protocolNumber = int(args['<protocol_id>'])
@@ -78,9 +67,22 @@ def main():
             cell_list=args['<HS_cell_id>']
             hsToCellDict = { n+1:cell_list[n] for n in range(len(cell_list)) }
 
+        #get the total number of headstages for formatting
+        nHeadstages = len(HS_TO_UID_DICT)
+        #drop the headstages we do not need from saving
+        for hs,cell in hsToCellDict.items():
+            try: #alert user that cells will be dropped
+                HS_TO_UID_DICT[hs]
+            except:
+                print('Cell %s was not added. You do not have headstage %s!'%(cell,hs))
+            if cell == NO_CELL_STRING:
+                HS_TO_UID_DICT.pop(hs)
+        print(HS_TO_UID_DICT)
+
+        UID_TO_HS_DICT= { v:k for k,v in HS_TO_UID_DICT.items() }
 
         #initialize the controller
-        mcc=mccControl(MCC_DLLPATH)
+        mcc=mccControl(MCC_DLLPATH) #FIXME consolidate for cleaner dllhandle managment via with as
         mccF=mccFuncs(mcc)
 
         #make the mode dict for the headstages
@@ -91,7 +93,7 @@ def main():
         setMCCLoadProt(uidModeDict,protocolNumber,mcc)
 
         #save the state of each headstage and which cell is associated with it
-        uidStateDict=mccF.getMCCState()
+        uidStateDict=mccF.getMCCState(UID_TO_HS_DICT) #give it the uids in the form of keys type magic
         mccF.cleanup() #make sure we get rid of the dllhandels
 
         hsStateDict = makeHeadstageStateDict(uidStateDict,UID_TO_HS_DICT) #this is our data
@@ -113,8 +115,8 @@ def main():
         #save and display everything
         data = { filename : ( protocolNumber , hsStateDict  ) } #INTO THE PICKLE
         dataman.updatePickle(data)
-        textData = makeText( data , ROW_ORDER, ROW_NAMES , OFF_STRING , STATE_TO_UNIT_DICT, MODE_TO_UNIT_DICT )
-        csvData = makeText( data , ROW_ORDER, ROW_NAMES, OFF_STRING, STATE_TO_UNIT_DICT, MODE_TO_UNIT_DICT, ',' )
+        textData = makeText( data , ROW_ORDER, ROW_NAMES , OFF_STRING , STATE_TO_UNIT_DICT, MODE_TO_UNIT_DICT, nHeadstages )
+        csvData = makeText( data , ROW_ORDER, ROW_NAMES, OFF_STRING, STATE_TO_UNIT_DICT, MODE_TO_UNIT_DICT, nHeadstages, ',' )
         dataman.updateCSV( csvData )
         print(textData) 
 

@@ -2,16 +2,10 @@ from ctypes import *
 from time import sleep
 import inspect as ins
 import os
-#import rpdb2
-#rpdb2.settrace()
 
 #developed for api version 1.0.0.7
 
-#class based version of the mcc msg python wrapper
 """HOW TO USE:
-
-    from mccpy import mccmsg
-    mcc=mccmsg
 
     YOU MUST CALL cleanup() ON YOUR OWN
 
@@ -161,8 +155,7 @@ class mccControl:
         try:
             mcTup=self.mcDict[uniqueID]
         except KeyError:
-            print('I dont know where you got that uniqueID but it wasnt from here!')
-            raise KeyError
+            raise KeyError('I dont know where you got that uniqueID but it wasnt from here! Check your config!')
        
         self.mcCurrent=None #FIXME get rid of all this list nonsense
         out = self.SelectMultiClamp(*mcTup)

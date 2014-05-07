@@ -53,11 +53,10 @@ def rowPrintLogic(row,StateDict,delim,OFF_STRING, STATE_TO_UNIT_DICT, MODE_TO_UN
 
     return out
 
-def makeText(data,ROW_ORDER,ROW_NAMES,OFF_STRING,STATE_TO_UNIT_DICT, MODE_TO_UNIT_DICT,delimiter='\t'):
+def makeText(data,ROW_ORDER,ROW_NAMES,OFF_STRING,STATE_TO_UNIT_DICT, MODE_TO_UNIT_DICT,numberHeadstages,delimiter='\t'):
     # for reference: data = { filename : ( protocolNumber , hsStateDict  ) }
     lines=[]
 
-    numberHeadstages=len(list(data.values())[0][1])
     lineOneList=['HS%s'%n * (n>0) for n in range(numberHeadstages+1)]
     lines.append( '\n'+delimiter.join( lineOneList ) ) #\n is to make it place nice with .split('\n',1)[1]
 
@@ -68,8 +67,11 @@ def makeText(data,ROW_ORDER,ROW_NAMES,OFF_STRING,STATE_TO_UNIT_DICT, MODE_TO_UNI
 
         for row in ROW_ORDER:
             values=[ ROW_NAMES[row] ]
-            for i in range(1,len(hsStateDict)+1):
-                values.append( '%s'%rowPrintLogic( row,hsStateDict[i],delimiter,OFF_STRING,STATE_TO_UNIT_DICT, MODE_TO_UNIT_DICT ) )
+            for i in range(1,numberHeadstages+1):
+                try: 
+                    values.append( '%s'%rowPrintLogic( row,hsStateDict[i],delimiter,OFF_STRING,STATE_TO_UNIT_DICT, MODE_TO_UNIT_DICT ) )
+                except KeyError:
+                    values.append('') #blank cell if we weren't using that row
 
             lines.append( delimiter.join(values) )
     return '\n'.join(lines)

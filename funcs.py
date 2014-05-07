@@ -71,20 +71,24 @@ def makeUIDModeDict(protocolNumber,PROTOCOL_MODE_DICT,HS_TO_UID_DICT):
     modeTup=PROTOCOL_MODE_DICT[ protocolNumber ]
     modes=[ modeDefs[modeName] for modeName in modeTup ]
     uidModeDict={}
-    for i in range(len(modes)):
-        uid = HS_TO_UID_DICT[ i+1 ]
-        uidModeDict[ uid ] = modes[ i ] #the tuple is just listed headstages 1 through 4 though it could be n now
+    #this only sets the headstages that have cells
+    for headstage,uid in HS_TO_UID_DICT.items():
+        uidModeDict[ uid ] = modes[ headstage - 1 ]
     return uidModeDict
 
 def makeHeadstageStateDict(uidStateDict, UID_TO_HS_DICT):
     hsStateDict={}
-    for uid,state in uidStateDict.items():
-        hsStateDict[ UID_TO_HS_DICT[uid] ] = state
+    for uid,headstage in UID_TO_HS_DICT.items():
+        hsStateDict[ headstage ] = uidStateDict[uid]
     return hsStateDict
 
 def addCellToHeadStage(hsToCellDict,hsStateDict): #note this is an in place modification
-    for hs,cell in hsToCellDict.items():
-        hsStateDict[hs]['Cell']=cell
+    #if we iterate through hsToCellDict xx is still there
+    for headstage,stateDict in hsStateDict.items():
+        #try: #fairly certain this is no longer needed
+        stateDict['Cell'] = hsToCellDict[headstage]
+        #except KeyError: 
+            #print('Cell %s was not added because you do not have that many headstages!'%cell)
 
 def setModes(uidModeDict,mcc): #FIXME this is ugly...
     for uid,mode in uidModeDict.items():
