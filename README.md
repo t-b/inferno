@@ -13,7 +13,7 @@ Dependencies
 
 Configuration
 -------------
-Edit config.py to match your setup.
+Copy config.py.example to config.py and edit it to match your setup.
 Most of the dictionaries should be self explanatory.
 
 HS_TO_UID_DICT associates the numbering you use for your headstages 1-n to the
