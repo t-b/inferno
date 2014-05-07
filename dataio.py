@@ -1,7 +1,7 @@
 import os
 import pickle
 
-class dataio:
+class dataio: #TODO if we are REALLY paranoid we can open the file back up and check that it matches what we have in memory...
     """ class to manage input and output of data to disk
     this way we can retain a lock on the files for the
     duration of our program run time and not have nasty

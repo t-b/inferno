@@ -1,16 +1,13 @@
 #!/usr/bin/env python3.3
-""" For Dante
+"""Inferno: electrophysiology with Clampex in a nutshell.
 Usage:
-
-    inferno.py <HS1_cell_id> <HS2_cell_id> <HS3_cell_id> <HS4_cell_id> <protocol_id> [ --filepath=<path> --config=<path> ] 
-
+    inferno.py <HS1_cell_id> <HS2_cell_id> <HS3_cell_id> <HS4_cell_id> <protocol_id> [ --config=<path> --csvpath=<path> ] 
     inferno.py makecsv [ <pickle> [ <output> ] ]
-
     inferno.py --help
 
 Options:
     -h --help                   print this
-    -f --filepath=<path>        set which csv file to write to, IF NONE IT WILL USE HARDCODED FILE
+    -f --csvpath=<path>         set which csv file to write to, IF NONE IT WILL USE HARDCODED FILE
     -c --config=<path>          set which config file to use [default: config.ini]
 """
 
@@ -54,22 +51,10 @@ def main():
         return None
 
     #import and check config settings
-    CONFIGPATH = args['']
-    try:
-        from config import PICKLEPATH
-        from config import MCC_DLLPATH
-        from config import HS_TO_UID_DICT
-        from config import PROTOCOL_MODE_DICT
-        from config import ROW_ORDER
-        from config import ROW_NAMES
-        from config import OFF_STRING
-
-        CSVPATH=args['--filepath']
-        if not CSVPATH:
-            from config import CSVPATH
-    except ImportError:
-        print('No config.py file found! Did you copy config.py.example to config.py?')
-        return None
+    configTuple = parseConfig(args['--config'])
+    PICKLEPATH, CSVPATH, MCC_DLLPATH, OFF_STRING, ROW_ORDER, ROW_NAMES, HS_TO_UID_DICT, PROTOCOL_MODE_DICT, MODE_TO_UNIT_DICT, STATE_TO_UNIT_DICT = configTuple
+    if args['--csvpath']:
+        CSVPATH = args['--csvpath']
 
     #see if clampex is on, get the old filename (error check?)
     old_filename = getClampexFilename()
