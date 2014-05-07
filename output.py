@@ -22,7 +22,7 @@ STATE_TO_UNIT_DICT = {
 'Mode':None, 
 
 'HoldingEnable':None,
-'Holding':None, #LOOKUP
+'Holding':None,
 'PrimarySignal':None,
 'PrimarySignalGain':None,
 'PrimarySignalLPF':None,
