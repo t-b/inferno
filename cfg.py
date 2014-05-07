@@ -51,11 +51,13 @@ def parseConfig(PATH):
     nHeadstages = len(HS_TO_UID_DICT)
     for tup in PROTOCOL_MODE_DICT.values():
         if len(tup) > nHeadstages:
-            print('You specified more modes than you have deadstages. Inferno will use only as many as needed. Ignoring.')
+            print('You specified more modes than you have headstages. Inferno will use only as many as needed. Ignoring.')
         elif len(tup) < nHeadstages:
             raise ValueError('You have %s headstages but you only set modes for'
                              ' %s of them! Check your config! It is OK to leave'
                              ' modes blank but you need commas.'%(nHeadstages,len(tup)))
+
+
 
 
     return PICKLEPATH, CSVPATH, MCC_DLLPATH, NO_CELL_STRING, OFF_STRING, ROW_ORDER, ROW_NAMES, HS_TO_UID_DICT, PROTOCOL_MODE_DICT, MODE_TO_UNIT_DICT, STATE_TO_UNIT_DICT
@@ -112,7 +114,7 @@ _FORMATTING :    {
                 _NO_CELL_STRING : 'xx',
                 _OFF_STRING     : 'OFF', 
                 #these should match the names of keys of the state dict
-                _ROW_ORDER      : 'Cell,\nMode,\nHolding,\nBridgeBalResist', 
+                _ROW_ORDER      : 'Cell\nMode\nHolding\nBridgeBalResist', 
                 }, 
 
 _ROW_NAMES :   { #all the rows in the state dict, probs should validate
@@ -171,12 +173,12 @@ _STATE_TO_UNIT_DICT :  {
                     },
 }
 def main():
+    badstring='IC,VC,asdf,'
+    badstring=',,,'
+    badstring='IC,VC,asdf,asdf'
     makeConfig(example_config,'test.ini')
     badConfig = example_config #pretty sure this is by reference
-    badConfig[_PROTOCOL_MODE_DICT][1]='IC,VC,asdf,asdf'
-    makeConfig(badConfig,'bad.ini')
-    parseConfig('bad.ini')
-    badConfig[_PROTOCOL_MODE_DICT][1]='IC,VC,asdf'
+    badConfig[_PROTOCOL_MODE_DICT][1]=badstring
     makeConfig(badConfig,'bad.ini')
     parseConfig('bad.ini')
 

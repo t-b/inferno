@@ -69,7 +69,8 @@ def getClampexWinLeftTop():
 def makeUIDModeDict(protocolNumber,PROTOCOL_MODE_DICT,HS_TO_UID_DICT):
     modeDefs = { v:k for k,v in MCC_MODE_DICT.items() }
     modeTup=PROTOCOL_MODE_DICT[ protocolNumber ]
-    modes=[ modeDefs[modeName] for modeName in modeTup ]
+    modes=[ modeDefs[modeName] if modeName in modeDefs else None for modeName in modeTup ]
+    print(modes)
     uidModeDict={}
     #this only sets the headstages that have cells
     for headstage,uid in HS_TO_UID_DICT.items():
@@ -92,6 +93,8 @@ def addCellToHeadStage(hsToCellDict,hsStateDict): #note this is an in place modi
 
 def setModes(uidModeDict,mcc): #FIXME this is ugly...
     for uid,mode in uidModeDict.items():
+        if mode is None: #this works with makeUIDModeDict
+            continue
         mcc.selectUniqueID(uid)
         mcc.SetMode(mode)
     sleep(1) #it takes about 1 second for MCC to update and the telegraph inputs to change
