@@ -3,6 +3,7 @@
 
 from mcc import MCC_MODE_DICT
 
+#hrm, the number of functions I have to pass STATE_TO_UNIT_DICT through really suggests there might be some use in having shared state?
 
 UNIT_DEFINITIONS = { #used under multiplication with the base unit
 'G' : 1E-9,
@@ -14,10 +15,10 @@ UNIT_DEFINITIONS = { #used under multiplication with the base unit
 'p' : 1E12,
 }
 
-def formatUnit(StateVariable, StateDict): #TODO perhaps make it a tuple of unit and format?
+def formatUnit(StateVariable, StateDict, STATE_TO_UNIT_DICT, MODE_TO_UNIT_DICT): #TODO perhaps make it a tuple of unit and format?
     #FIXME this is SUPER slow if we have many rows, should just make and return a dict of multiples!
     #only issue is how to deal with the modes as they come up...
-    value = StateDict[StateVariable]
+    value = StateDict[StateVariable] #FIXME for some reason when we run this with a single cell... OH it is because the program is expect EXACTLY n headstages, need to fix that stat!
     if StateVariable == 'Holding':
         multiple = UNIT_DEFINITIONS[ MODE_TO_UNIT_DICT[ MCC_MODE_DICT[ StateDict['Mode'] ] ] ] #lol oh god
     else:
@@ -27,20 +28,20 @@ def formatUnit(StateVariable, StateDict): #TODO perhaps make it a tuple of unit 
     else:
         return value * multiple
 
-def rowPrintLogic(row,StateDict,delim,OFF_STRING,UNITS):
+def rowPrintLogic(row,StateDict,delim,OFF_STRING, STATE_TO_UNIT_DICT, MODE_TO_UNIT_DICT):
     #get units
     mode = StateDict['Mode']
 
     if row == 'Holding':
         if StateDict['HoldingEnable']:
-            out = formatUnit(row,StateDict)
+            out = formatUnit(row,StateDict,STATE_TO_UNIT_DICT, MODE_TO_UNIT_DICT)
             if delim=='\t':
                 out='%2.2f'%out
         else:
             out = OFF_STRING
     elif row == 'BridgeBalResist':
         if StateDict['BridgeBalEnable'] and StateDict['Mode'] == 1:
-            out = formatUnit(row,StateDict)
+            out = formatUnit(row,StateDict,STATE_TO_UNIT_DICT, MODE_TO_UNIT_DICT)
             if delim=='\t':
                 out='%1.1e'%out
         else:
@@ -48,11 +49,11 @@ def rowPrintLogic(row,StateDict,delim,OFF_STRING,UNITS):
     elif row == 'Mode':
         out = MCC_MODE_DICT[ StateDict[row] ]
     else:
-        out = formatUnit(row,StateDict)
+        out = formatUnit(row,StateDict,STATE_TO_UNIT_DICT, MODE_TO_UNIT_DICT)
 
     return out
 
-def makeText(data,ROW_ORDER,ROW_NAMES,OFF_STRING,delimiter='\t'):
+def makeText(data,ROW_ORDER,ROW_NAMES,OFF_STRING,STATE_TO_UNIT_DICT, MODE_TO_UNIT_DICT,delimiter='\t'):
     # for reference: data = { filename : ( protocolNumber , hsStateDict  ) }
     lines=[]
 
@@ -67,8 +68,8 @@ def makeText(data,ROW_ORDER,ROW_NAMES,OFF_STRING,delimiter='\t'):
 
         for row in ROW_ORDER:
             values=[ ROW_NAMES[row] ]
-            for i in range(1,5):
-                values.append( '%s'%rowPrintLogic( row,hsStateDict[i],delimiter,OFF_STRING ) )
+            for i in range(1,len(hsStateDict)+1):
+                values.append( '%s'%rowPrintLogic( row,hsStateDict[i],delimiter,OFF_STRING,STATE_TO_UNIT_DICT, MODE_TO_UNIT_DICT ) )
 
             lines.append( delimiter.join(values) )
     return '\n'.join(lines)

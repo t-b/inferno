@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.3
 """Inferno: electrophysiology with Clampex in a nutshell.
 Usage:
-    inferno.py <HS1_cell_id> <HS2_cell_id> <HS3_cell_id> <HS4_cell_id> <protocol_id> [ --config=<path> --csvpath=<path> ] 
+    inferno.py <protocol_id> <HS_cell_id>... [ --config=<path> --csvpath=<path> ] 
     inferno.py makecsv [ <pickle> [ <output> ] ]
     inferno.py --help
 
@@ -9,7 +9,7 @@ Options:
     -h --help                   print this
     -f --csvpath=<path>         set which csv file to write to, IF NONE IT WILL USE HARDCODED FILE
     -c --config=<path>          set which config file to use [default: config.ini]
-"""
+""" #FIXME why does the repeating argument need to come last in this instance :(
 
 from docopt import docopt
 args=docopt(__doc__) #do this early to prevent all the lags
@@ -21,13 +21,13 @@ from functions import mccFuncs
 
 from cfg import parseConfig
 
-#from funcs import getClampexFilename
-#from funcs import makeUIDModeDict
-#from funcs import setMCCLoadProt
-#from funcs import clickProtocol
-#from funcs import makeHeadstageStateDict
-#from funcs import addCellToHeadStage
-#from funcs import clickRecord
+from funcs import getClampexFilename
+from funcs import makeUIDModeDict
+from funcs import setMCCLoadProt
+from funcs import clickProtocol
+from funcs import makeHeadstageStateDict
+from funcs import addCellToHeadStage
+from funcs import clickRecord
 
 from output import makeText
 
@@ -53,6 +53,7 @@ def main():
     #import and check config settings
     configTuple = parseConfig(args['--config'])
     PICKLEPATH, CSVPATH, MCC_DLLPATH, OFF_STRING, ROW_ORDER, ROW_NAMES, HS_TO_UID_DICT, PROTOCOL_MODE_DICT, MODE_TO_UNIT_DICT, STATE_TO_UNIT_DICT = configTuple
+    print(configTuple)
     if args['--csvpath']:
         CSVPATH = args['--csvpath']
 
@@ -66,12 +67,16 @@ def main():
 
         #set variables from the command line
         protocolNumber = int(args['<protocol_id>'])
-        hsToCellDict = {
-            1:args['<HS1_cell_id>'],
-            2:args['<HS2_cell_id>'],
-            3:args['<HS3_cell_id>'],
-            4:args['<HS4_cell_id>'],
-        }
+        try: 
+            hsToCellDict = {
+                1:args['<HS1_cell_id>'],
+                2:args['<HS2_cell_id>'],
+                3:args['<HS3_cell_id>'],
+                4:args['<HS4_cell_id>'],
+            }
+        except KeyError: #testing the <>... format
+            cell_list=args['<HS_cell_id>']
+            hsToCellDict = { n+1:cell_list[n] for n in range(len(cell_list)) }
 
 
         #initialize the controller
@@ -108,8 +113,8 @@ def main():
         #save and display everything
         data = { filename : ( protocolNumber , hsStateDict  ) } #INTO THE PICKLE
         dataman.updatePickle(data)
-        textData = makeText( data , ROW_ORDER, ROW_NAMES , OFF_STRING )
-        csvData = makeText( data , ROW_ORDER, ROW_NAMES, OFF_STRING, ',' )
+        textData = makeText( data , ROW_ORDER, ROW_NAMES , OFF_STRING , STATE_TO_UNIT_DICT, MODE_TO_UNIT_DICT )
+        csvData = makeText( data , ROW_ORDER, ROW_NAMES, OFF_STRING, STATE_TO_UNIT_DICT, MODE_TO_UNIT_DICT, ',' )
         dataman.updateCSV( csvData )
         print(textData) 
 

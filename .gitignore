@@ -2,7 +2,7 @@
 ### Inferno
 ###########
 
-config.py
+config.ini
 *.csv
 *.pickle
 

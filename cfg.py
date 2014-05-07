@@ -6,21 +6,48 @@
 import configparser
 
 #definitions of the strings as they will appear in config.ini
-PATHS = 'PATHS'
-PICKLEPATH = 'PICKLEPATH'
-CSVPATH = 'CSVPATH'
-MCC_DLLPATH = 'MCC_DLL_PATH'
+_PATHS = 'PATHS'
+_PICKLEPATH = 'PICKLEPATH'
+_CSVPATH = 'CSVPATH'
+_MCC_DLLPATH = 'MCC_DLLPATH'
 
-FORMATTING = 'FORMATTING'
-OFF_STRING = 'OFF STRING'
-ROW_ORDER = 'ROW ORDER'
+_FORMATTING = 'FORMATTING'
+_OFF_STRING = 'OFF STRING'
+_ROW_ORDER = 'ROW ORDER'
 
-ROW_NAMES = 'ROW NAMES'
+_ROW_NAMES = 'ROW NAMES'
 #TODO define the StateNames from mccControl?
-HS_TO_UID_DICT = 'HEADSTAGE TO UNIQUE ID'
-PROTOCOL_MODE_DICT = 'PROTOCOL MULTICLAMP MODES'
-MODE_TO_UNIT_DICT = 'MODE TO UNITS'
-STATE_TO_UNIT_DICT = 'STATE TO UNITS'
+_HS_TO_UID_DICT = 'HEADSTAGE TO UNIQUE ID'
+_PROTOCOL_MODE_DICT = 'PROTOCOL MULTICLAMP MODES'
+_MODE_TO_UNIT_DICT = 'MODE TO UNITS'
+_STATE_TO_UNIT_DICT = 'STATE TO UNITS'
+
+def getGetHeadstageCount(PATH):
+    cfg=configparser.ConfigParser()
+    cfg.optionxform=str
+    cfg.read(PATH)
+    return len(cfg[_HS_TO_UID_DICT])
+
+def parseConfig(PATH):
+    cfg=configparser.ConfigParser()
+    cfg.optionxform=str #preserve case senstivity
+    cfg.read(PATH)
+
+    PICKLEPATH = cfg[_PATHS][_PICKLEPATH]
+    CSVPATH = cfg[_PATHS][_CSVPATH]
+    MCC_DLLPATH = cfg[_PATHS][_MCC_DLLPATH]
+
+    OFF_STRING = cfg[_FORMATTING][_OFF_STRING]
+    ROW_ORDER = cfg[_FORMATTING][_ROW_ORDER].split('\n')
+
+    ROW_NAMES = { k:v for k,v in cfg[_ROW_NAMES].items() }
+    HS_TO_UID_DICT = { int(k):v for k,v in cfg[_HS_TO_UID_DICT].items() }
+    PROTOCOL_MODE_DICT = { int(k):v.split(' , ') for k,v in cfg[_PROTOCOL_MODE_DICT].items() }
+    MODE_TO_UNIT_DICT = { k:v for k,v in cfg[_MODE_TO_UNIT_DICT].items() }
+    STATE_TO_UNIT_DICT = { k:v for k,v in cfg[_STATE_TO_UNIT_DICT].items() }
+
+
+    return PICKLEPATH, CSVPATH, MCC_DLLPATH, OFF_STRING, ROW_ORDER, ROW_NAMES, HS_TO_UID_DICT, PROTOCOL_MODE_DICT, MODE_TO_UNIT_DICT, STATE_TO_UNIT_DICT
 
 
 def makeConfig(configdict,PATH):
@@ -29,50 +56,31 @@ def makeConfig(configdict,PATH):
     with open( PATH , 'w' ) as f:
         cfg.write(f)
 
-def parseConfig(PATH):
-    cfg=configparser.ConfigParser()
-    cfg.read(PATH)
-
-    PICKLEPATH = cfg[PATHS][PICKLEKPATH]
-    CSVPATH = cfg[PATHS][CSVPATH]
-    MCC_DLLPATH = cfg[PATHS][MCC_DLLPATH]
-
-    OFF_STRING = cfg[FORMATTING][OFF_STRING]
-    ROW_ORDER = cfg[FORMATTING][ROW_ORDER]
-
-    ROW_NAMES = { k:v for k,v in cfg[ROW_NAMES].items() }
-    HS_TO_UID_DICT = { int(k):v for k,v in cfg[HS_TO_UID_DICT].items() }
-    PROTOCOL_MODE_DICT = { int(k):v.split(' , ') for k,v in cfg[PROTOCOL_MODE_DICT].items() }
-    MODE_TO_UNIT_DICT = { k:v for k,v in cfg[MODE_TO_UNIT_DICT].items() }
-    STATE_TO_UNIT_DICT = { k:v for k,v in cfg[STATE_TO_UNIT_DICT].items() }
-
-
-    return PICKLEPATH, CSVPATH, MCC_DLLPATH, OFF_STRING, ROW_ORDER, ROW_NAMES, HS_TO_UID_DICT, PROTOCOL_MODE_DICT, MODE_TO_UNIT_DICT, STATE_TO_UNIT_DICT
 
 
 #used for default behavior #FIXME I dont think this works this ways... I think it will add these values to EACH section... which is NOT what we want...
 default_config = {
 'DEFAULT':  {
-            PICKLEPATH    : "patch_experiment_data.pickle", 
-            CSVPATH       : "patch_experiment_data.csv", 
-            MCC_DLLPATH   : "C:/Program Files (x86)/Molecular Devices/MultiClamp 700B Commander/3rd Party Support/AxMultiClampMsg", 
+            _PICKLEPATH    : "patch_experiment_data.pickle", 
+            _CSVPATH       : "patch_experiment_data.csv", 
+            _MCC_DLLPATH   : "C:/Program Files (x86)/Molecular Devices/MultiClamp 700B Commander/3rd Party Support/AxMultiClampMsg", 
             }
 }
 example_config = {
-PATHS : {
-        PICKLEPATH    : "patch_experiment_data.pickle", 
-        CSVPATH       : "patch_experiment_data.csv", 
-        MCC_DLLPATH   : "C:/Program Files (x86)/Molecular Devices/MultiClamp 700B Commander/3rd Party Support/AxMultiClampMsg", 
+_PATHS : {
+        _PICKLEPATH    : "patch_experiment_data.pickle", 
+        _CSVPATH       : "patch_experiment_data.csv", 
+        _MCC_DLLPATH   : "C:/Program Files (x86)/Molecular Devices/MultiClamp 700B Commander/3rd Party Support/AxMultiClampMsg", 
         }, 
 
-HS_TO_UID_DICT :    {
+_HS_TO_UID_DICT :    {
                     1:'00830476_1',
                     2:'00830476_2',
                     3:'00830691_1',
                     4:'00830691_2',
                     }, 
 
-PROTOCOL_MODE_DICT :    { #conforms to MCC_MODE_DICT naming
+_PROTOCOL_MODE_DICT :    { #conforms to MCC_MODE_DICT naming
                          1:'IC , VC , VC , VC',
                          2:'VC , IC , VC , VC',
                          3:'VC , VC , IC , VC',
@@ -89,13 +97,13 @@ PROTOCOL_MODE_DICT :    { #conforms to MCC_MODE_DICT naming
                         14:'IC , VC , VC , VC',
                         }, 
 
-FORMATTING :    {
-                OFF_STRING  : 'OFF', 
+_FORMATTING :    {
+                _OFF_STRING  : 'OFF', 
                 #these should match the names of keys of the state dict
-                ROW_ORDER   : 'Cell,\nMode,\nHolding,\nBridgeBalResist', 
+                _ROW_ORDER   : 'Cell,\nMode,\nHolding,\nBridgeBalResist', 
                 }, 
 
-ROW_NAMES :   { #all the rows in the state dict, probs should validate
+_ROW_NAMES :   { #all the rows in the state dict, probs should validate
                 'DateTime':'Time',
                 'Cell':'Cell',
                 'Mode':'Mode', 
@@ -120,12 +128,12 @@ ROW_NAMES :   { #all the rows in the state dict, probs should validate
                 'Channel':'Channel',
                 }, 
 
-MODE_TO_UNIT_DICT :   {
+_MODE_TO_UNIT_DICT :   {
                     'IC':'p',
                     'VC':'m'
                     },
 
-STATE_TO_UNIT_DICT :  {
+_STATE_TO_UNIT_DICT :  {
                     'DateTime':'None',
                     'Cell':'None',
                     'Mode':'None ',
