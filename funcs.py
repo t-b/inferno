@@ -98,10 +98,6 @@ def setMCCLoadProt(uidModeDict,protocolNumber,mcc):
 
 def getClampexFilename():
     """ YYYY_MM_DD_NNNN.abf """ 
-    def getClampexWinName():
-        for i,name in getWindows():
-            if name.count('Clampex'):
-                return name
     name=getClampexWinName()
     if name is None:
         raise IOError('pCLAMP is not on!')

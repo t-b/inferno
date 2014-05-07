@@ -14,7 +14,10 @@ UNIT_DEFINITIONS = { #used under multiplication with the base unit
 'p' : 1E12,
 }
 
-def formatUnit(StateVariable, value, StateDict):
+def formatUnit(StateVariable, StateDict): #TODO perhaps make it a tuple of unit and format?
+    #FIXME this is SUPER slow if we have many rows, should just make and return a dict of multiples!
+    #only issue is how to deal with the modes as they come up...
+    value = StateDict[StateVariable]
     if StateVariable == 'Holding':
         multiple = UNIT_DEFINITIONS[ MODE_TO_UNIT_DICT[ MCC_MODE_DICT[ StateDict['Mode'] ] ] ] #lol oh god
     else:
@@ -24,20 +27,20 @@ def formatUnit(StateVariable, value, StateDict):
     else:
         return value * multiple
 
-def rowPrintLogic(row,StateDict,delim,OFF_STRING,UNITS): #FIXME UNITS!!!
+def rowPrintLogic(row,StateDict,delim,OFF_STRING,UNITS):
     #get units
     mode = StateDict['Mode']
 
     if row == 'Holding':
         if StateDict['HoldingEnable']:
-            out = StateDict[row]
+            out = formatUnit(row,StateDict)
             if delim=='\t':
                 out='%2.2f'%out
         else:
             out = OFF_STRING
     elif row == 'BridgeBalResist':
         if StateDict['BridgeBalEnable'] and StateDict['Mode'] == 1:
-            out = StateDict[row]
+            out = formatUnit(row,StateDict)
             if delim=='\t':
                 out='%1.1e'%out
         else:
@@ -45,7 +48,7 @@ def rowPrintLogic(row,StateDict,delim,OFF_STRING,UNITS): #FIXME UNITS!!!
     elif row == 'Mode':
         out = MCC_MODE_DICT[ StateDict[row] ]
     else:
-        out = StateDict[row]
+        out = formatUnit(row,StateDict)
 
     return out
 
