@@ -89,7 +89,8 @@ def addCellToHeadStage(hsToCellDict,hsStateDict): #note this is an in place modi
         #try: #fairly certain this is no longer needed
         stateDict['Cell'] = hsToCellDict[headstage]
         #except KeyError: 
-            #print('Cell %s was not added because you do not have that many headstages!'%cell)
+            #pass #this will just ignore headstages between m and n where m is the number of cells specified on the command line and n is the number of headstages
+        #we have to handle going over vs going under one way or another this seems ok, maybe going over is rarer so we should flip which dict we iterate through, but no need for now
 
 def setModes(uidModeDict,mcc): #FIXME this is ugly...
     for uid,mode in uidModeDict.items():

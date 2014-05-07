@@ -77,7 +77,6 @@ def makeConfig(configdict,PATH):
         cfg.write(f)
 
 
-
 #used for default behavior #FIXME I dont think this works this ways... I think it will add these values to EACH section... which is NOT what we want...
 default_config = {
 'DEFAULT':  {

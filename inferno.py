@@ -1,14 +1,15 @@
 #!/usr/bin/env python3.3
-"""Inferno: electrophysiology with Clampex in a nutshell.
+"""Inferno: electrophysiology with Clampex in a shell.
 Usage:
-    inferno.py <protocol_id> <HS_cell_id>... [ --config=<path> --csvpath=<path> ] 
+    inferno.py <HSn_cell_id>... [ --protocol=<id> --config=<path> --csvpath=<path> ]
     inferno.py makecsv [ <pickle> [ <output> ] ]
     inferno.py --help
 
 Options:
-    -h --help                   print this
-    -f --csvpath=<path>         set which csv file to write to, IF NONE IT WILL USE HARDCODED FILE
-    -c --config=<path>          set which config file to use [default: config.ini]
+    -h --help           print this
+    -p --protocol=<id>  set which protocol to load, if not set will run with current settings
+    -f --csvpath=<path> set which csv file to write, defaults to CSVPATH from config
+    -c --config=<path>  set which config file to use [default: config.ini]
 """ #FIXME why does the repeating argument need to come last in this instance :(
 
 from docopt import docopt
@@ -55,42 +56,39 @@ def main():
     with dataio(PICKLEPATH,CSVPATH) as dataman:
 
         #set variables from the command line
-        protocolNumber = int(args['<protocol_id>'])
-        try: 
-            hsToCellDict = {
-                1:args['<HS1_cell_id>'],
-                2:args['<HS2_cell_id>'],
-                3:args['<HS3_cell_id>'],
-                4:args['<HS4_cell_id>'],
-            }
-        except KeyError: #testing the <>... format
-            cell_list=args['<HS_cell_id>']
-            hsToCellDict = { n+1:cell_list[n] for n in range(len(cell_list)) }
+        cell_list=args['<HSn_cell_id>']
+        hsToCellDict = { n+1:cell_list[n] for n in range(len(cell_list)) }
+        print(hsToCellDict)
 
         #get the total number of headstages for formatting
         nHeadstages = len(HS_TO_UID_DICT)
         #drop the headstages we do not need from saving
-        for hs,cell in hsToCellDict.items():
-            try: #alert user that cells will be dropped
-                HS_TO_UID_DICT[hs]
-            except:
-                print('Cell %s was not added. You do not have headstage %s!'%(cell,hs))
-            if cell == NO_CELL_STRING:
-                HS_TO_UID_DICT.pop(hs)
-        print(HS_TO_UID_DICT)
+        for hs in range(1,nHeadstages+1):
+            try:
+                if hsToCellDict[hs] == NO_CELL_STRING:
+                    HS_TO_UID_DICT.pop(hs) #pop hs that we specify with no cell
+            except KeyError:
+                if hs <= nHeadstages: #pop hs not on cmd line
+                    HS_TO_UID_DICT.pop(hs)
 
+        print('hs to uid',HS_TO_UID_DICT)
         UID_TO_HS_DICT= { v:k for k,v in HS_TO_UID_DICT.items() }
 
         #initialize the controller
         mcc=mccControl(MCC_DLLPATH) #FIXME consolidate for cleaner dllhandle managment via with as
         mccF=mccFuncs(mcc)
 
-        #make the mode dict for the headstages
-        uidModeDict=makeUIDModeDict(protocolNumber,PROTOCOL_MODE_DICT,HS_TO_UID_DICT)
+        if args['--protocol'] is not None:
+            protocolNumber = int(args['--protocol'])
 
+            #make the mode dict for the headstages
+            uidModeDict=makeUIDModeDict(protocolNumber,PROTOCOL_MODE_DICT,HS_TO_UID_DICT)
 
-        #set the modes for each headstage and load the protocol
-        setMCCLoadProt(uidModeDict,protocolNumber,mcc)
+            #set the modes for each headstage and load the protocol
+            setMCCLoadProt(uidModeDict,protocolNumber,mcc)
+
+        else:
+            protocolNumber = 'prev' #FIXME DAMN IT
 
         #save the state of each headstage and which cell is associated with it
         uidStateDict=mccF.getMCCState(UID_TO_HS_DICT) #give it the uids in the form of keys type magic
