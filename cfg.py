@@ -4,6 +4,7 @@
 """
 
 import configparser
+from mcc import MCC_MODE_DICT
 
 #definitions of the strings as they will appear in config.ini
 _PATHS = 'PATHS'
@@ -49,9 +50,15 @@ def parseConfig(PATH):
     STATE_TO_UNIT_DICT = { k:v for k,v in cfg[_STATE_TO_UNIT_DICT].items() }
 
     nHeadstages = len(HS_TO_UID_DICT)
-    for tup in PROTOCOL_MODE_DICT.values():
+    validModes = list(MCC_MODE_DICT.values())
+    validModes.append('')
+    for prot,tup in PROTOCOL_MODE_DICT.items():
+        for string in tup:
+            if string not in validModes:
+                print( 'Warning! In protocol %s a bad mode name "%s" has been detected. Check your config.'%(prot,string) )
         if len(tup) > nHeadstages:
-            print('You specified more modes than you have headstages. Inferno will use only as many as needed. Ignoring.')
+            print('Warning! In protocol %s you listed more modes than your rig'
+                  ' has headstages. Inferno will use only as many as needed. Ignoring.'%prot)
         elif len(tup) < nHeadstages:
             raise ValueError('You have %s headstages but you only set modes for'
                              ' %s of them! Check your config! It is OK to leave'
