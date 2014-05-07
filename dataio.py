@@ -98,14 +98,14 @@ class dataio:
 
 def main():
     from IPython import embed
-    from funcs import makeText #bloodly pywin32 being pulled in by this
+    from output import makeText #bloodly pywin32 being pulled in by this
     from config import ROW_ORDER,ROW_NAMES,OFF_STRING
 
     #d=dataio('pickletest.pickle','csvtest.csv')
 
-    sample_data = { 'asdf filename.abf':(1,{'things':'really?'}),
-                    'asdf filename2.abf':(1,{'things':'really?'}),
-                    'asdf filename3.abf':(1,{'things':'really?'}),
+    sample_data = { 'asdf filename.abf':(1,{1:'really?'}),
+                    'asdf filename2.abf':(1,{2:'really?'}),
+                    'asdf filename3.abf':(1,{3:'really?'}),
                   }
     update_data = {
         'did this update work?':(2,{'ALL THE THINGS':'NOPE'}),

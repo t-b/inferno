@@ -59,3 +59,9 @@ ROW_NAMES = { #all the rows in the state dict, probs should validate
 }
 
 OFF_STRING = "OFF"
+
+UNITS = {
+'current':'pA',
+'voltage':'mV',
+'resistance':'MO',
+}

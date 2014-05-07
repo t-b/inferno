@@ -110,61 +110,6 @@ def getClampexFilename():
     #print(name)
     return name
 
-def rowPrintLogic(row,StateDict,delim,OFF_STRING): #FIXME UNITS!!!
-    if row == 'Holding':
-        if StateDict['HoldingEnable']:
-            out = StateDict[row]
-            if delim=='\t':
-                out='%2.2f'%out
-        else:
-            out = OFF_STRING
-    elif row == 'BridgeBalResist':
-        if StateDict['BridgeBalEnable'] and StateDict['Mode'] == 1:
-            out = StateDict[row]
-            if delim=='\t':
-                out='%1.1e'%out
-        else:
-            out = OFF_STRING
-    elif row == 'Mode':
-        out = MCC_MODE_DICT[ StateDict[row] ]
-    else:
-        out = StateDict[row]
-
-    return out
-
-def makeText(data,ROW_ORDER,ROW_NAMES,OFF_STRING,delimiter='\t'):
-    # for reference: data = { filename : ( protocolNumber , hsStateDict  ) }
-    lines=[]
-
-    numberHeadstages=len(list(data.values())[0][1]) #FIXME doesnt work if we change the number of headstages half way through? but I guess we could just list n headstages
-    lineOneList=['HS%s'%n * (n>0) for n in range(numberHeadstages+1)]
-    lines.append( '\n'+delimiter.join( lineOneList ) ) #\n is to make it place nice with .split('\n',1)[1] or append the HS line on a new line every time
-
-    for filename , ( protocolNumber , hsStateDict ) in data.items():
-
-        trialNumber=filename[-8:-4]
-        lines.append( delimiter.join( ('%s'%trialNumber , '%s'%protocolNumber ,'','','') ) )
-
-        for row in ROW_ORDER:
-            values=[ ROW_NAMES[row] ]
-            for i in range(1,5):
-                values.append( '%s'%rowPrintLogic( row,hsStateDict[i],delimiter,OFF_STRING ) )
-
-            lines.append( delimiter.join(values) )
-    return '\n'.join(lines)
-
-    #output format
-
-    #filename format YYYY_MM_DD_nnnn
-    #protocol p1 p2 p3 p4 corrisponding to the buttons
-
-    #nnnn   p1
-    #       1   2   3   4
-    #cell   a   b   c   d 
-    #mode   vc  ic  vc  ic #map between mcc + channel and the digitizer input channel
-    #holding    -70 OFF OFF -70 #OFF for holding disabled
-    #bridge balance
-
 def main():
     print(PCLAMP_BUTTON_OFFSETS)
     for offset in PCLAMP_BUTTON_OFFSETS.values():
