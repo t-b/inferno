@@ -59,7 +59,8 @@ def parseConfig(PATH):
 
     STATE_TO_UNIT_DICT = {}
     for key,string in cfg[_STATE_TO_UNIT_DICT].items():
-        tup = tuple( string.replace(', ',' ').replace(',',' ').replace('\t',' ').split(' ') )
+        fixed_delims = string.replace(' , ',' ').replace(', ',' ').replace(',',' ').replace('\t',' ')
+        tup = tuple(fixed_delims.split(' ') )
         STATE_TO_UNIT_DICT[ key ] = tup
 
     #check MCC_DLLPATH, the others we check later becase we may be creating them
@@ -114,17 +115,17 @@ _PATHS : {
         }, 
 
 _HS_TO_UID_DICT :    {
-                    1:'Demo1_1',
-                    2:'Demo1_2',
-                    3:'Demo2_1',
-                    4:'Demo2_2',
+                    1:'12345678_1',
+                    2:'12345678_2',
+                    3:'87654321_1',
+                    4:'87654321_2',
                     }, 
 
 _PROTOCOL_MODE_DICT :    { #conforms to MCC_MODE_DICT naming
-                         1:'IC , VC , VC , VC',
-                         2:'VC , IC , VC , VC',
-                         3:'VC , VC , IC , VC',
-                         4:'VC , VC , VC , IC',
+                         1:'IC , VC , VC , IEZ',
+                         2:'VC , IC , IEZ , VC',
+                         3:'VC , IEZ , IC , VC',
+                         4:'IEZ , VC , VC , IC',
                          5:'',
                          6:'',
                          7:'',
@@ -170,8 +171,8 @@ _ROW_NAMES :   { #all the rows in the state dict, probs should validate
                 }, 
 
 _STATE_TO_UNIT_DICT :  {
-                    'IC':'p, 2.1f',
-                    'VC':'m, 2.1f',
+                    'IC':'p, 3.1f',
+                    'VC':'m, 3.1f',
                     'DateTime':'None',
                     'Cell':'None',
                     'Mode':'None ',
@@ -190,7 +191,7 @@ _STATE_TO_UNIT_DICT :  {
                     'SlowCTX20Enable':'None',
 
                     'BridgeBalEnable':'None',
-                    'BridgeBalResist':'M, 2.1f',
+                    'BridgeBalResist':'M, 3.1F',
 
                     'Serial':'None',
                     'Channel':'None',

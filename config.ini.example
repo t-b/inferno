@@ -4,16 +4,16 @@ CSVPATH     = patch_experiment_data.csv
 MCC_DLLPATH = C:/Program Files (x86)/Molecular Devices/MultiClamp 700B Commander/3rd Party Support/AxMultiClampMsg
 
 [HEADSTAGE TO UNIQUE ID]
-1 = 00830476_1 
-2 = 00830476_2 
-3 = 00830691_1 
-4 = 00830691_2 
+1 = 12345678_1 
+2 = 12345678_2 
+3 = 87654321_1 
+4 = 87654321_2 
 
 [PROTOCOL MULTICLAMP MODES] #conforms to MCC_MODE_DICT naming
- 1 = IC , VC , VC , VC 
- 2 = VC , IC , VC , VC 
- 3 = VC , VC , IC , VC 
- 4 = VC , VC , VC , IC 
+ 1 = IC , IC , VC , VC 
+ 2 = VC , VC , IC , IC 
+ 3 = VC , VC , IEZ , IEZ 
+ 4 = IEZ , VC , IC , IEZ 
  5 =
  6 =
  7 =
@@ -60,8 +60,8 @@ Serial              = Serial
 Channel             = Channel 
 
 [STATE TO UNITS]
-IC                  = p , 2.1f
-VC                  = m , 2.1f
+IC                  = p , 3.1f
+VC                  = m , 3.1f
 DateTime            = None
 Cell                = None
 Mode                = None 
@@ -80,7 +80,7 @@ SlowCompTau         = u
 SlowCTX20Enable     = None
 
 BridgeBalEnable     = None
-BridgeBalResist     = M , 2.1f
+BridgeBalResist     = M , 3.1F
 
 Serial              = None
 Channel             = None
