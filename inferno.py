@@ -119,17 +119,14 @@ def main():
 
             addCellToHeadStage(hsToCellDict,hsStateDict)
             
-            #print(hsStateDict)
-
             #run pclamp
+            clickRecord()
+            sleep(.1) #there is a weird bug where another window pops up and can sometimes block the first click, so click twice
             clickRecord()
 
             #get the filename from the windown name! tada! wat a stuipd hack
             sleep(.1) #give the window time to change
             filename = getClampexFilename()
-
-            #TODO deal with fact that filename wont change if you stop the recording
-            #assert filename != old_filename, 'Warning! filename has not changed! Something is wrong!'
 
             #save and display everything
             data = { filename : ( protocolNumber , hsStateDict  ) } #INTO THE PICKLE
