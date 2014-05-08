@@ -11,6 +11,8 @@ Dependencies
 * pClamp10 (Clampex)
 * MultiClampCommander (so far only tested with MultiClamp 700B)
 
+* In order to export Inferno to an exe you will need cx_freeze
+
 Configuration
 -------------
 Copy config.py.example to config.py and edit it to match your setup.

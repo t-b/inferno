@@ -45,10 +45,12 @@ def parseConfig(PATH):
 
     ROW_NAMES = { k:v for k,v in cfg[_ROW_NAMES].items() }
     HS_TO_UID_DICT = { int(k):v for k,v in cfg[_HS_TO_UID_DICT].items() }
-    PROTOCOL_MODE_DICT = { int(k):[s.strip().rstrip() for s in v.split(',')] for k,v in cfg[_PROTOCOL_MODE_DICT].items() }
+    PROTOCOL_MODE_DICT = { int(k):[s.strip().rstrip() for s in v.split(',')] for k,v in cfg[_PROTOCOL_MODE_DICT].items() if v is not '' }
+    print(PROTOCOL_MODE_DICT)
     MODE_TO_UNIT_DICT = { k:v for k,v in cfg[_MODE_TO_UNIT_DICT].items() }
     STATE_TO_UNIT_DICT = { k:v for k,v in cfg[_STATE_TO_UNIT_DICT].items() }
 
+    #validate protocol mode specifications #TODO make it work same was a NO_CELL_STRING
     nHeadstages = len(HS_TO_UID_DICT)
     validModes = list(MCC_MODE_DICT.values())
     validModes.append('')
@@ -61,8 +63,8 @@ def parseConfig(PATH):
                   ' has headstages. Inferno will use only as many as needed. Ignoring.'%prot)
         elif len(tup) < nHeadstages:
             raise ValueError('You have %s headstages but you only set modes for'
-                             ' %s of them! Check your config! It is OK to leave'
-                             ' modes blank but you need commas.'%(nHeadstages,len(tup)))
+                             ' %s of them! Check protocol %s in your config! It is OK to leave'
+                             ' modes blank but you need commas.'%(nHeadstages,len(tup),prot))
 
 
 

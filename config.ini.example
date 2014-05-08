@@ -26,6 +26,8 @@ MCC_DLLPATH = C:/Program Files (x86)/Molecular Devices/MultiClamp 700B Commander
 14 = IC , VC , VC , VC 
 
 [FORMATTING]
+#string to enter to tell inferno that the headstage is empty
+NO CELL STRING = xx
 OFF_STRING = OFF
 #these should match the names of keys of the state dict
 ROW_ORDER = Cell
