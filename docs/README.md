@@ -5,24 +5,33 @@ A command line tool for controlling MultiClampCommander and Clampex and saving d
 
 Configuration
 -------------
-Copy config.ini.example to config.ini and edit it to match your setup.  Most
+Copy config.ini.example to config.ini and edit it to match your setup. Most
 sections in config.ini should be self explanatory. All sections are required.
 
-HS_TO_UID_DICT associates the numbering you use for your headstages 1-n to the
-serial number (8 digit number for 700B)  of the Multiclamp follow by an underscore
-followed by the channel number (1 or 2). For example 1:'12345678_1' associates your
-headstage number 1 to the headstage plugged in to the first channel of the amplifier
-that has the serial number 1234567. You should have one entry for each headstage
-on your rig.  
+[HEADSTAGE TO UNIQUE ID] associates the numbers you use for your headstages 1-n
+to the serial number (8 digit number for 700B)  of the Multiclamp follow by an
+underscore followed by the channel number (1 or 2). For example 1 = 12345678_1
+associates your headstage number 1 to the headstage plugged in to the first
+channel of the amplifier that has the serial number 1234567. You should have one
+entry for each headstage on your rig.  
 
-PROTOCOL_MODE_DICT associates a list of numbers 1-n to ( representing the UI
-buttons moving from left to right in pClamp) to tuples that specify the modes
-(voltage clamp "VC", current clamp "IC", or current equals zero "IEZ") that the
-protocol assigned to that button uses. The tuple should be the same length as
-the number of headstages on your rig.
+[PROTOCOL MULTICLAMP MODES] associates a list of numbers 1-14, which represent
+the UI buttons moving from left to right in Clampex, to tuples that specify the
+modes (voltage clamp "VC", current clamp "IC", or current equals zero "IEZ")
+that the protocol assigned to that button uses. The tuple should be the same
+length as the number of headstages on your rig. __You need to assign your
+protocols to the UI buttons for Inferno to work properly.__
+
+[STATE TO UNITS] tell Inferno how to display numbers from MultiClampCommander
+using tuples of an SI prefix and python string formatting syntax. Please see
+[the python documentation](https://docs.python.org/3.3/library/string.html#format-specification-mini-language)
+for reference. If you do not specify a format it will default to %s. Note that
+MultiClampCommander stores all numbers as the base unit (V,A, etc). Note also
+that IC and VC are in fact specified by checking the Mode setting for holding
+however since there is no overlap of keys we keep them in [STATE TO UNITS]
 
 Button Offsets. In gui.py it is possible to modify the button offsets.
-Inferno is currently configured using the default pClamp UI arrangment, but
+Inferno is currently configured using the default Clampex UI arrangment, but
 if you have modified your settings then those button offsets will be wrong.
 All offsets are from the top left corner of the window in units of pixels.
 

@@ -5,7 +5,7 @@ from mcc import MCC_MODE_DICT
 
 #hrm, the number of functions I have to pass STATE_TO_UNIT_DICT through really suggests there might be some use in having shared state?
 
-UNIT_DEFINITIONS = { #used under multiplication with the base unit
+PREFIX_DEFINITIONS = { #used under multiplication with the base unit
 'G' : 1E-9,
 'M' : 1E-6,
 'K' : 1E-3,
@@ -20,13 +20,18 @@ def formatUnit(StateVariable, StateDict, STATE_TO_UNIT_DICT, MODE_TO_UNIT_DICT):
     #only issue is how to deal with the modes as they come up...
     value = StateDict[StateVariable] #FIXME for some reason when we run this with a single cell... OH it is because the program is expect EXACTLY n headstages, need to fix that stat!
     if StateVariable == 'Holding':
-        multiple = UNIT_DEFINITIONS[ MODE_TO_UNIT_DICT[ MCC_MODE_DICT[ StateDict['Mode'] ] ] ] #lol oh god
+        prefix , fmt = MODE_TO_UNIT_DICT[ MCC_MODE_DICT[ StateDict['Mode'] ] ] ] #lol oh god
+        multiple = PREFIX_DEFINITIONS[ unit ]
+        format_string = '%'+fmt
     else:
-        multiple = STATE_TO_UNIT_DICT[StateVariable]
+        prefix , fmt = STATE_TO_UNIT_DICT[StateVariable]
+        multiple = PREFIX_DEFINITIONS[ unit ]
+        format_string = '%'+fmt
+
     if multiple == 'None':
-        return value
+        return format_string%value
     else:
-        return value * multiple
+        return format_string%( value * multiple )
 
 def rowPrintLogic(row,StateDict,delim,OFF_STRING, STATE_TO_UNIT_DICT, MODE_TO_UNIT_DICT):
     #get units
@@ -35,15 +40,11 @@ def rowPrintLogic(row,StateDict,delim,OFF_STRING, STATE_TO_UNIT_DICT, MODE_TO_UN
     if row == 'Holding':
         if StateDict['HoldingEnable']:
             out = formatUnit(row,StateDict,STATE_TO_UNIT_DICT, MODE_TO_UNIT_DICT)
-            if delim=='\t':
-                out='%2.2f'%out
         else:
             out = OFF_STRING
     elif row == 'BridgeBalResist':
         if StateDict['BridgeBalEnable'] and StateDict['Mode'] == 1:
             out = formatUnit(row,StateDict,STATE_TO_UNIT_DICT, MODE_TO_UNIT_DICT)
-            if delim=='\t':
-                out='%1.1e'%out
         else:
             out = OFF_STRING
     elif row == 'Mode':

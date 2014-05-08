@@ -53,8 +53,15 @@ def parseConfig(PATH):
     HS_TO_UID_DICT = { int(k):v for k,v in cfg[_HS_TO_UID_DICT].items() }
     PROTOCOL_MODE_DICT = { int(k):[s.strip().rstrip() for s in v.split(',')] for k,v in cfg[_PROTOCOL_MODE_DICT].items() if v is not '' }
     print(PROTOCOL_MODE_DICT)
-    MODE_TO_UNIT_DICT = { k:v for k,v in cfg[_MODE_TO_UNIT_DICT].items() }
-    STATE_TO_UNIT_DICT = { k:v for k,v in cfg[_STATE_TO_UNIT_DICT].items() }
+    STATE_TO_UNIT_DICT = { k:tuple(v.replace(' ','').split(',')) for k,v in cfg[_STATE_TO_UNIT_DICT].items() } #FIXME make sure tabs dont mess this up?
+
+    #set default formatting for strings
+    updateDict = {}
+    for mode,tup in STATE_TO_UNIT_DICT.items():
+        if len(tup) == 1:
+            updateDict[ mode ] = tuple(tup[0],'s')
+    STATE_TO_UNIT_DICT.update(updateDict)
+    print(STATE_TO_UNIT_DICT)
 
     #validate protocol mode specifications #TODO make it work same was a NO_CELL_STRING
     nHeadstages = len(HS_TO_UID_DICT)
