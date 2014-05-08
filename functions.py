@@ -209,7 +209,7 @@ class mccFuncs: #FIXME add a way to get the current V and I via... telegraph?
 
 def main():
     from mcc import mccControl
-    #from IPython import embed
+    from IPython import embed
     from config import MCC_DLLPATH
     mcc=mccFuncs(mccControl(MCC_DLLPATH))
     embed()

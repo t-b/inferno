@@ -11,7 +11,6 @@ Dependencies
 * pClamp10 (Clampex)
 * MultiClampCommander (so far only tested with MultiClamp 700B)
 
-* In order to export Inferno to an exe you will need cx_freeze
 
 Configuration
 -------------
@@ -42,6 +41,10 @@ The Clampex window MUST be visible in order to click the protocol buttons
 (Dear Molecular Devices, great hardware. Your software sucks.).
 
 MultiClampCommander windows need to be opened but do not need to be visible.
+
+Building
+--------
+* Inferno must be built against 32bit Python to communicate with AxMuliClampMsg.dll. Thus to package Inferno into an msi installer using setup.py you will need an x86 python install and cx_Freeze. Once you have these, change PATHON_PATH_X86 in build.py to match your install location.
 
 Notes
 -----
