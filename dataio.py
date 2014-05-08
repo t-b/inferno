@@ -87,7 +87,7 @@ class dataio: #TODO if we are REALLY paranoid we can open the file back up and c
             else:
                 textData = '\n'+textData.split('\n',2)[2]
         else:
-            textData.strip('\n') #a new csv file so dont put a newline first
+            textData = textData.strip('\n') #a new csv file so dont put a newline first
 
         self.csvFile.close()
         with open( self.CSVPATH , 'at' ) as csvWrite:
@@ -97,7 +97,7 @@ class dataio: #TODO if we are REALLY paranoid we can open the file back up and c
     def writeCSV(self,textData):
         self.csvFile.close()
         with open( self.CSVPATH , 'wt' ) as csvWrite:
-            csvWrite.writelines(textData)
+            csvWrite.writelines(textData.strip('\n'))
         self.csvFile = open( self.CSVPATH , 'rt' )
 
 

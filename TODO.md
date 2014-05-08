@@ -1,6 +1,5 @@
 Todo
 ----
--1) get rid of newline at the start of the csv file
 0) specifying protocol numbers that are blank results in a key error
 1) figure out how to set the default path for the conifg, this cannot be set using docopt, it should probably be %INSTALL_DIR%/config.ini or something
 2) copying config.ini within the program folder causes administrative bickering, we need a better option :(, I dont want to go full inferno.ini in the users home folder >_< derpmax, something something configurationmanager? yep, that config.ini in program files is not writeable >_< DERP
@@ -12,6 +11,7 @@ Todo
 
 Done
 ----
+x) get rid of newline at the start of the csv file
 x) for some reason when switching to a different protocol the protocol will sometimes not load properly... it seems to be missing the click?! there seems to be a stupid little window that pops up for just a couple miliseconds... going to try just double clicking the record button...
 x) IF CELLS ARE NOT ON THE HEADSTAGE STILL LOAD ALL THE PROTOCOL STUFF OR PCLAMP WILL ERROR
 x) split out the functions in inferno.py to their own file so that they can be tested independently
