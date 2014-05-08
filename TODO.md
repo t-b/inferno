@@ -1,6 +1,5 @@
 Todo
 ----
--2) for some reason when switching to a different protocol the protocol will sometimes not load properly... it seems to be missing the click?! there seems to be a stupid little window that pops up for just a couple miliseconds... going to try just double clicking the record button...
 -1) get rid of newline at the start of the csv file
 0) specifying protocol numbers that are blank results in a key error
 1) figure out how to set the default path for the conifg, this cannot be set using docopt, it should probably be %INSTALL_DIR%/config.ini or something
@@ -13,6 +12,7 @@ Todo
 
 Done
 ----
--2) IF CELLS ARE NOT ON THE HEADSTAGE STILL LOAD ALL THE PROTOCOL STUFF OR PCLAMP WILL ERROR
+x) for some reason when switching to a different protocol the protocol will sometimes not load properly... it seems to be missing the click?! there seems to be a stupid little window that pops up for just a couple miliseconds... going to try just double clicking the record button...
+x) IF CELLS ARE NOT ON THE HEADSTAGE STILL LOAD ALL THE PROTOCOL STUFF OR PCLAMP WILL ERROR
 x) split out the functions in inferno.py to their own file so that they can be tested independently
 x) Naming consistency: the program itself is Clampex fix this, pClamp is the suite of software
