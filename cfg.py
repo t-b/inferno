@@ -3,6 +3,7 @@
     This should probably be renamed config.py despite naming conflicts
 """
 
+import os
 import configparser
 from mcc import MCC_MODE_DICT
 
@@ -58,7 +59,7 @@ def parseConfig(PATH):
     updateDict = {}
     for mode,tup in STATE_TO_UNIT_DICT.items():
         if len(tup) == 1:
-            updateDict[ mode ] = tuple(tup[0],'s')
+            updateDict[ mode ] = tup[0],'s'
     STATE_TO_UNIT_DICT.update(updateDict)
     print(STATE_TO_UNIT_DICT)
 
@@ -92,13 +93,8 @@ def makeConfig(configdict,PATH):
 
 
 #used for default behavior #FIXME I dont think this works this ways... I think it will add these values to EACH section... which is NOT what we want...
-default_config = {
-'DEFAULT':  {
-            _PICKLEPATH    : "patch_experiment_data.pickle", 
-            _CSVPATH       : "patch_experiment_data.csv", 
-            _MCC_DLLPATH   : "C:/Program Files (x86)/Molecular Devices/MultiClamp 700B Commander/3rd Party Support/AxMultiClampMsg", 
-            }
-}
+
+
 example_config = {
 _PATHS : {
         _PICKLEPATH    : "patch_experiment_data.pickle", 
@@ -107,10 +103,10 @@ _PATHS : {
         }, 
 
 _HS_TO_UID_DICT :    {
-                    1:'00830476_1',
-                    2:'00830476_2',
-                    3:'00830691_1',
-                    4:'00830691_2',
+                    1:'Demo1_1',
+                    2:'Demo1_2',
+                    3:'Demo2_1',
+                    4:'Demo2_2',
                     }, 
 
 _PROTOCOL_MODE_DICT :    { #conforms to MCC_MODE_DICT naming
@@ -118,16 +114,16 @@ _PROTOCOL_MODE_DICT :    { #conforms to MCC_MODE_DICT naming
                          2:'VC , IC , VC , VC',
                          3:'VC , VC , IC , VC',
                          4:'VC , VC , VC , IC',
-                         5:'IC , VC , VC , VC',
-                         6:'VC , IC , VC , VC',
-                         7:'VC , VC , IC , VC',
-                         8:'VC , VC , VC , IC',
-                         9:'IC , VC , VC , VC',
-                        10:'IC , VC , VC , VC',
-                        11:'IC , VC , VC , VC',
-                        12:'IC , VC , VC , VC',
-                        13:'IC , VC , VC , VC',
-                        14:'IC , VC , VC , VC',
+                         5:'',
+                         6:'',
+                         7:'',
+                         8:'',
+                         9:'',
+                        10:'',
+                        11:'',
+                        12:'',
+                        13:'',
+                        14:'',
                         }, 
 
 _FORMATTING :    {
@@ -163,8 +159,8 @@ _ROW_NAMES :   { #all the rows in the state dict, probs should validate
                 }, 
 
 _STATE_TO_UNIT_DICT :  {
-                    'IC':'p',
-                    'VC':'m',
+                    'IC':'p, 2.1f',
+                    'VC':'m, 2.1f',
                     'DateTime':'None',
                     'Cell':'None',
                     'Mode':'None ',
@@ -183,7 +179,7 @@ _STATE_TO_UNIT_DICT :  {
                     'SlowCTX20Enable':'None',
 
                     'BridgeBalEnable':'None',
-                    'BridgeBalResist':'M ',
+                    'BridgeBalResist':'M, 2.1f',
 
                     'Serial':'None',
                     'Channel':'None',
