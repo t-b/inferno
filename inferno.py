@@ -37,27 +37,29 @@ from output import makeText
 from dataio import dataio
 
 def main():
+    #import and check config settings
+    configTuple = parseConfig(args['--config'])
+    PICKLEPATH, CSVPATH, MCC_DLLPATH, NO_CELL_STRING, OFF_STRING, ROW_ORDER, ROW_NAMES, HS_TO_UID_DICT, PROTOCOL_MODE_DICT, STATE_TO_UNIT_DICT = configTuple
+
+    #get the total number of headstages
+    nHeadstages = len(HS_TO_UID_DICT)
+
     #enter make csv mode?
     if args['makecsv']:
         print('making csv from binary data!')
-        configTuple = parseConfig(args['--config'])
-        PICKLEPATH, CSVPATH, MCC_DLLPATH, NO_CELL_STRING, OFF_STRING, ROW_ORDER, ROW_NAMES, HS_TO_UID_DICT, PROTOCOL_MODE_DICT, STATE_TO_UNIT_DICT = configTuple
         if args['<pickle>'] is not None:
             PICKLEPATH = args['<pickle>']
         if args['<output>'] is not None:
             CSVPATH = args['<output>']
         with dataio(PICKLEPATH,CSVPATH) as dataman:
             data=dataman.loadPickle()
-        nHeadstages = len(HS_TO_UID_DICT)
         textData = makeText( data , ROW_ORDER, ROW_NAMES , OFF_STRING , STATE_TO_UNIT_DICT, nHeadstages )
         csvData = makeText( data , ROW_ORDER, ROW_NAMES, OFF_STRING, STATE_TO_UNIT_DICT, nHeadstages, ',' )
         print(textData)
         dataman.writeCSV(csvData)
         return None
 
-    #import and check config settings
-    configTuple = parseConfig(args['--config'])
-    PICKLEPATH, CSVPATH, MCC_DLLPATH, NO_CELL_STRING, OFF_STRING, ROW_ORDER, ROW_NAMES, HS_TO_UID_DICT, PROTOCOL_MODE_DICT, STATE_TO_UNIT_DICT = configTuple
+    #did we set the csvpath on the commandline?
     if args['--csvpath']:
         CSVPATH = args['--csvpath']
 
@@ -67,10 +69,6 @@ def main():
     #set variables from the command line
     cell_list=args['<HSn_cell_id>']
     hsToCellDict = { n+1:cell_list[n] for n in range(len(cell_list)) }
-    #print(hsToCellDict)
-
-    #get the total number of headstages for formatting
-    nHeadstages = len(HS_TO_UID_DICT)
 
     UID_TO_HS_DICT= { v:k for k,v in HS_TO_UID_DICT.items() }
 
