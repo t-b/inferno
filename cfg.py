@@ -21,7 +21,6 @@ _ROW_NAMES = 'ROW NAMES'
 #TODO define the StateNames from mccControl?
 _HS_TO_UID_DICT = 'HEADSTAGE TO UNIQUE ID'
 _PROTOCOL_MODE_DICT = 'PROTOCOL MULTICLAMP MODES'
-_MODE_TO_UNIT_DICT = 'MODE TO UNITS'
 _STATE_TO_UNIT_DICT = 'STATE TO UNITS'
 
 def getGetHeadstageCount(PATH):
@@ -82,7 +81,7 @@ def parseConfig(PATH):
 
 
 
-    return PICKLEPATH, CSVPATH, MCC_DLLPATH, NO_CELL_STRING, OFF_STRING, ROW_ORDER, ROW_NAMES, HS_TO_UID_DICT, PROTOCOL_MODE_DICT, MODE_TO_UNIT_DICT, STATE_TO_UNIT_DICT
+    return PICKLEPATH, CSVPATH, MCC_DLLPATH, NO_CELL_STRING, OFF_STRING, ROW_ORDER, ROW_NAMES, HS_TO_UID_DICT, PROTOCOL_MODE_DICT, STATE_TO_UNIT_DICT
 
 def makeConfig(configdict,PATH):
     cfg=configparser.ConfigParser()
@@ -163,12 +162,9 @@ _ROW_NAMES :   { #all the rows in the state dict, probs should validate
                 'Channel':'Channel',
                 }, 
 
-_MODE_TO_UNIT_DICT :   {
-                    'IC':'p',
-                    'VC':'m'
-                    },
-
 _STATE_TO_UNIT_DICT :  {
+                    'IC':'p',
+                    'VC':'m',
                     'DateTime':'None',
                     'Cell':'None',
                     'Mode':'None ',

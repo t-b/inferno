@@ -15,12 +15,12 @@ PREFIX_DEFINITIONS = { #used under multiplication with the base unit
 'p' : 1E12,
 }
 
-def formatUnit(StateVariable, StateDict, STATE_TO_UNIT_DICT, MODE_TO_UNIT_DICT): #TODO perhaps make it a tuple of unit and format?
+def formatUnit(StateVariable, StateDict, STATE_TO_UNIT_DICT): #TODO perhaps make it a tuple of unit and format?
     #FIXME this is SUPER slow if we have many rows, should just make and return a dict of multiples!
     #only issue is how to deal with the modes as they come up...
     value = StateDict[StateVariable] #FIXME for some reason when we run this with a single cell... OH it is because the program is expect EXACTLY n headstages, need to fix that stat!
     if StateVariable == 'Holding':
-        prefix , fmt = MODE_TO_UNIT_DICT[ MCC_MODE_DICT[ StateDict['Mode'] ] ] ] #lol oh god
+        prefix , fmt = STATE_TO_UNIT_DICT[ MCC_MODE_DICT[ StateDict['Mode'] ] ] ] #lol oh god
         multiple = PREFIX_DEFINITIONS[ unit ]
         format_string = '%'+fmt
     else:
@@ -33,28 +33,28 @@ def formatUnit(StateVariable, StateDict, STATE_TO_UNIT_DICT, MODE_TO_UNIT_DICT):
     else:
         return format_string%( value * multiple )
 
-def rowPrintLogic(row,StateDict,delim,OFF_STRING, STATE_TO_UNIT_DICT, MODE_TO_UNIT_DICT):
+def rowPrintLogic(row,StateDict,delim,OFF_STRING, STATE_TO_UNIT_DICT):
     #get units
     mode = StateDict['Mode']
 
     if row == 'Holding':
         if StateDict['HoldingEnable']:
-            out = formatUnit(row,StateDict,STATE_TO_UNIT_DICT, MODE_TO_UNIT_DICT)
+            out = formatUnit(row,StateDict,STATE_TO_UNIT_DICT)
         else:
             out = OFF_STRING
     elif row == 'BridgeBalResist':
         if StateDict['BridgeBalEnable'] and StateDict['Mode'] == 1:
-            out = formatUnit(row,StateDict,STATE_TO_UNIT_DICT, MODE_TO_UNIT_DICT)
+            out = formatUnit(row,StateDict,STATE_TO_UNIT_DICT)
         else:
             out = OFF_STRING
     elif row == 'Mode':
         out = MCC_MODE_DICT[ StateDict[row] ]
     else:
-        out = formatUnit(row,StateDict,STATE_TO_UNIT_DICT, MODE_TO_UNIT_DICT)
+        out = formatUnit(row,StateDict,STATE_TO_UNIT_DICT)
 
     return out
 
-def makeText(data,ROW_ORDER,ROW_NAMES,OFF_STRING,STATE_TO_UNIT_DICT, MODE_TO_UNIT_DICT,numberHeadstages,delimiter='\t'):
+def makeText(data,ROW_ORDER,ROW_NAMES,OFF_STRING,STATE_TO_UNIT_DICT,numberHeadstages,delimiter='\t'):
     # for reference: data = { filename : ( protocolNumber , hsStateDict  ) }
     lines=[]
 
@@ -70,7 +70,7 @@ def makeText(data,ROW_ORDER,ROW_NAMES,OFF_STRING,STATE_TO_UNIT_DICT, MODE_TO_UNI
             values=[ ROW_NAMES[row] ]
             for i in range(1,numberHeadstages+1):
                 try: 
-                    values.append( '%s'%rowPrintLogic( row,hsStateDict[i],delimiter,OFF_STRING,STATE_TO_UNIT_DICT, MODE_TO_UNIT_DICT ) )
+                    values.append( '%s'%rowPrintLogic( row,hsStateDict[i],delimiter,OFF_STRING,STATE_TO_UNIT_DICT ) )
                 except KeyError:
                     values.append('') #blank cell if we weren't using that row
 

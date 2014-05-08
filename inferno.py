@@ -46,7 +46,7 @@ def main():
 
     #import and check config settings
     configTuple = parseConfig(args['--config'])
-    PICKLEPATH, CSVPATH, MCC_DLLPATH, NO_CELL_STRING, OFF_STRING, ROW_ORDER, ROW_NAMES, HS_TO_UID_DICT, PROTOCOL_MODE_DICT, MODE_TO_UNIT_DICT, STATE_TO_UNIT_DICT = configTuple
+    PICKLEPATH, CSVPATH, MCC_DLLPATH, NO_CELL_STRING, OFF_STRING, ROW_ORDER, ROW_NAMES, HS_TO_UID_DICT, PROTOCOL_MODE_DICT, STATE_TO_UNIT_DICT = configTuple
     if args['--csvpath']:
         CSVPATH = args['--csvpath']
 
@@ -122,8 +122,8 @@ def main():
         #save and display everything
         data = { filename : ( protocolNumber , hsStateDict  ) } #INTO THE PICKLE
         dataman.updatePickle(data)
-        textData = makeText( data , ROW_ORDER, ROW_NAMES , OFF_STRING , STATE_TO_UNIT_DICT, MODE_TO_UNIT_DICT, nHeadstages )
-        csvData = makeText( data , ROW_ORDER, ROW_NAMES, OFF_STRING, STATE_TO_UNIT_DICT, MODE_TO_UNIT_DICT, nHeadstages, ',' )
+        textData = makeText( data , ROW_ORDER, ROW_NAMES , OFF_STRING , STATE_TO_UNIT_DICT, nHeadstages )
+        csvData = makeText( data , ROW_ORDER, ROW_NAMES, OFF_STRING, STATE_TO_UNIT_DICT, nHeadstages, ',' )
         dataman.updateCSV( csvData )
         print(textData) 
 
