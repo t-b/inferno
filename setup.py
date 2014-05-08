@@ -22,7 +22,7 @@ buildOptions = { 'create_shared_zip' : False,
 
 
 setup(name = 'inferno',
-      version = '0.0.1',
+      version = '0.0.2',
       description = 'Inferno: electrophysiology in a shell.',
       options = { 'build_exe' : buildOptions } ,
       executables = executables,
