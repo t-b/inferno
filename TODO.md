@@ -1,5 +1,6 @@
 Todo
 ----
+-2) IF CELLS ARE NOT ON THE HEADSTAGE STILL LOAD ALL THE PROTOCOL STUFF OR PCLAMP WILL ERROR
 -1) get rid of newline at the start of the csv file
 0) specifying protocol numbers that are blank results in a key error
 1) figure out how to set the default path for the conifg, this cannot be set using docopt, it should probably be %INSTALL_DIR%/config.ini or something

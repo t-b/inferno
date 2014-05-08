@@ -71,16 +71,7 @@ def main():
 
     #get the total number of headstages for formatting
     nHeadstages = len(HS_TO_UID_DICT)
-    #drop the headstages we do not need from saving
-    for hs in range(1,nHeadstages+1):
-        try:
-            if hsToCellDict[hs] == NO_CELL_STRING:
-                HS_TO_UID_DICT.pop(hs) #pop hs that we specify with no cell
-        except KeyError:
-            if hs <= nHeadstages: #pop hs not on cmd line
-                HS_TO_UID_DICT.pop(hs)
 
-    #print('hs to uid',HS_TO_UID_DICT)
     UID_TO_HS_DICT= { v:k for k,v in HS_TO_UID_DICT.items() }
 
     #initialize the controller
@@ -109,6 +100,17 @@ def main():
 
             else:
                 protocolNumber = 'prev' #FIXME DAMN IT
+
+            #after setting all headstages drop the headstages we do not need from saving
+            for hs in range(1,nHeadstages+1):
+                try:
+                    if hsToCellDict[hs] == NO_CELL_STRING:
+                        HS_TO_UID_DICT.pop(hs) #pop hs that we specify with no cell
+                except KeyError:
+                    if hs <= nHeadstages: #pop hs not on cmd line
+                        HS_TO_UID_DICT.pop(hs)
+
+            UID_TO_HS_DICT= { v:k for k,v in HS_TO_UID_DICT.items() }
 
             #save the state of each headstage and which cell is associated with it
             uidStateDict=mccF.getMCCState(UID_TO_HS_DICT) #give it the uids in the form of keys type magic
