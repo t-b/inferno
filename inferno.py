@@ -1,8 +1,8 @@
 #!/usr/bin/env python3.3
 """Inferno: electrophysiology with Clampex in a shell.
 Usage:
-    inferno.py <HSn_cell_id>... [ --protocol=<id> --config=<path> --csvpath=<path> ]
-    inferno.py makecsv [ <pickle> [ <output> ] ]
+    inferno.py run <HSn_cell_id>... [ --protocol=<id> --config=<path> --csvpath=<path> ]
+    inferno.py makecsv [ <pickle> [ <output> ] ] [ --config=<path> ]
     inferno.py --help
 
 Options:
@@ -15,7 +15,7 @@ Options:
 import sys
 
 from docopt import docopt
-args=docopt(__doc__) #do this early to prevent all the lags
+args=docopt(__doc__)
 print(args)
 
 from time import sleep
@@ -40,8 +40,14 @@ def main():
     #enter make csv mode?
     if args['makecsv']:
         print('making csv from binary data!')
-        print(args['<pickle>'])
-        print(args['<output>'])
+        configTuple = parseConfig(args['--config'])
+        PICKLEPATH, CSVPATH, MCC_DLLPATH, NO_CELL_STRING, OFF_STRING, ROW_ORDER, ROW_NAMES, HS_TO_UID_DICT, PROTOCOL_MODE_DICT, STATE_TO_UNIT_DICT = configTuple
+        if args['<pickle>'] is not None:
+            PICKLEPATH = args['<pickle>']
+        if args['<output>'] is not None:
+            CSVPATH = args['<output>']
+        with dataio(PICKLEPATH,CSVPATH) as dataman:
+            out=dataman.loadPickle()
         return None
 
     #import and check config settings
