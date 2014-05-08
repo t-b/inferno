@@ -17,6 +17,10 @@ class dataio: #TODO if we are REALLY paranoid we can open the file back up and c
     def __enter__(self):
         return self 
 
+    def __exit__(self,type,value,traceback):
+        self.csvFile.close()
+        self.pickleFile.close()
+
     def openFile(self,PATH,fileType):
         """ ALWAYS open READ """
         if os.path.exists(PATH):
@@ -89,11 +93,6 @@ class dataio: #TODO if we are REALLY paranoid we can open the file back up and c
         with open( self.CSVPATH , 'at' ) as csvWrite:
             csvWrite.writelines(textData)
         self.csvFile = open( self.CSVPATH , 'rt' )
-
-    def __exit__(self,type,value,traceback):
-        self.csvFile.close()
-        self.pickleFile.close()
-
 
 
 def main():

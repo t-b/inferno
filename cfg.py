@@ -51,8 +51,16 @@ def parseConfig(PATH):
 
     ROW_NAMES = { k:v for k,v in cfg[_ROW_NAMES].items() }
     HS_TO_UID_DICT = { int(k):v for k,v in cfg[_HS_TO_UID_DICT].items() }
-    PROTOCOL_MODE_DICT = { int(k):[s.strip().rstrip() for s in v.split(',')] for k,v in cfg[_PROTOCOL_MODE_DICT].items() if v is not '' }
-    STATE_TO_UNIT_DICT = { k:tuple(v.replace(' ','').split(',')) for k,v in cfg[_STATE_TO_UNIT_DICT].items() } #FIXME make sure tabs dont mess this up?
+    
+    PROTOCOL_MODE_DICT = {}
+    for key,string in cfg[_PROTOCOL_MODE_DICT].items():
+        if string is not '':
+            PROTOCOL_MODE_DICT[ int(key) ] = [s.strip().rstrip() for s in string.split(',')]
+
+    STATE_TO_UNIT_DICT = {}
+    for key,string in cfg[_STATE_TO_UNIT_DICT].items():
+        tup = tuple( string.replace(', ',' ').replace(',',' ').replace('\t',' ').split(' ') )
+        STATE_TO_UNIT_DICT[ key ] = tup
 
     #check MCC_DLLPATH, the others we check later becase we may be creating them
     if not os.path.exists(MCC_DLLPATH):
@@ -62,8 +70,9 @@ def parseConfig(PATH):
     updateDict = {}
     for mode,tup in STATE_TO_UNIT_DICT.items():
         if len(tup) == 1:
-            updateDict[ mode ] = tup[0],'s'
+            updateDict[ mode ] = tup[0],'s' #FIXME make sure we aren't missing a comma!
     STATE_TO_UNIT_DICT.update(updateDict)
+    print(STATE_TO_UNIT_DICT)
 
     #validate protocol mode specifications #TODO make it work same was a NO_CELL_STRING
     nHeadstages = len(HS_TO_UID_DICT)

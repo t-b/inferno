@@ -72,6 +72,12 @@ class mccControl:
         self._pbPointer=byref(c_bool())
         self._pdPointer=byref(c_double())
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self,type,value,traceback):
+        self.DestroyObject()
+
     def errPrint(self):
         errval=val(self._pnError,c_int_p)
         if errval==6000:

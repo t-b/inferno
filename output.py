@@ -9,6 +9,7 @@ PREFIX_DEFINITIONS = { #used under multiplication with the base unit
 'G' : 1E-9,
 'M' : 1E-6,
 'K' : 1E-3,
+'None' : 1,
 'm' : 1E3,
 'u' : 1E6,
 'n' : 1E9,

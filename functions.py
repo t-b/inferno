@@ -199,7 +199,9 @@ class mccFuncs: #FIXME add a way to get the current V and I via... telegraph?
         return self
     def cleanup(self):
         try:
-            self.mcc.DestroyObject()
+            pass
+            #self.mcc.cleanup()
+            #self.mcc.DestroyObject()
             #print(self.mcc.__class__,'handler destroyed')
         except:
             pass

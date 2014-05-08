@@ -79,59 +79,58 @@ def main():
     UID_TO_HS_DICT= { v:k for k,v in HS_TO_UID_DICT.items() }
 
     #initialize the controller
-    mcc=mccControl(MCC_DLLPATH) #FIXME consolidate for cleaner dllhandle managment via with as
-    for uid in UID_TO_HS_DICT:
-        try:
-            mcc.mcDict[uid]
-        except KeyError:
-            print(mcc.mcDict.keys())
-            raise IOError('MultiClamp %s is not on! Exiting.'%uid)
+    with mccControl(MCC_DLLPATH) as mcc:
+        for uid in UID_TO_HS_DICT:
+            try:
+                mcc.mcDict[uid]
+            except KeyError:
+                print(mcc.mcDict.keys())
+                raise IOError('MultiClamp %s is not on! Exiting.'%uid)
 
-    mccF=mccFuncs(mcc)
+        mccF=mccFuncs(mcc)
 
-    #open the csv and pickle, make sure they are valid and keep a lock on them
-    #needs to happen before we touch any of the settings on the mcc etc so gurantee a save
-    with dataio(PICKLEPATH,CSVPATH) as dataman:
+        #open the csv and pickle, make sure they are valid and keep a lock on them
+        #needs to happen before we touch any of the settings on the mcc etc so gurantee a save
+        with dataio(PICKLEPATH,CSVPATH) as dataman:
 
-        if args['--protocol'] is not None:
-            protocolNumber = int(args['--protocol'])
+            if args['--protocol'] is not None:
+                protocolNumber = int(args['--protocol'])
 
-            #make the mode dict for the headstages
-            uidModeDict=makeUIDModeDict(protocolNumber,PROTOCOL_MODE_DICT,HS_TO_UID_DICT)
+                #make the mode dict for the headstages
+                uidModeDict=makeUIDModeDict(protocolNumber,PROTOCOL_MODE_DICT,HS_TO_UID_DICT)
 
-            #set the modes for each headstage and load the protocol
-            setMCCLoadProt(uidModeDict,protocolNumber,mcc)
+                #set the modes for each headstage and load the protocol
+                setMCCLoadProt(uidModeDict,protocolNumber,mcc)
 
-        else:
-            protocolNumber = 'prev' #FIXME DAMN IT
+            else:
+                protocolNumber = 'prev' #FIXME DAMN IT
 
-        #save the state of each headstage and which cell is associated with it
-        uidStateDict=mccF.getMCCState(UID_TO_HS_DICT) #give it the uids in the form of keys type magic
-        mccF.cleanup() #make sure we get rid of the dllhandels
+            #save the state of each headstage and which cell is associated with it
+            uidStateDict=mccF.getMCCState(UID_TO_HS_DICT) #give it the uids in the form of keys type magic
 
-        hsStateDict = makeHeadstageStateDict(uidStateDict,UID_TO_HS_DICT) #this is our data
+            hsStateDict = makeHeadstageStateDict(uidStateDict,UID_TO_HS_DICT) #this is our data
 
-        addCellToHeadStage(hsToCellDict,hsStateDict)
-        
-        #print(hsStateDict)
+            addCellToHeadStage(hsToCellDict,hsStateDict)
+            
+            #print(hsStateDict)
 
-        #run pclamp
-        clickRecord()
+            #run pclamp
+            clickRecord()
 
-        #get the filename from the windown name! tada! wat a stuipd hack
-        sleep(.1) #give the window time to change
-        filename = getClampexFilename()
+            #get the filename from the windown name! tada! wat a stuipd hack
+            sleep(.1) #give the window time to change
+            filename = getClampexFilename()
 
-        #TODO deal with fact that filename wont change if you stop the recording
-        #assert filename != old_filename, 'Warning! filename has not changed! Something is wrong!'
+            #TODO deal with fact that filename wont change if you stop the recording
+            #assert filename != old_filename, 'Warning! filename has not changed! Something is wrong!'
 
-        #save and display everything
-        data = { filename : ( protocolNumber , hsStateDict  ) } #INTO THE PICKLE
-        dataman.updatePickle(data)
-        textData = makeText( data , ROW_ORDER, ROW_NAMES , OFF_STRING , STATE_TO_UNIT_DICT, nHeadstages )
-        csvData = makeText( data , ROW_ORDER, ROW_NAMES, OFF_STRING, STATE_TO_UNIT_DICT, nHeadstages, ',' )
-        dataman.updateCSV( csvData )
-        print(textData) 
+            #save and display everything
+            data = { filename : ( protocolNumber , hsStateDict  ) } #INTO THE PICKLE
+            dataman.updatePickle(data)
+            textData = makeText( data , ROW_ORDER, ROW_NAMES , OFF_STRING , STATE_TO_UNIT_DICT, nHeadstages )
+            csvData = makeText( data , ROW_ORDER, ROW_NAMES, OFF_STRING, STATE_TO_UNIT_DICT, nHeadstages, ',' )
+            dataman.updateCSV( csvData )
+    print(textData) 
 
 
 if __name__ == '__main__':
