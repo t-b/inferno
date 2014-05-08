@@ -12,6 +12,8 @@ Options:
     -c --config=<path>  set which config file to use [default: config.ini]
 """ #FIXME why does the repeating argument need to come last in this instance :(
 
+import sys
+
 from docopt import docopt
 args=docopt(__doc__) #do this early to prevent all the lags
 print(args)

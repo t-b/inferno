@@ -31,6 +31,12 @@ def getGetHeadstageCount(PATH):
     return len(cfg[_HS_TO_UID_DICT])
 
 def parseConfig(PATH):
+    if not os.path.exists(PATH):
+        if PATH == 'config.ini':
+            extra = 'Did you copy config.ini.example to config.ini and edit it to match your rig?'
+        else: 
+            extra = ''
+        raise IOError('That config file does not exist!%s'%extra)
     cfg=configparser.ConfigParser()
     cfg.optionxform=str #preserve case senstivity
     cfg.read(PATH)
