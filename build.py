@@ -8,6 +8,7 @@
 
 #TODO a batch script to launch a terminal window?
 
+
 def makeExe():
     pass
 
@@ -19,3 +20,10 @@ def copySrc():
 
 def zipIt():
     pass
+
+def main():
+    makeExe()
+
+
+if __name__ == '__main__':
+    main()

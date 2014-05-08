@@ -97,7 +97,7 @@ class dataio: #TODO if we are REALLY paranoid we can open the file back up and c
 
 
 def main():
-    from IPython import embed
+    #from IPython import embed
     from output import makeText #bloodly pywin32 being pulled in by this
     from config import ROW_ORDER,ROW_NAMES,OFF_STRING
 

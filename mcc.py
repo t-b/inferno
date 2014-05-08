@@ -1,6 +1,6 @@
 from ctypes import *
 from time import sleep
-import inspect as ins
+#import inspect as ins
 import os
 
 #developed for api version 1.0.0.7
@@ -759,21 +759,13 @@ class mccControl:
         #self.aDLL.MCCMSG_BuildErrorText(self.hMCCmsg, nValue, sValue, uValue)
         #return self.errPrint()
 
-def viewFuncs():
-    import inspect as ins
-    for func, objs in ins.getmembers(mccmsg):
-        if ins.isfunction(objs):
-            if func!='__init__':
-                print('%s'%(func))
-
 def main():
-    #viewFuncs()
-    from config import MCC_DLLPATH
+    from config import MCC_DLLPATH #FIXME
     mcc=mccControl(MCC_DLLPATH)
     new=[]
     for mc in mcc.mcList:
         new.append(val(mc[1],c_char_p))
-    printD(new)
+    #printD(new)
     #printD(mcc.GetMode())
     #mcc.__init__()
     #mcc.DestroyObject()
