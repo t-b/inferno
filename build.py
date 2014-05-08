@@ -9,10 +9,12 @@ import os
 PYTHON_PATH_X86='C:\X86Python33\python.exe'
 
 def pre():
-    os.system('cp docs\README.md docs\README.txt')
+    #os.system('cp docs\README.md docs\README.txt')
+    pass
 
 def post():
-    os.system('rm docs\README.txt')
+    #os.system('rm docs\README.txt')
+    pass
 
 def makeExe():
     command = 'setup.py bdist_msi'

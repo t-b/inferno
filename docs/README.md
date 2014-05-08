@@ -56,6 +56,11 @@ The Clampex window MUST be visible in order to click the protocol buttons
 
 MultiClampCommander windows need to be opened but do not need to be visible.
 
+Upgrading
+---------
+In order to perform a clean upgrade uninstall the old version of Inferno before
+installing a new version.
+
 Notes
 -----
 Inferno ONLY sets the the mode of the patch clamp amplifier. It is possible to
