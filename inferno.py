@@ -47,8 +47,12 @@ def main():
         if args['<output>'] is not None:
             CSVPATH = args['<output>']
         with dataio(PICKLEPATH,CSVPATH) as dataman:
-            out=dataman.loadPickle()
-        print(out)
+            data=dataman.loadPickle()
+        nHeadstages = len(HS_TO_UID_DICT)
+        textData = makeText( data , ROW_ORDER, ROW_NAMES , OFF_STRING , STATE_TO_UNIT_DICT, nHeadstages )
+        csvData = makeText( data , ROW_ORDER, ROW_NAMES, OFF_STRING, STATE_TO_UNIT_DICT, nHeadstages, ',' )
+        print(textData)
+        dataman.writeCSV(csvData)
         return None
 
     #import and check config settings

@@ -94,6 +94,13 @@ class dataio: #TODO if we are REALLY paranoid we can open the file back up and c
             csvWrite.writelines(textData)
         self.csvFile = open( self.CSVPATH , 'rt' )
 
+    def writeCSV(self,textData):
+        self.csvFile.close()
+        with open( self.CSVPATH , 'wt' ) as csvWrite:
+            csvWrite.writelines(textData)
+        self.csvFile = open( self.CSVPATH , 'rt' )
+
+
 
 def main():
     #from IPython import embed
