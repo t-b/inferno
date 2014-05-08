@@ -41,6 +41,16 @@ All offsets are from the top left corner of the window in units of pixels.
 
 Usage
 -----
+The Inferno installer adds inferno.exe to the windows PATH environment variable.
+You can open a command prompt anywhere and run inferno --help to get started.
+
+A batch file inferno.bat is also available to open a command prompt to the
+folder containing inferno so that it is easy to run in the event your PATH
+gets changed.
+
+If you want to make a shortcut use inferno.bat since running
+inferno.exe from windows explorer won't do anything.
+
 The Clampex window MUST be visible in order to click the protocol buttons
 (Dear Molecular Devices, great hardware. Your software sucks.).
 

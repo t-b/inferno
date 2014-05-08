@@ -22,7 +22,7 @@ from time import sleep
 from mcc import mccControl
 from functions import mccFuncs
 
-from cfg import parseConfig
+from config import parseConfig
 
 from funcs import getClampexFilename
 from funcs import makeUIDModeDict

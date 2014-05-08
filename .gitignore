@@ -52,6 +52,7 @@ local.properties
 
 # Build results
 
+dist/
 [Dd]ebug/
 [Rr]elease/
 x64/
