@@ -2,9 +2,10 @@
 ### Inferno
 ###########
 
-config.ini
+*.ini
 *.csv
 *.pickle
+MANIFEST
 
 #################
 ## Eclipse

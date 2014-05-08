@@ -1,4 +1,5 @@
-""" This is the code for formatting text output to terminal or CSV
+"""
+    This is the code for formatting text output to terminal or CSV
 """
 
 from mcc import MCC_MODE_DICT
