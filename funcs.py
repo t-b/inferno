@@ -70,7 +70,6 @@ def makeUIDModeDict(protocolNumber,PROTOCOL_MODE_DICT,HS_TO_UID_DICT):
     modeDefs = { v:k for k,v in MCC_MODE_DICT.items() }
     modeTup=PROTOCOL_MODE_DICT[ protocolNumber ]
     modes=[ modeDefs[modeName] if modeName in modeDefs else None for modeName in modeTup ]
-    print(modes)
     uidModeDict={}
     #this only sets the headstages that have cells
     for headstage,uid in HS_TO_UID_DICT.items():

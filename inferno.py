@@ -16,7 +16,7 @@ import sys
 
 from docopt import docopt
 args=docopt(__doc__)
-print(args)
+#print(args)
 
 from time import sleep
 from mcc import mccControl
@@ -48,6 +48,7 @@ def main():
             CSVPATH = args['<output>']
         with dataio(PICKLEPATH,CSVPATH) as dataman:
             out=dataman.loadPickle()
+        print(out)
         return None
 
     #import and check config settings
@@ -62,7 +63,7 @@ def main():
     #set variables from the command line
     cell_list=args['<HSn_cell_id>']
     hsToCellDict = { n+1:cell_list[n] for n in range(len(cell_list)) }
-    print(hsToCellDict)
+    #print(hsToCellDict)
 
     #get the total number of headstages for formatting
     nHeadstages = len(HS_TO_UID_DICT)
@@ -75,7 +76,7 @@ def main():
             if hs <= nHeadstages: #pop hs not on cmd line
                 HS_TO_UID_DICT.pop(hs)
 
-    print('hs to uid',HS_TO_UID_DICT)
+    #print('hs to uid',HS_TO_UID_DICT)
     UID_TO_HS_DICT= { v:k for k,v in HS_TO_UID_DICT.items() }
 
     #initialize the controller

@@ -73,7 +73,6 @@ def parseConfig(PATH):
         if len(tup) == 1:
             updateDict[ mode ] = tup[0],'s' #FIXME make sure we aren't missing a comma!
     STATE_TO_UNIT_DICT.update(updateDict)
-    print(STATE_TO_UNIT_DICT)
 
     #validate protocol mode specifications #TODO make it work same was a NO_CELL_STRING
     nHeadstages = len(HS_TO_UID_DICT)

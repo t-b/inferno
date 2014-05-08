@@ -98,7 +98,8 @@ class dataio: #TODO if we are REALLY paranoid we can open the file back up and c
 def main():
     #from IPython import embed
     from output import makeText #bloodly pywin32 being pulled in by this
-    from config import ROW_ORDER,ROW_NAMES,OFF_STRING
+    from config import parseConfig
+    PICKLEPATH, CSVPATH, MCC_DLLPATH, NO_CELL_STRING, OFF_STRING, ROW_ORDER, ROW_NAMES, HS_TO_UID_DICT, PROTOCOL_MODE_DICT, STATE_TO_UNIT_DICT = parseConfig('config.ini.example')
 
     #d=dataio('pickletest.pickle','csvtest.csv')
 
@@ -111,20 +112,21 @@ def main():
         '2 did this update work?':(2,{'ALL THE THINGS':'NOPE'}),
     }
 
+    nHeadstages = len(HS_TO_UID_DICT)
     with dataio('nrw.pickle','nrw.csv') as nrw , dataio('nwr.pickle','nwr.csv') as nwr:
         print(nrw.loadCSV())
         print(nrw.loadPickle())
         nrw.updatePickle(sample_data)
-        nrw.updatePickle( makeText(sample_data,ROW_ORDER,ROW_NAMES,OFF_STRING,delimiter=',') )
+        nrw.updatePickle( makeText(sample_data,ROW_ORDER,ROW_NAMES,OFF_STRING,STATE_TO_UNIT_DICT,nHeadstages,delimiter=',') )
         nrw.updatePickle(update_data)
-        nrw.updatePickle( makeText(update_data,ROW_ORDER,ROW_NAMES,OFF_STRING,delimiter=',') )
+        nrw.updatePickle( makeText(update_data,ROW_ORDER,ROW_NAMES,OFF_STRING,STATE_TO_UNIT_DICT,nHeadstages,delimiter=',') )
 
         nwr.updatePickle(sample_data)
-        nwr.updatePickle( makeText(sample_data,ROW_ORDER,ROW_NAMES,OFF_STRING,delimiter=',') )
+        nwr.updatePickle( makeText(sample_data,ROW_ORDER,ROW_NAMES,OFF_STRING,STATE_TO_UNIT_DICT,nHeadstages,delimiter=',') )
         print(nwr.loadCSV())
         print(nwr.loadPickle())
         nwr.updatePickle(update_data)
-        nwr.updatePickle( makeText(update_data,ROW_ORDER,ROW_NAMES,OFF_STRING,delimiter=',') )
+        nwr.updatePickle( makeText(update_data,ROW_ORDER,ROW_NAMES,OFF_STRING,STATE_TO_UNIT_DICT,nHeadstages,delimiter=',') )
 
     def csvTest():
         print(d.loadCSV())
