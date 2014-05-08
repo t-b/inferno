@@ -19,9 +19,12 @@ include_files = [
 buildOptions = { 'create_shared_zip' : False,
                  'include_files' : include_files,
                }
+bdistOptions = { 'add_to_path':True,
+                 'upgrade_code':'{AFA68806-4E2B-406a-858B-880B842ADA05}',
+}
 
 setupOptions = { 'build_exe' : buildOptions,
-                 'bdist_msi' : {'add_to_path':True,'upgrade_code':'inferno1'}
+                 'bdist_msi' : bdistOptions,
                }
 
 setup(name = 'inferno',
