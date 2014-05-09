@@ -2,7 +2,7 @@ Inferno
 =======
 A command line tool for controlling MultiClampCommander and Clampex and saving data.
 
-Inferno is an open source project licensed under the HAVE NOT DECIDED YET license.
+Inferno is an open source project licensed under the MIT license.
 Source code is availble at [http://github.com/tgbugs/inferno](http://github.com/tgbugs/inferno).
 
 Please submit any bugs or feature requests to the github issue tracker.
