@@ -1,5 +1,4 @@
 #!/usr/bin/env python3.3
-__version__ = '0.0.3'
 from __init__ import __version__
 from config import DEFAULT_USER_DIR
 __doc__ = """
