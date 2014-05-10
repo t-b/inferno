@@ -24,25 +24,39 @@ _HS_TO_UID_DICT = 'HEADSTAGE TO UNIQUE ID'
 _PROTOCOL_MODE_DICT = 'PROTOCOL MULTICLAMP MODES'
 _STATE_TO_UNIT_DICT = 'STATE TO UNITS'
 
-def getGetHeadstageCount(PATH):
-    cfg=configparser.ConfigParser()
-    cfg.optionxform=str
-    cfg.read(PATH)
-    return len(cfg[_HS_TO_UID_DICT])
+DEFAULT_USER_DIR = '~/inferno/'
+
+def firstRun(CONFIGPATH):
+    if CONFIGPATH == DEFAULT_USER_DIR+'config.ini':
+        user_dir = os.path.expanduser(DEFAULT_USER_DIR)
+        configpath = os.path.expanduser(CONFIGPATH)
+        if not os.path.exists(user_dir):
+            os.makedirs(user_dir)
+            makeConfig(example_config,configpath+'.example')
+            print('This seems to be the first time you have run Inferno.\n'
+                  'An example config has been generated at {0}config.ini.example.\n'
+                  'There is also a nicely formated example in the install folder.\n'
+                  'Please copy one of these scripts to {0}config.ini and edit it\n'
+                  'to match the settings of your rig and protocols.'.format(DEFAULT_USER_DIR)
+                 )
+            return True
+        else:
+            return False
 
 def parseConfig(PATH):
-    if not os.path.exists(PATH):
-        if PATH == 'config.ini':
+    path=os.path.expanduser(PATH)
+    if not os.path.exists(path):
+        if PATH == DEFAULT_USER_DIR+'config.ini':
             extra = 'Did you copy config.ini.example to config.ini and edit it to match your rig?'
         else: 
             extra = ''
-        raise IOError('That config file does not exist!%s'%extra)
+        raise IOError('That config file does not exist!\n%s'%extra)
     cfg=configparser.ConfigParser()
     cfg.optionxform=str #preserve case senstivity
-    cfg.read(PATH)
+    cfg.read(path)
 
-    PICKLEPATH = cfg[_PATHS][_PICKLEPATH]
-    CSVPATH = cfg[_PATHS][_CSVPATH]
+    PICKLEPATH = os.path.expanduser(cfg[_PATHS][_PICKLEPATH])
+    CSVPATH = os.path.expanduser(cfg[_PATHS][_CSVPATH])
     MCC_DLLPATH = cfg[_PATHS][_MCC_DLLPATH]
 
     NO_CELL_STRING = cfg[_FORMATTING][_NO_CELL_STRING]
@@ -96,10 +110,13 @@ def parseConfig(PATH):
     return PICKLEPATH, CSVPATH, MCC_DLLPATH, NO_CELL_STRING, OFF_STRING, ROW_ORDER, ROW_NAMES, HS_TO_UID_DICT, PROTOCOL_MODE_DICT, STATE_TO_UNIT_DICT
 
 def makeConfig(configdict,PATH):
+    path = os.path.expanduser(PATH)
+    if os.path.exists(path):
+        raise IOError('File already exists! If you meant to overwrite it please delete it first.')
     cfg=configparser.ConfigParser()
     cfg.optionxform=str
     cfg.read_dict(configdict)
-    with open( PATH , 'w' ) as f:
+    with open( path , 'w' ) as f:
         cfg.write(f)
 
 
@@ -108,9 +125,9 @@ def makeConfig(configdict,PATH):
 
 example_config = {
 _PATHS : {
-        _PICKLEPATH    : "patch_experiment_data.pickle", 
-        _CSVPATH       : "patch_experiment_data.csv", 
-        _MCC_DLLPATH   : "C:/Program Files (x86)/Molecular Devices/MultiClamp 700B Commander/3rd Party Support/AxMultiClampMsg", 
+        _PICKLEPATH    : DEFAULT_USER_DIR+'patch_experiment_data.pickle', 
+        _CSVPATH       : DEFAULT_USER_DIR+'patch_experiment_data.csv', 
+        _MCC_DLLPATH   : 'C:/Program Files (x86)/Molecular Devices/MultiClamp 700B Commander/3rd Party Support/AxMultiClampMsg', 
         }, 
 
 _HS_TO_UID_DICT :    {
@@ -177,7 +194,7 @@ _STATE_TO_UNIT_DICT :  {
                     'Mode':'None ',
 
                     'HoldingEnable':'None',
-                    'Holding':'None #LOOKUP',
+                    'Holding':'None',
                     'PrimarySignal':'None',
                     'PrimarySignalGain':'None',
                     'PrimarySignalLPF':'None',

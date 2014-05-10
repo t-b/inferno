@@ -10,9 +10,10 @@ Please submit any bugs or feature requests to the github issue tracker.
 Configuration
 -------------
 By default Inferno looks for a configuration file in ~/inferno/config.ini.
-The installer will create ~/inferno/config.ini.example. You should copy
-config.ini.example to config.ini and edit it to match your setup. Most
-sections in config.ini should be self explanatory. All sections are required.
+To create ~/inferno/config.ini.example run '>inferno setup'. You should copy
+config.ini.example located in the install folder, or the example created by
+inferno setup to config.ini and edit it to match your setup. Most sections
+in config.ini should be self explanatory. All sections are required.
 
 [HEADSTAGE TO UNIQUE ID] associates the numbers you use for your headstages 1-n
 to the serial number (8 digit number for 700B)  of the Multiclamp follow by an
@@ -46,9 +47,8 @@ Usage
 The Inferno installer adds inferno.exe to the windows PATH environment variable.
 You can open a command prompt anywhere and run inferno --help to get started.
 
-A batch file inferno.bat is also available to open a command prompt to the
-folder containing inferno so that it is easy to run in the event your PATH
-gets changed.
+A batch file inferno.bat is also available to open a command prompt and execute
+inferno --help.
 
 If you want to make a shortcut use inferno.bat since running
 inferno.exe from windows explorer won't do anything.
@@ -57,6 +57,10 @@ The Clampex window MUST be visible in order to click the protocol buttons
 (Dear Molecular Devices, great hardware. Your software sucks.).
 
 MultiClampCommander windows need to be opened but do not need to be visible.
+
+Formatting Data
+---------------
+TODO
 
 Upgrading
 ---------
@@ -68,6 +72,9 @@ Notes
 Inferno ONLY sets the the mode of the patch clamp amplifier. It is possible to
 programatically set and adjust many other things, however there is a risk of
 loosing cells due to misconfigured settings and takes time to develop properly.
+
+WARNING: Inferno stores binary data in a python dictionary using filenames as
+keys. If you use non unique filenames 
 
 Known Issues
 ------------

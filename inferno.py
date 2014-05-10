@@ -1,16 +1,19 @@
 #!/usr/bin/env python3.3
-"""Inferno: electrophysiology with Clampex in a shell.
+from config import DEFAULT_USER_DIR
+__doc__ = """
+Inferno: electrophysiology with Clampex in a shell.
 Usage:
     inferno.py run <HSn_cell_id>... [ --protocol=<id> --config=<path> --csvpath=<path> ]
     inferno.py makecsv [ <pickle> [ <output> ] ] [ --config=<path> ]
+    inferno.py setup
     inferno.py --help
 
 Options:
     -h --help           print this
     -p --protocol=<id>  set which protocol to load, if not set will run with current settings
     -f --csvpath=<path> set which csv file to write, defaults to CSVPATH from config
-    -c --config=<path>  set which config file to use [default: ~/inferno/config.ini]
-""" #FIXME why does the repeating argument need to come last in this instance :(
+    -c --config=<path>  set which config file to use [default: %sconfig.ini]
+"""%DEFAULT_USER_DIR
 
 import sys
 
@@ -22,7 +25,7 @@ from time import sleep
 from mcc import mccControl
 from functions import mccFuncs
 
-from config import parseConfig
+from config import parseConfig, firstRun
 
 from funcs import getClampexFilename
 from funcs import makeUIDModeDict
@@ -38,6 +41,11 @@ from dataio import dataio
 
 def main():
     #import and check config settings
+    if firstRun(args['--config']):
+        return None
+    elif args['setup']:
+        print('Setup already complete!')
+        return None
     configTuple = parseConfig(args['--config'])
     PICKLEPATH, CSVPATH, MCC_DLLPATH, NO_CELL_STRING, OFF_STRING, ROW_ORDER, ROW_NAMES, HS_TO_UID_DICT, PROTOCOL_MODE_DICT, STATE_TO_UNIT_DICT = configTuple
 
