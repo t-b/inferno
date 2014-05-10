@@ -14,11 +14,12 @@ Todo
 
 13) make it possible to choose how to format the filename data and the protocol name data
 
-14) FIXME the structure of the makecsv options is not correct, you should be able to spec a csv file without having to spec a binary file!
 
 
 Done
 ----
+x) FIXME the structure of the makecsv options is not correct, you should be able to spec a csv file without having to spec a binary file!
+
 x) make it possible to easily extend inferno with new modules for acquisition programs other than Clampex10, eg Clampex9...
 
 x) specifying protocol numbers that are blank results in a key error

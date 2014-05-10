@@ -67,13 +67,14 @@ on all four headstages at once you could do the following:
 
 `inferno run a xx b -p 3`
 
-In thise case you have associated the cell with identifier a to headstage 1,
-left headstage two blank by using `xx` to mark it as blank (you can set what
-string means no cell in your config with the `NO_CELL_STRING` value) and
-associated the cell with identifier b to headstage three, and left the fourth
-headstage blank by not entering anything at all.
+In thise case you have associated the cell with identifier `a` to headstage 1,
+left headstage two blank by using `xx` to mark it as blank, 
+associated the cell with identifier `b` to headstage three, and left the fourth
+headstage blank by not entering anything at all. Cell identifiers are case
+sensitive. You can set what string means no cell in your config with the
+ `NO_CELL_STRING` value.
 
-### Details
+##### Details
 The Inferno installer adds inferno.exe to the windows PATH environment variable.
 You can open a command prompt anywhere and run inferno --help to get started.
 
