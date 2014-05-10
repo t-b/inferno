@@ -8,7 +8,7 @@ executables = [
                appendScriptToExe=True,
                appendScriptToLibrary = False,
                excludes = ['IPython'],
-               replacePaths = [('*','*')],
+               replacePaths = [('*','')],
               )
 ]
 
