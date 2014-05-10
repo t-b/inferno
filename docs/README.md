@@ -3,7 +3,7 @@ Inferno
 A command line tool for controlling MultiClampCommander and Clampex and saving data.
 
 Inferno is an open source project licensed under the MIT license.
-Source code is availble at [http://github.com/tgbugs/inferno](http://github.com/tgbugs/inferno).
+Source code is available at [http://github.com/tgbugs/inferno](http://github.com/tgbugs/inferno).
 
 A pretty version of this README is available at:
 https://github.com/tgbugs/inferno/tree/dev/docs/README.md
@@ -28,7 +28,7 @@ entry for each headstage on your rig.
 
 [PROTOCOL MULTICLAMP MODES] associates a list of numbers 1-17, which represent
 the UI buttons moving from left to right in Clampex, to tuples that specify the
-modes (voltage clamp "VC", current clamp "IC", or current equals zero "IEZ")
+modes (voltage clamp VC, current clamp IC, or current equals zero IEZ)
 that the protocol assigned to that button uses. The tuple should be the same
 length as the number of headstages on your rig. __You need to assign your
 protocols to the UI buttons for Inferno to work properly.__ The buttons in
@@ -57,11 +57,11 @@ Usage
 The Inferno installer adds inferno.exe to the windows PATH environment variable.
 You can open a command prompt anywhere and run inferno --help to get started.
 
-A batch file inferno.bat is also available to open a command prompt and execute
-inferno --help.
+A batch file run_inferno.bat is also available to automatically open a command
+prompt and execute inferno --help.
 
-If you want to make a shortcut use inferno.bat since running
-inferno.exe from windows explorer won't do anything.
+If you want to make a shortcut use run_inferno.bat since running inferno.exe
+from windows explorer won't do anything useful.
 
 The Clampex window MUST be visible in order to click the protocol buttons
 (Dear Molecular Devices, great hardware. Your software sucks.).
@@ -75,11 +75,11 @@ installing a new version.
 
 Notes
 -----
-Inferno ONLY sets the the mode of the patch clamp amplifier. It is possible to
-programatically set and adjust many other things, however there is a risk of
-loosing cells due to misconfigured settings and takes time to develop properly.
+Inferno ONLY sets the mode (IC,VC,IEZ) of the patch clamp amplifier. It is
+possible to automatically set many other values via the MCC API, however for
+the time being we will leave those controls in the hands of the experimenter.
 
-WARNING: Inferno stores binary data in a python dictionary using filenames as
+__WARNING:__ Inferno stores binary data in a python dictionary using filenames as
 keys. If you change folders from day to day and reuse filenames without changing
 the binary pickle save file you will loose data. Inferno will warn you if it detects
 that you are overwriting existing entries in a pickle file.
@@ -87,5 +87,5 @@ that you are overwriting existing entries in a pickle file.
 Known Issues
 ------------
 It takes time for values set in MultiClampCommander to propagate via telegraph
-to Clampex. We sleep(1) to prevent erros when loading Clampex protocol too soon.
-We have only tested with 4 headstages, it may take longer if you use more.
+to Clampex. We sleep(1) to prevent errors when loading the Clampex protocol too
+soon. We have only tested with 4 headstages, it may take longer if you use more.
