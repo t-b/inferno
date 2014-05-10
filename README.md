@@ -8,6 +8,8 @@ Dependencies
 * docopt
 * pywin32
 
+Supported Programs
+------------------
 * pClamp10 (Clampex)
 * MultiClampCommander (so far only tested with MultiClamp 700B)
 
@@ -16,11 +18,6 @@ Usage
 Inferno can be run from the command line via inferno.py if you have installed
 python and the dependencies listed above. Please see docs/README.md for more
 information on using Inferno from source and as a binary.
-
-Upgrading
----------
-If you are using the standalone installer version of Inferno please
-uninstall the old version of Inferno before installing a new version.
 
 Building
 --------

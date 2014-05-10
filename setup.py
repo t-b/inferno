@@ -1,7 +1,7 @@
 import sys
 from cx_Freeze import setup, Executable
 
-VERSION = '0.0.2'
+VERSION = '0.0.3'
 
 executables = [
     Executable('inferno.py',
