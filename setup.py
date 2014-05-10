@@ -1,7 +1,6 @@
 import sys
 from cx_Freeze import setup, Executable
-
-VERSION = '0.0.3'
+from inferno import __version__
 
 executables = [
     Executable('inferno.py',
@@ -9,7 +8,7 @@ executables = [
                appendScriptToExe=True,
                appendScriptToLibrary = False,
                excludes = ['IPython'],
-               replacePaths = True,
+               replacePaths = [('*','*')],
               )
 ]
 
@@ -31,7 +30,7 @@ setupOptions = { 'build_exe' : buildOptions,
                }
 
 setup(name = 'inferno',
-      version = VERSION,
+      version = __version__,
       author = 'Tom Gillespie',
       author_email = 'tgbugs@gmail.com',
       url = 'https://github.com/tgbugs/inferno',

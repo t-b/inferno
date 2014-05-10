@@ -1,4 +1,5 @@
 #!/usr/bin/env python3.3
+__version__ = '0.0.3'
 from config import DEFAULT_USER_DIR
 __doc__ = """
 
@@ -14,13 +15,14 @@ Options:
     -p --protocol=<id>  set which protocol to load, if not set will run with current settings
     -f --csvpath=<path> set which csv file to write, defaults to CSVPATH from config
     -c --config=<path>  set which config file to use [default: %sconfig.ini]
+    -v --version        show version
 
 """%DEFAULT_USER_DIR
 
 import sys
 
 from docopt import docopt
-args=docopt(__doc__)
+args=docopt( __doc__ , version = 'Inferno '+__version__ )
 #print(args)
 
 from time import sleep
