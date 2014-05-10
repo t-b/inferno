@@ -740,8 +740,8 @@ class mccControl:
 
     def GetMeterValue(self, u):
         uValue=c_uint(u)
-        self.aDLL.MCCMSG_GetMeterValue(self.hMCCmsg, uValue, self._pnError)
-        return self.errPrint()
+        self.aDLL.MCCMSG_GetMeterValue(self.hMCCmsg, self._pdPointer, uValue, self._pnError)
+        return val(self._pdPointer, c_double_p)
 
 #MCC toolbar funcs
     def Reset(self):
@@ -766,15 +766,13 @@ class mccControl:
         #return self.errPrint()
 
 def main():
-    from config import MCC_DLLPATH #FIXME
-    mcc=mccControl(MCC_DLLPATH)
-    new=[]
-    for mc in mcc.mcList:
-        new.append(val(mc[1],c_char_p))
-    #printD(new)
-    #printD(mcc.GetMode())
-    #mcc.__init__()
-    #mcc.DestroyObject()
+    MCC_DLLPATH = 'C:/Axon/MultiClamp 700B Commander/3rd Party Support/AxMultiClampMsg/'
+    with mccControl(MCC_DLLPATH) as mcc:
+        for uid in mcc.mcDict:
+            mcc.selectUniqueID(uid)
+            vals = [mcc.GetMeterValue(i) for i in range(4)]
+            print(vals)
+
 
 if __name__=='__main__':
     main()
@@ -796,4 +794,10 @@ const UINT MCCMSG_PRI_SIGNAL_IC_100XACMEMBPOTENTIAL     = 10; // 700B and 700A
 const UINT MCCMSG_PRI_SIGNAL_IC_EXTCMDCURRENT           = 11; // 700B only
 const UINT MCCMSG_PRI_SIGNAL_IC_AUXILIARY1              = 12; // 700B and 700A
 const UINT MCCMSG_PRI_SIGNAL_IC_AUXILIARY2              = 13; // 700B only
+
+// Parameters for MCCMSG_GetMeterValue()
+const UINT MCCMSG_METER1                                = 0;  // 700B 
+const UINT MCCMSG_METER2                                = 1;  // 700B 
+const UINT MCCMSG_METER3                                = 2;  // 700B 
+const UINT MCCMSG_METER4                                = 3;  // 700B 
 """
