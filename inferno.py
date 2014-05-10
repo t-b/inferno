@@ -6,8 +6,7 @@ __doc__ = """
 Inferno: electrophysiology with Clampex in a shell.
 Usage:
     inferno.py run <HSn_cell_id>... [ --protocol=<id> --config=<path> --csvpath=<path> ]
-    inferno.py makecsv [ <pickle> [ <output> ] ] [ --config=<path> ]
-    inferno.py makecsv [ --csvpath=<path> ] [ --pikpath=<path> ] [ --config=<path> ]
+    inferno.py makecsv [ --csvpath=<path> --pikpath=<path> --config=<path> ]
     inferno.py setup
     inferno.py --help
 
