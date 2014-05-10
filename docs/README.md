@@ -3,7 +3,7 @@ Inferno
 A command line tool for controlling MultiClampCommander and Clampex and saving data.
 
 Inferno is an open source project licensed under the MIT license.
-Source code is available at [http://github.com/tgbugs/inferno](http://github.com/tgbugs/inferno).
+Source code is available at http://github.com/tgbugs/inferno.
 
 A pretty version of this README is available at:
 https://github.com/tgbugs/inferno/tree/dev/docs/README.md
@@ -33,7 +33,6 @@ that the protocol assigned to that button uses. The tuple should be the same
 length as the number of headstages on your rig. __You need to assign your
 protocols to the UI buttons for Inferno to work properly.__ The buttons in
 question can be seen here:
-
 
 ![alt text](https://raw.githubusercontent.com/tgbugs/inferno/dev/docs/clxbutts.jpg "Yep, those")
 
@@ -81,8 +80,8 @@ the time being we will leave those controls in the hands of the experimenter.
 
 __WARNING:__ Inferno stores binary data in a python dictionary using filenames as
 keys. If you change folders from day to day and reuse filenames without changing
-the binary pickle save file you will loose data. Inferno will warn you if it detects
-that you are overwriting existing entries in a pickle file.
+which pickle file you save to (in the config), you will loose data. Inferno will
+warn you if it detects that you are overwriting existing entries in a pickle file.
 
 Known Issues
 ------------
