@@ -152,6 +152,9 @@ _PROTOCOL_MODE_DICT :    { #conforms to MCC_MODE_DICT naming
                         12:'',
                         13:'',
                         14:'',
+                        15:'',
+                        16:'',
+                        17:'',
                         }, 
 
 _FORMATTING :    {

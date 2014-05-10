@@ -5,15 +5,19 @@ A command line tool for controlling MultiClampCommander and Clampex and saving d
 Inferno is an open source project licensed under the MIT license.
 Source code is availble at [http://github.com/tgbugs/inferno](http://github.com/tgbugs/inferno).
 
+A pretty version of this README is available at:
+https://github.com/tgbugs/inferno/tree/dev/docs/README.md
+
 Please submit any bugs or feature requests to the github issue tracker.
 
 Configuration
 -------------
 By default Inferno looks for a configuration file in ~/inferno/config.ini.
 To create ~/inferno/config.ini.example run '>inferno setup'. You should copy
-config.ini.example located in the install folder, or the example created by
-inferno setup to config.ini and edit it to match your setup. Most sections
-in config.ini should be self explanatory. All sections are required.
+config.ini.example located in the install folder (same place as this README),
+or the example created by inferno setup to config.ini and edit it to match
+your setup (the example in the install folder has nicer formatting). Most
+sections in config.ini should be self explanatory. All sections are required.
 
 [HEADSTAGE TO UNIQUE ID] associates the numbers you use for your headstages 1-n
 to the serial number (8 digit number for 700B)  of the Multiclamp follow by an
@@ -22,24 +26,28 @@ associates your headstage number 1 to the headstage plugged in to the first
 channel of the amplifier that has the serial number 1234567. You should have one
 entry for each headstage on your rig.  
 
-[PROTOCOL MULTICLAMP MODES] associates a list of numbers 1-14, which represent
+[PROTOCOL MULTICLAMP MODES] associates a list of numbers 1-17, which represent
 the UI buttons moving from left to right in Clampex, to tuples that specify the
 modes (voltage clamp "VC", current clamp "IC", or current equals zero "IEZ")
 that the protocol assigned to that button uses. The tuple should be the same
 length as the number of headstages on your rig. __You need to assign your
-protocols to the UI buttons for Inferno to work properly.__
+protocols to the UI buttons for Inferno to work properly.__ The buttons in
+question can be seen here: ![alt text][Those things in the red box, yeah them]
+(https://github.com/tgbugs/inferno/tree/dev/docs/clxbutts.jpg)
 
 [STATE TO UNITS] tell Inferno how to display numbers from MultiClampCommander
 using tuples of an SI prefix and python string formatting syntax. Please see
 [the python documentation](https://docs.python.org/3.3/library/string.html#format-specification-mini-language)
-for reference. If you do not specify a format it will default to %s. Note that
-MultiClampCommander stores all numbers as the base unit (V,A, etc). Note also
-that IC and VC are in fact specified by checking the Mode setting for holding
-however since there is no overlap of keys we keep them in [STATE TO UNITS]
+for reference. If you do not specify a format it will default to normal string
+formatting. Note that MultiClampCommander stores all numbers as the base unit
+(V,A, etc). Note also that IC and VC are in fact specified by checking the Mode
+setting for a headstage, however since there is no overlap of keys we keep
+them in [STATE TO UNITS].
 
 Button Offsets. In gui.py it is possible to modify the button offsets.
 Inferno is currently configured using the default Clampex UI arrangment, but
-if you have modified your settings then those button offsets will be wrong.
+if you have modified your settings then those button offsets will be wrong and
+you should return the Clampex GUI to the default settings (as seen above).
 All offsets are from the top left corner of the window in units of pixels.
 
 Usage

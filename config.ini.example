@@ -26,6 +26,10 @@ MCC_DLLPATH = C:/Program Files (x86)/Molecular Devices/MultiClamp 700B Commander
 12 =
 13 =
 14 =
+15 = 
+16 =
+17 =
+
 
 [FORMATTING]
 #string to enter to tell inferno that the headstage is empty
