@@ -1,6 +1,6 @@
 import sys
 from cx_Freeze import setup, Executable
-from inferno import __version__
+from __init__ import __version__
 
 executables = [
     Executable('inferno.py',
@@ -15,7 +15,7 @@ executables = [
 include_files = [
     'config.ini.example',
     ('docs/README.md','README.txt'),
-    'inferno.bat',
+    'run_inferno.bat',
 ]
 
 buildOptions = { 'create_shared_zip' : False,
