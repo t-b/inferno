@@ -34,7 +34,8 @@ length as the number of headstages on your rig. __You need to assign your
 protocols to the UI buttons for Inferno to work properly.__ The buttons in
 question can be seen here:
 
-![alt text](https://github.com/tgbugs/inferno/tree/dev/docs/clxbutts.jpg "Yep, those")
+
+![alt text](https://raw.githubusercontent.com/tgbugs/inferno/dev/docs/clxbutts.jpg "Yep, those")
 
 [STATE TO UNITS] tell Inferno how to display numbers from MultiClampCommander
 using tuples of an SI prefix and python string formatting syntax. Please see
