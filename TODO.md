@@ -12,6 +12,10 @@ Todo
 
 12) possibly rework how the data acquistion interacts such that it is easier to add new systems, basically we just need a type that provides access to IsOn, LoadProtocol, Record, and GetFilename
 
+13) make it possible to choose how to format the filename data and the protocol name data
+
+14) FIXME the structure of the makecsv options is not correct, you should be able to spec a csv file without having to spec a binary file!
+
 
 Done
 ----

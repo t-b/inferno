@@ -13,7 +13,7 @@ Please submit any bugs or feature requests to the github issue tracker.
 Configuration
 -------------
 By default Inferno looks for a configuration file in ~/inferno/config.ini.
-To create ~/inferno/config.ini.example run '>inferno setup'. You should copy
+To create ~/inferno/config.ini.example run `inferno setup`. You should copy
 config.ini.example located in the install folder (same place as this README),
 or the example created by inferno setup to config.ini and edit it to match
 your setup (the example in the install folder has nicer formatting). Most
@@ -53,6 +53,27 @@ All offsets are from the top left corner of the window in units of pixels.
 
 Usage
 -----
+To run Inferno start up Clampex and your MultiClampCommander windows and open
+a command propt and type `inferno` or double click `run_inferno.bat` in the
+program folder.
+
+A couple of examples of how to use Inferno for on a rig with four headstages:
+
+`inferno run cell1 cell2 cell3 cell4 -p 1`
+
+loads the program associated with the first Clampex button and associates
+cell1 with headstage 1, cell 2 with headstage 2, etc. If you don't have cells
+on all four headstages at once you could do the following:
+
+`inferno run a xx b -p 3`
+
+In thise case you have associated the cell with identifier a to headstage 1,
+left headstage two blank by using `xx` to mark it as blank (you can set what
+string means no cell in your config with the `NO_CELL_STRING` value) and
+associated the cell with identifier b to headstage three, and left the fourth
+headstage blank by not entering anything at all.
+
+### Details
 The Inferno installer adds inferno.exe to the windows PATH environment variable.
 You can open a command prompt anywhere and run inferno --help to get started.
 
@@ -67,10 +88,15 @@ The Clampex window MUST be visible in order to click the protocol buttons
 
 MultiClampCommander windows need to be opened but do not need to be visible.
 
-Upgrading
----------
-In order to perform a clean upgrade uninstall the old version of Inferno before
-installing a new version.
+Text output
+-----------
+Inferno saves a subset of the data it collects formatted as text that is easy
+to read for analysis (all the data is saved in the binary). You can control
+what is displayed and how it is formatted using the config as mentioned above.
+It is also possible to write (or rewrite) the CSV file with different formatting
+by modifying your config and running `inferno makecsv`. By defautl this uses the
+pickle file and the csv file listed in your config but you can specify different
+files using options on the command line.
 
 Notes
 -----
