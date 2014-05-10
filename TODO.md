@@ -16,6 +16,7 @@ Todo
 
 13) make it possible to choose how to format the filename data and the protocol name data
 
+14) use folders to make the source more readable
 
 
 Done

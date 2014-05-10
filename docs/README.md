@@ -18,6 +18,8 @@ config.ini.example located in the install folder (same place as this README),
 or the example created by inferno setup to config.ini and edit it to match
 your setup (the example in the install folder has nicer formatting). Most
 sections in config.ini should be self explanatory. All sections are required.
+__Please test your config settings and the general operation of Inferno on your
+rig before conducting real experiments__
 
 [HEADSTAGE TO UNIQUE ID] associates the numbers you use for your headstages 1-n
 to the serial number (8 digit number for 700B)  of the Multiclamp follow by an
