@@ -58,10 +58,6 @@ The Clampex window MUST be visible in order to click the protocol buttons
 
 MultiClampCommander windows need to be opened but do not need to be visible.
 
-Formatting Data
----------------
-TODO
-
 Upgrading
 ---------
 In order to perform a clean upgrade uninstall the old version of Inferno before
@@ -74,7 +70,9 @@ programatically set and adjust many other things, however there is a risk of
 loosing cells due to misconfigured settings and takes time to develop properly.
 
 WARNING: Inferno stores binary data in a python dictionary using filenames as
-keys. If you use non unique filenames 
+keys. If you change folders from day to day and reuse filenames without changing
+the binary pickle save file you will loose data. Inferno will warn you if it detects
+that you are overwriting existing entries in a pickle file.
 
 Known Issues
 ------------

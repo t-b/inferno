@@ -67,6 +67,7 @@ def main():
         dataman.writeCSV(csvData)
         return None
 
+    #check that we actually have a 
     #did we set the csvpath on the commandline?
     if args['--csvpath']:
         CSVPATH = args['--csvpath']

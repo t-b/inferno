@@ -61,7 +61,11 @@ class dataio: #TODO if we are REALLY paranoid we can open the file back up and c
 
     def updatePickle(self,data):
         try:
+            for key in data:
+                if key in self.saved_data:
+                    print('WARNING! You are overwriting an existing data entry!')
             self.saved_data.update(data)
+
         except ValueError: #MUST have this here or we loose ALL the data in the file! (WTF)
             print('The data you just passed in is not a dictionary!')
             raise #prevent opening in write mode
