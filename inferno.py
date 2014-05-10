@@ -1,6 +1,7 @@
 #!/usr/bin/env python3.3
 from config import DEFAULT_USER_DIR
 __doc__ = """
+
 Inferno: electrophysiology with Clampex in a shell.
 Usage:
     inferno.py run <HSn_cell_id>... [ --protocol=<id> --config=<path> --csvpath=<path> ]
@@ -13,6 +14,7 @@ Options:
     -p --protocol=<id>  set which protocol to load, if not set will run with current settings
     -f --csvpath=<path> set which csv file to write, defaults to CSVPATH from config
     -c --config=<path>  set which config file to use [default: %sconfig.ini]
+
 """%DEFAULT_USER_DIR
 
 import sys
@@ -27,13 +29,14 @@ from functions import mccFuncs
 
 from config import parseConfig, firstRun
 
-from funcs import getClampexFilename
 from funcs import makeUIDModeDict
-from funcs import setMCCLoadProt
-from funcs import clickProtocol
 from funcs import makeHeadstageStateDict
 from funcs import addCellToHeadStage
-from funcs import clickRecord
+from funcs import MCCsetModes
+
+from clampex import ClampexLoadProtocol as LoadProtocol
+from clampex import ClampexRecord as Record
+from clampex import ClampexGetFilename as GetFilename
 
 from output import makeText
 
@@ -67,19 +70,32 @@ def main():
         dataman.writeCSV(csvData)
         return None
 
-    #check that we actually have a 
     #did we set the csvpath on the commandline?
     if args['--csvpath']:
         CSVPATH = args['--csvpath']
 
-    #see if clampex is on
-    old_filename = getClampexFilename()
+    #see if clampex is on, this is rather a hack and should be made explicit
+    old_filename = GetFilename()
 
     #set variables from the command line
     cell_list=args['<HSn_cell_id>']
     hsToCellDict = { n+1:cell_list[n] for n in range(len(cell_list)) }
 
     UID_TO_HS_DICT= { v:k for k,v in HS_TO_UID_DICT.items() }
+
+    #seee if we have a protocol
+    if args['--protocol'] is not None:
+        protocolNumber = int(args['--protocol'])
+
+        #make the mode dict for the headstages
+        uidModeDict=makeUIDModeDict(protocolNumber,PROTOCOL_MODE_DICT,HS_TO_UID_DICT)
+
+        if uidModeDict is None:
+            print( 'Protocol %s is not defined! Exiting.'%protocolNumber )
+            return None
+    else:
+        protocolNumber = 'prev' #FIXME DAMN IT
+
 
     #initialize the controller
     with mccControl(MCC_DLLPATH) as mcc:
@@ -96,17 +112,12 @@ def main():
         #needs to happen before we touch any of the settings on the mcc etc so gurantee a save
         with dataio(PICKLEPATH,CSVPATH) as dataman:
 
+            #set the modes for each headstage and load the protocol
             if args['--protocol'] is not None:
-                protocolNumber = int(args['--protocol'])
+                MCCsetModes(uidModeDict,mcc)
+                LoadProtocol(protocolNumber)
+                #FIXME dissociate this to enable modular use
 
-                #make the mode dict for the headstages
-                uidModeDict=makeUIDModeDict(protocolNumber,PROTOCOL_MODE_DICT,HS_TO_UID_DICT)
-
-                #set the modes for each headstage and load the protocol
-                setMCCLoadProt(uidModeDict,protocolNumber,mcc)
-
-            else:
-                protocolNumber = 'prev' #FIXME DAMN IT
 
             #after setting all headstages drop the headstages we do not need from saving
             for hs in range(1,nHeadstages+1):
@@ -126,14 +137,11 @@ def main():
 
             addCellToHeadStage(hsToCellDict,hsStateDict)
             
-            #run pclamp
-            clickRecord()
-            sleep(.1) #there is a weird bug where another window pops up and can sometimes block the first click, so click twice
-            clickRecord()
+            #run  the protocol
+            Record()
 
             #get the filename from the windown name! tada! wat a stuipd hack
-            sleep(.1) #give the window time to change
-            filename = getClampexFilename()
+            filename = GetFilename()
 
             #save and display everything
             data = { filename : ( protocolNumber , hsStateDict  ) } #INTO THE PICKLE

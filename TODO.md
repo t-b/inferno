@@ -1,14 +1,16 @@
 Todo
 ----
-0) specifying protocol numbers that are blank results in a key error
 6) make it posssible to parse only a subset of the config
-7) make it possible to easily extend inferno with new modules for acquisition programs other than Clampex10, eg Clampex9...
 8) may need to add a way to write to a different binary file too depending on file structure
 9) alternately alert the user and ask if this is what they wanted to do, if no, we need to figure out how to sanely save both pieces of data...
+10) update how we use config parser to support multiple config file locations?
+11) make checking to see if the program is on explict
 
 
 Done
 ----
+x) make it possible to easily extend inferno with new modules for acquisition programs other than Clampex10, eg Clampex9...
+x) specifying protocol numbers that are blank results in a key error
 x) we will need to tailor the defaults for the exe version, if people want to run the script by itself... ok they can edit stuff themselves
 x) figure out how to set the default path for the conifg, this cannot be set using docopt, it should probably be %INSTALL_DIR%/config.ini or something
 x) copying config.ini within the program folder causes administrative bickering, we need a better option :(, I dont want to go full inferno.ini in the users home folder >_< derpmax, something something configurationmanager? yep, that config.ini in program files is not writeable >_< DERP
