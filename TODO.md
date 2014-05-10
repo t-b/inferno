@@ -1,5 +1,7 @@
 Todo
 ----
+0) rather irritating issue in which dataio will create a new pickle file and csv file if one does not exist when using inferno makecsv, nbd for now, but decidedly a bug
+
 6) make it posssible to parse only a subset of the config
 
 8) may need to add a way to write to a different binary file too depending on file structure
