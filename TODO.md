@@ -7,6 +7,7 @@ Todo
 4) set the build option that changes path names...
 5) we will need to tailor the defaults for the exe version, if people want to run the script by itself... ok they can edit stuff themselves
 6) make it posssible to parse only a subset of the config
+7) make it possible to easily extend inferno with new modules for acquisition programs other than Clampex10, eg Clampex9...
 
 
 Done

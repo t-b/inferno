@@ -1,5 +1,7 @@
-import sys #why do we need this again?
+import sys
 from cx_Freeze import setup, Executable
+
+VERSION = '0.0.2'
 
 executables = [
     Executable('inferno.py',
@@ -7,6 +9,7 @@ executables = [
                appendScriptToExe=True,
                appendScriptToLibrary = False,
                excludes = ['IPython'],
+               replacePaths = True,
               )
 ]
 
@@ -28,8 +31,14 @@ setupOptions = { 'build_exe' : buildOptions,
                }
 
 setup(name = 'inferno',
-      version = '0.0.2',
+      version = VERSION,
+      author = 'Tom Gillespie',
+      author_email = 'tgbugs@gmail.com',
+      url = 'https://github.com/tgbugs/inferno',
+      license = 'MIT',
       description = 'Inferno: electrophysiology in a shell.',
+      platforms = ['windows'],
+      install_requires = ['docopt','pywin32'],
       options = setupOptions,
       executables = executables,
      )

@@ -9,7 +9,9 @@ Please submit any bugs or feature requests to the github issue tracker.
 
 Configuration
 -------------
-Copy config.ini.example to config.ini and edit it to match your setup. Most
+By default Inferno looks for a configuration file in ~/inferno/config.ini.
+The installer will create ~/inferno/config.ini.example. You should copy
+config.ini.example to config.ini and edit it to match your setup. Most
 sections in config.ini should be self explanatory. All sections are required.
 
 [HEADSTAGE TO UNIQUE ID] associates the numbers you use for your headstages 1-n

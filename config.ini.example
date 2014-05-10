@@ -1,15 +1,15 @@
 [PATHS]
-PICKLEPATH  = patch_experiment_data.pickle
-CSVPATH     = patch_experiment_data.csv
+PICKLEPATH  = ~/inferno/patch_experiment_data.pickle
+CSVPATH     = ~/inferno/patch_experiment_data.csv
 MCC_DLLPATH = C:/Program Files (x86)/Molecular Devices/MultiClamp 700B Commander/3rd Party Support/AxMultiClampMsg
 
-[HEADSTAGE TO UNIQUE ID]
+[HEADSTAGE TO UNIQUE ID] # ***CHANGE ME!!!!!*** #
 1 = 12345678_1 
 2 = 12345678_2 
 3 = 87654321_1 
 4 = 87654321_2 
 
-[PROTOCOL MULTICLAMP MODES] #conforms to MCC_MODE_DICT naming
+[PROTOCOL MULTICLAMP MODES] # ***CHANGE ME!!!!!*** #
  1 = IC , IC , VC , VC 
  2 = VC , VC , IC , IC 
  3 = VC , VC , IEZ , IEZ 

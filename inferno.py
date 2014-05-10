@@ -9,7 +9,7 @@ Options:
     -h --help           print this
     -p --protocol=<id>  set which protocol to load, if not set will run with current settings
     -f --csvpath=<path> set which csv file to write, defaults to CSVPATH from config
-    -c --config=<path>  set which config file to use [default: config.ini]
+    -c --config=<path>  set which config file to use [default: ~/inferno/config.ini]
 """ #FIXME why does the repeating argument need to come last in this instance :(
 
 import sys
