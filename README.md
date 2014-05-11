@@ -5,16 +5,18 @@ A command line tool for controlling MultiClampCommander and Clampex and saving d
 Installation
 ------------
 To install a standalone version of Inferno please download and install the
-most recent MSI from the releases page. Please check the installation folder
-and read the README.txt provided there (it is the same as docs/README.md so
-you can read that instead).
+most recent MSI from the [releases page](https://github.com/tgbugs/inferno/releases).
+Please check the installation folder and read the README.txt provided there
+(it is the same as [docs/README.md](docs/README.md) so you can read that
+instead). Otherwise you can simply download the zip file or use git clone and
+run Inferno from inferno.py.
 
 Usage
 -----
 If you do not use the standalone installer, Inferno can be run from the command
 line via inferno.py if you have installed python and the dependencies listed
-below. The docs/README.md also has information relevant for using Inferno from
-source.
+below. The [README.md in docs](docs/README.md) also has information relevant
+for using Inferno from source.
 
 Dependencies
 ------------

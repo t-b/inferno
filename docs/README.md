@@ -3,7 +3,7 @@ Inferno
 A command line tool for controlling MultiClampCommander and Clampex and saving data.
 
 Inferno is an open source project licensed under the MIT license.
-Source code is available at [http://github.com/tgbugs/inferno](http://github.com/tgbugs/inferno).
+Source code is available at http://github.com/tgbugs/inferno.
 
 A pretty version of this README is available at:
 https://github.com/tgbugs/inferno/tree/dev/docs/README.md
@@ -13,11 +13,13 @@ Please submit any bugs or feature requests to the github issue tracker.
 Configuration
 -------------
 By default Inferno looks for a configuration file in ~/inferno/config.ini.
-To create ~/inferno/config.ini.example run '>inferno setup'. You should copy
+To create ~/inferno/config.ini.example run `inferno setup`. You should copy
 config.ini.example located in the install folder (same place as this README),
 or the example created by inferno setup to config.ini and edit it to match
 your setup (the example in the install folder has nicer formatting). Most
 sections in config.ini should be self explanatory. All sections are required.
+__Please test your config settings and the general operation of Inferno on your
+rig before conducting real experiments__
 
 [HEADSTAGE TO UNIQUE ID] associates the numbers you use for your headstages 1-n
 to the serial number (8 digit number for 700B)  of the Multiclamp follow by an
@@ -33,7 +35,6 @@ that the protocol assigned to that button uses. The tuple should be the same
 length as the number of headstages on your rig. __You need to assign your
 protocols to the UI buttons for Inferno to work properly.__ The buttons in
 question can be seen here:
-
 
 ![alt text](https://raw.githubusercontent.com/tgbugs/inferno/dev/docs/clxbutts.jpg "Yep, those")
 
@@ -54,6 +55,28 @@ All offsets are from the top left corner of the window in units of pixels.
 
 Usage
 -----
+To run Inferno start up Clampex and your MultiClampCommander windows and open
+a command propt and type `inferno` or double click `run_inferno.bat` in the
+program folder.
+
+A couple of examples of how to use Inferno for on a rig with four headstages:
+
+`inferno run cell1 cell2 cell3 cell4 -p 1`
+
+loads the program associated with the first Clampex button and associates
+cell1 with headstage 1, cell 2 with headstage 2, etc. If you don't have cells
+on all four headstages at once you could do the following:
+
+`inferno run a xx b -p 3`
+
+In thise case you have associated the cell with identifier `a` to headstage 1,
+left headstage two blank by using `xx` to mark it as blank, 
+associated the cell with identifier `b` to headstage three, and left the fourth
+headstage blank by not entering anything at all. Cell identifiers are case
+sensitive. You can set what string means no cell in your config with the
+ `NO_CELL_STRING` value.
+
+##### Details
 The Inferno installer adds inferno.exe to the windows PATH environment variable.
 You can open a command prompt anywhere and run inferno --help to get started.
 
@@ -68,10 +91,15 @@ The Clampex window MUST be visible in order to click the protocol buttons
 
 MultiClampCommander windows need to be opened but do not need to be visible.
 
-Upgrading
----------
-In order to perform a clean upgrade uninstall the old version of Inferno before
-installing a new version.
+Text output
+-----------
+Inferno saves a subset of the data it collects formatted as text that is easy
+to read for analysis (all the data is saved in the binary). You can control
+what is displayed and how it is formatted using the config as mentioned above.
+It is also possible to write (or rewrite) the CSV file with different formatting
+by modifying your config and running `inferno makecsv`. By defautl this uses the
+pickle file and the csv file listed in your config but you can specify different
+files using options on the command line.
 
 Notes
 -----
@@ -81,8 +109,8 @@ the time being we will leave those controls in the hands of the experimenter.
 
 __WARNING:__ Inferno stores binary data in a python dictionary using filenames as
 keys. If you change folders from day to day and reuse filenames without changing
-the binary pickle save file you will loose data. Inferno will warn you if it detects
-that you are overwriting existing entries in a pickle file.
+which pickle file you save to (in the config), you will loose data. Inferno will
+warn you if it detects that you are overwriting existing entries in a pickle file.
 
 Known Issues
 ------------

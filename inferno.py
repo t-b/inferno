@@ -6,15 +6,16 @@ __doc__ = """
 Inferno: electrophysiology with Clampex in a shell.
 Usage:
     inferno.py run <HSn_cell_id>... [ --protocol=<id> --config=<path> --csvpath=<path> ]
-    inferno.py makecsv [ <pickle> [ <output> ] ] [ --config=<path> ]
+    inferno.py makecsv [ --csvpath=<path> --pikpath=<path> --config=<path> ]
     inferno.py setup
     inferno.py --help
 
 Options:
     -h --help           print this
     -p --protocol=<id>  set which protocol to load, if not set will run with current settings
-    -f --csvpath=<path> set which csv file to write, defaults to CSVPATH from config
     -c --config=<path>  set which config file to use [default: %sconfig.ini]
+    -f --csvpath=<path> set which csv file to write, defaults to CSVPATH from config
+    -k --pikpath=<path> set which pickle file to use, defaults to PICKLEPATH from config
     -v --version        show version
 
 """%DEFAULT_USER_DIR
@@ -60,10 +61,10 @@ def main():
     #enter make csv mode?
     if args['makecsv']:
         print('making csv from binary data!')
-        if args['<pickle>'] is not None:
-            PICKLEPATH = args['<pickle>']
-        if args['<output>'] is not None:
-            CSVPATH = args['<output>']
+        if args['--pikpath'] is not None:
+            PICKLEPATH = args['--pikpath']
+        if args['--csvpath'] is not None:
+            CSVPATH = args['--csvpath']
         with dataio(PICKLEPATH,CSVPATH) as dataman:
             data=dataman.loadPickle()
         textData = makeText( data , ROW_ORDER, ROW_NAMES , OFF_STRING , STATE_TO_UNIT_DICT, nHeadstages )

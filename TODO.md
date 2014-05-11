@@ -1,5 +1,7 @@
 Todo
 ----
+0) rather irritating issue in which dataio will create a new pickle file and csv file if one does not exist when using inferno makecsv, nbd for now, but decidedly a bug
+
 6) make it posssible to parse only a subset of the config
 
 8) may need to add a way to write to a different binary file too depending on file structure
@@ -12,9 +14,15 @@ Todo
 
 12) possibly rework how the data acquistion interacts such that it is easier to add new systems, basically we just need a type that provides access to IsOn, LoadProtocol, Record, and GetFilename
 
+13) make it possible to choose how to format the filename data and the protocol name data
+
+14) use folders to make the source more readable
+
 
 Done
 ----
+x) FIXME the structure of the makecsv options is not correct, you should be able to spec a csv file without having to spec a binary file!
+
 x) make it possible to easily extend inferno with new modules for acquisition programs other than Clampex10, eg Clampex9...
 
 x) specifying protocol numbers that are blank results in a key error
