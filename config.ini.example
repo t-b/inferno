@@ -62,12 +62,20 @@ SlowCTX20Enable     = Tau20x
 BridgeBalEnable     = BBalON 
 BridgeBalResist     = BBal 
 
+MeterResisEnable    = MeterRE
+MeterIrmsEnable     = MeterIE
+MeterVoltage        = VoltsM
+MeterCurrent        = AmpsM
+
 Serial              = Serial
 Channel             = Channel 
 
 [STATE TO UNITS]
 IC                  = p , 3.1f
 VC                  = m , 3.1f
+Resist
+Irms
+
 DateTime            = None
 Cell                = None
 Mode                = None 
@@ -87,6 +95,11 @@ SlowCTX20Enable     = None
 
 BridgeBalEnable     = None
 BridgeBalResist     = M , 3.1F
+
+MeterResisEnable    = None
+MeterIrmsEnable     = None
+MeterVoltage        = m, 3.1f
+MeterCurrent        = n, 3.1f
 
 Serial              = None
 Channel             = None

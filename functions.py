@@ -53,6 +53,12 @@ class mccFuncs: #FIXME add a way to get the current V and I via... telegraph?
             state['PrimarySignalLPF']=self.mcc.GetPrimarySignalLPF() #also in abf file
             state['PipetteOffset']=self.mcc.GetPipetteOffset()
 
+            #meter values and state for a given channel
+            state['MeterResistEnable'] = self.mcc.GetMeterResistEnable()
+            state['MeterIrmsEnable'] = self.mcc.GetMeterIrmsEnable()
+            state['MeterVoltage'] = self.mcc.GetMeterValue( (state['Channel']-1) * 2 ) #0,2
+            state['MeterCurrent'] = self.mcc.GetMeterValue( (state['Channel']*2) - 1 ) #1,3
+
             #XXX ONLY RELEVANT FOR MODE 0 (VC)
             state['FastCompCap']=self.mcc.GetFastCompCap()
             state['SlowCompCap']=self.mcc.GetSlowCompCap()
