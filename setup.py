@@ -15,6 +15,7 @@ executables = [
 include_files = [
     'config.ini.example',
     ('docs/README.md','README.txt'),
+    ('RELEASE_NOTES.md','RELEASE_NOTES.txt'),
     'run_inferno.bat',
 ]
 
