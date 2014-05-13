@@ -12,10 +12,10 @@ Usage:
 
 Options:
     -h --help           print this
-    -p --protocol=<id>  set which protocol to load, if not set will run with current settings
-    -c --config=<path>  set which config file to use [default: %sconfig.ini]
-    -f --csvpath=<path> set which csv file to write, defaults to CSVPATH from config
-    -k --pikpath=<path> set which pickle file to use, defaults to PICKLEPATH from config
+    -p --protocol=<id>  set protocol to load, otherwise use current settings
+    -c --config=<path>  set config file to use [default: %sconfig.ini]
+    -f --csvpath=<path> set csv file to write, default: CSVPATH from config
+    -k --pikpath=<path> set pickle file to use, default: PICKLEPATH from config
     -v --version        show version
 
 """%DEFAULT_USER_DIR
