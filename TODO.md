@@ -18,6 +18,8 @@ Todo
 
 14) use folders to make the source more readable
 
+15) define meter naming schemes in mcc.py explicitly
+
 
 Done
 ----

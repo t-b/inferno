@@ -17,10 +17,43 @@ PREFIX_DEFINITIONS = { #used under multiplication with the base unit
 'p' : 1E12,
 }
 
-def formatUnit(StateVariable, StateDict, STATE_TO_UNIT_DICT): #TODO perhaps make it a tuple of unit and format?
+def meterFormatting(StateVariable, StateDict, OFF_STRING, STATE_TO_UNIT_DICT):
+    if StateVariable == 'Meter':
+        if StateDict['Mode'] == 0:
+            if StateDict['MeterResistEnable']:
+                return formatUnit('MeterResist',StateDict,STATE_TO_UNIT_DICT)
+            else:
+                return formatUnit('MeterVoltage',StateDict,STATE_TO_UNIT_DICT)
+        else: #mode 1 or 2 are current clamp
+            if StateDIct['MeterIrmsEnable']:
+                return formatUnit('MeterIrms',StateDict,STATE_TO_UNIT_DICT)
+            else:
+                return formatUnit('MeterCurrent',StateDict,STATE_TO_UNIT_DICT)
+    elif StateVariable == 'MeterVoltage':
+        if StateDict['MeterResistEnable']:
+            return OFF_STRING
+    elif StateVariable == 'MeterResist':
+        if not StateDict['MeterResistEnable']:
+            return OFF_STRING
+    elif StateVariable == 'MeterCurrent':
+        if StateDict['MeterIrmsEnable']:
+            return OFF_STRING
+    elif StateVariable == 'MeterIrms':
+        if not StateDict['MeterIrmsEnable']:
+            return OFF_STRING
+    #if the meters were actually in that state, or MeterVR, MeterII raw
+    return formatUnit(StateVariable,StateDict,STATE_TO_UNIT_DICT)
+
+
+def formatUnit(StateVariable, StateDict, STATE_TO_UNIT_DICT):
     #FIXME this is SUPER slow if we have many rows, should just make and return a dict of multiples!
-    #only issue is how to deal with the modes as they come up...
-    value = StateDict[StateVariable] #FIXME for some reason when we run this with a single cell... OH it is because the program is expect EXACTLY n headstages, need to fix that stat!
+    if StateVariable == 'MeterVoltage' or StateVariable == 'MeterResist':
+        value = StateDict['MeterVR']
+    elif StateVariable == 'MeterCurrent' or StateVariable == 'MeterIrms':
+        value = StateDict['MeterII']
+    else:
+        #only issue is how to deal with the modes as they come up...
+        value = StateDict[StateVariable] #FIXME for some reason when we run this with a single cell... OH it is because the program is expect EXACTLY n headstages, need to fix that stat!
     if StateVariable == 'Holding':
         prefix , fmt = STATE_TO_UNIT_DICT[ MCC_MODE_DICT[ StateDict['Mode'] ] ] #lol oh god
         multiple = PREFIX_DEFINITIONS[ prefix ]
@@ -51,6 +84,8 @@ def rowPrintLogic(row,StateDict,delim,OFF_STRING, STATE_TO_UNIT_DICT):
             out = OFF_STRING
     elif row == 'Mode':
         out = MCC_MODE_DICT[ StateDict[row] ]
+    elif row.count('Meter'):
+        out = meterFormatting(row,StateDict,OFF_STRING,STATE_TO_UNIT_DICT)
     else:
         out = formatUnit(row,StateDict,STATE_TO_UNIT_DICT)
 

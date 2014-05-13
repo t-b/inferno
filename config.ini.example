@@ -39,6 +39,7 @@ OFF STRING = OFF
 ROW ORDER = Cell
             Mode
             Holding
+	    Meter
             BridgeBalResist 
 
 [ROW NAMES] #all the rows in the state dict, probs should validate
@@ -62,10 +63,20 @@ SlowCTX20Enable     = Tau20x
 BridgeBalEnable     = BBalON 
 BridgeBalResist     = BBal 
 
-MeterResisEnable    = MeterRE
-MeterIrmsEnable     = MeterIE
-MeterVoltage        = VoltsM
-MeterCurrent        = AmpsM
+#intelligent meter
+Meter               = Meter
+
+#specific meters
+MeterVoltage        = MVolts
+MeterResist         = MResist
+MeterCurrent        = MCurrent
+MeterIrms           = MIrms
+
+#raw meter values
+MeterResistEnable   = MRE
+MeterVR             = MVR
+MeterIrmsEnable     = MIE
+MeterII             = MII
 
 Serial              = Serial
 Channel             = Channel 
@@ -73,8 +84,16 @@ Channel             = Channel
 [STATE TO UNITS]
 IC                  = p , 3.1f
 VC                  = m , 3.1f
-Resist
-Irms
+
+MeterVoltage        = m, 3.1f
+MeterResist         = M, 3.1f
+MeterCurrent        = p, 3.1f
+MeterIrms           = p, 3.1f
+
+MeterResistEnable   = None
+MeterVR             = None
+MeterIrmsEnable     = None
+MeterII             = None
 
 DateTime            = None
 Cell                = None
@@ -95,11 +114,6 @@ SlowCTX20Enable     = None
 
 BridgeBalEnable     = None
 BridgeBalResist     = M , 3.1F
-
-MeterResisEnable    = None
-MeterIrmsEnable     = None
-MeterVoltage        = m, 3.1f
-MeterCurrent        = n, 3.1f
 
 Serial              = None
 Channel             = None
