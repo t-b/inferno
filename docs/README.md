@@ -73,8 +73,8 @@ In thise case you have associated the cell with identifier `a` to headstage 1,
 left headstage two blank by using `xx` to mark it as blank, 
 associated the cell with identifier `b` to headstage three, and left the fourth
 headstage blank by not entering anything at all. Cell identifiers are case
-sensitive. You can set what string means no cell in your config with the
- `NO_CELL_STRING` value.
+sensitive. You can set what string signifies that there is no cell on a headstage
+in your config with the `NO_CELL_STRING` value.
 
 ##### Details
 The Inferno installer adds inferno.exe to the windows PATH environment variable.
