@@ -25,7 +25,7 @@ def meterFormatting(StateVariable, StateDict, OFF_STRING, STATE_TO_UNIT_DICT):
             else:
                 return formatUnit('MeterVoltage',StateDict,STATE_TO_UNIT_DICT)
         else: #mode 1 or 2 are current clamp
-            if StateDIct['MeterIrmsEnable']:
+            if StateDict['MeterIrmsEnable']:
                 return formatUnit('MeterIrms',StateDict,STATE_TO_UNIT_DICT)
             else:
                 return formatUnit('MeterCurrent',StateDict,STATE_TO_UNIT_DICT)

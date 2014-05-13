@@ -69,7 +69,7 @@ Meter               = Meter
 #specific meters
 MeterVoltage        = MVolts
 MeterResist         = MResist
-MeterCurrent        = MCurrent
+MeterCurrent        = MCurr
 MeterIrms           = MIrms
 
 #raw meter values
