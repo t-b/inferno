@@ -53,16 +53,17 @@ def formatUnit(StateVariable, StateDict, STATE_TO_UNIT_DICT):
     else:
         #only issue is how to deal with the modes as they come up...
         value = StateDict[StateVariable] #FIXME for some reason when we run this with a single cell... OH it is because the program is expect EXACTLY n headstages, need to fix that stat!
+
     if StateVariable == 'Holding':
         prefix , fmt = STATE_TO_UNIT_DICT[ MCC_MODE_DICT[ StateDict['Mode'] ] ] #lol oh god
         multiple = PREFIX_DEFINITIONS[ prefix ]
         format_string = '%'+fmt
     else:
-        prefix , fmt = STATE_TO_UNIT_DICT[StateVariable]
+        prefix , fmt = STATE_TO_UNIT_DICT[StateVariable] #XXX NOTE the 's' is added in parse
         multiple = PREFIX_DEFINITIONS[ prefix ]
         format_string = '%'+fmt
 
-    if multiple == 'None':
+    if multiple == 1:
         return format_string%value
     else:
         return format_string%( value * multiple )
