@@ -101,12 +101,12 @@ by modifying your config and running `inferno makecsv`. By defautl this uses the
 pickle file and the csv file listed in your config but you can specify different
 files using options on the command line.
 
-__Caution__: The current implementation of 'Meter' row printing is currently a
-bit janky. It will print the value of whichever mode that meter was in when
-the trial was run, so if you had the voltage/resist meter in resist mode it will
-format and print the resist value. Since units are not explictly listed it can
-sometimes be hard to tell from the value alone what state the meter was in. If
-you need to know for sure you can always print MeterVoltage or MeterCurrent.
+__Caution__: The current implementation of 'Meter' row printing is a bit janky.
+It will print the value of whichever mode that meter was in when the trial was
+run, so if you had the voltage/resist meter in resist mode it will format and
+print the resist value. Since units are not explictly listed it can be hard to
+tell from the value alone what state the meter was in. If you need to know for
+sure you can always print MeterVoltage or MeterCurrent.
 
 Notes
 -----
