@@ -161,7 +161,7 @@ _FORMATTING :    {
                 _NO_CELL_STRING : 'xx',
                 _OFF_STRING     : 'OFF', 
                 #these should match the names of keys of the state dict
-                _ROW_ORDER      : 'Cell\nMode\nHolding\nBridgeBalResist', 
+                _ROW_ORDER      : 'Cell\nMode\nHolding\nMeter\nBridgeBalResist', 
                 }, 
 
 _ROW_NAMES :   { #all the rows in the state dict, probs should validate
@@ -185,6 +185,16 @@ _ROW_NAMES :   { #all the rows in the state dict, probs should validate
                 'BridgeBalEnable':'BBalON',
                 'BridgeBalResist':'BBal',
 
+                'Meter':'Meter',
+                'MeterVoltage':'MVolts',
+                'MeterResist':'MResist',
+                'MeterCurrent':'MCurr',
+                'MeterIrms':'MIrms',
+                'MeterResistEnable':'MRE',
+                'MeterVR':'MVR',
+                'MeterIrmsEnable':'MIE',
+                'MeterII':'MII',
+
                 'Serial':'Serial',
                 'Channel':'Channel',
                 }, 
@@ -192,6 +202,16 @@ _ROW_NAMES :   { #all the rows in the state dict, probs should validate
 _STATE_TO_UNIT_DICT :  {
                     'IC':'p, 3.1f',
                     'VC':'m, 3.1f',
+
+                    'MeterVoltage':'m, 3.1f',
+                    'MeterResist':'M, 3.1f',
+                    'MeterCurrent':'p, 3.1f',
+                    'MeterIrms':'p, 3.1f',
+                    'MeterResistEnable':'None',
+                    'MeterVR':'None',
+                    'MeterIrmsEnable':'None',
+                    'MeterII':'None',
+
                     'DateTime':'None',
                     'Cell':'None',
                     'Mode':'None ',
