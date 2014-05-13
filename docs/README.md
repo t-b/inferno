@@ -13,7 +13,7 @@ Please submit any bugs or feature requests to the github issue tracker.
 Configuration
 -------------
 By default Inferno looks for a configuration file in ~/inferno/config.ini.
-To create [~/inferno/config.ini.example](inferno/config.ini.example)
+To create [~/inferno/config.ini.example](../config.ini.example)
 run `inferno setup`. You should copy config.ini.example located in the install
 folder (same place as this README), or the example created by inferno setup to
 config.ini and edit it to match your setup (the example in the install folder
