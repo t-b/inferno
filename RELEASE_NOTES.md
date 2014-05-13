@@ -1,6 +1,6 @@
 v0.0.4
 ------
-Added the ability to print the meter values for MultiClampCOmmander.
+Added the ability to print the meter values for MultiClampCommander.
 Please update your config if you want to be able to print these values.
 
 #### New StateVariables saved:
