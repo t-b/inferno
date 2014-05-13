@@ -78,15 +78,15 @@ in your config with the `NO_CELL_STRING` value.
 
 ##### Details
 The Inferno installer adds inferno.exe to the windows PATH environment variable.
-You can open a command prompt anywhere and run inferno --help to get started.
+You can open a command prompt anywhere and run `inferno --help` to get started.
 
-A batch file run_inferno.bat is also available to automatically open a command
-prompt and execute inferno --help.
+A batch file `run_inferno.bat` is also available to automatically open a command
+prompt and execute `inferno --help`.
 
-If you want to make a shortcut use run_inferno.bat since running inferno.exe
+If you want to make a shortcut use `run_inferno.bat` since running `inferno.exe`
 from windows explorer won't do anything useful.
 
-The Clampex window MUST be visible in order to click the protocol buttons
+__The Clampex window MUST be visible so that Inferno can click the protocol buttons__
 (Dear Molecular Devices, great hardware. Your software sucks.).
 
 MultiClampCommander windows need to be opened but do not need to be visible.
