@@ -22,7 +22,7 @@ All sections are required. __Please test your config settings and the general
 operation of Inferno on your rig before conducting real experiments__
 
 [HEADSTAGE TO UNIQUE ID] associates the numbers you use for your headstages 1-n
-to the serial number (8 digit number for 700B)  of the Multiclamp follow by an
+to the serial number (8 digit number for 700B)  of the MultiClamp follow by an
 underscore followed by the channel number (1 or 2). For example 1 = 12345678_1
 associates your headstage number 1 to the headstage plugged in to the first
 channel of the amplifier that has the serial number 1234567. You should have one
@@ -75,6 +75,11 @@ associated the cell with identifier `b` to headstage three, and left the fourth
 headstage blank by not entering anything at all. Cell identifiers are case
 sensitive. You can set what string signifies that there is no cell on a headstage
 in your config with the `NO_CELL_STRING` value.
+
+For those new to a command line interface, you can use the up and down arrows to
+navigate through previously execulted commands and then edit them. That way you
+don't have type the same command repeatedly and can simply change parts of it when
+you change protocol or get a new cell.
 
 ##### Details
 The Inferno installer adds inferno.exe to the windows PATH environment variable.

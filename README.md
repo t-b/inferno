@@ -4,11 +4,12 @@ A command line tool for controlling MultiClampCommander and Clampex and saving d
 
 Installation
 ------------
-To install a standalone version of Inferno please download and install the
-most recent MSI from the [releases page](https://github.com/tgbugs/inferno/releases).
+If your computer can run MultiClampCommander then it can run Inferno.
+You can get the most recent version of the Windows installer from the
+[releases page](https://github.com/tgbugs/inferno/releases).
 Please check the installation folder and read the README.txt provided there
 (it is the same as [docs/README.md](docs/README.md) so you can read that
-instead). Otherwise you can simply download the zip file or use git clone and
+instead). Otherwise you can download the zip file or use git clone and
 run Inferno from inferno.py.
 
 Usage
@@ -18,17 +19,18 @@ line via inferno.py if you have installed python and the dependencies listed
 below. The [README.md in docs](docs/README.md) also has information relevant
 for using Inferno from source.
 
-Dependencies
-------------
-* x86 python 3.3.x (64bit WILL NOT WORK with the multiclamp dll!)
-* docopt
-* pywin32
-* cx_Freeze (if you are building)
-
 Supported Programs
 ------------------
 * pClamp10 (Clampex)
 * MultiClampCommander (so far only tested with MultiClamp 700B)
+
+Dependencies
+------------
+The python version of Inferno has the following dependencies:
+* x86 python 3.3.x (64bit WILL NOT WORK with the multiclamp dll!)
+* docopt
+* pywin32
+* cx_Freeze (if you are building)
 
 Building
 --------
