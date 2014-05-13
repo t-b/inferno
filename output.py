@@ -44,7 +44,6 @@ def meterFormatting(StateVariable, StateDict, OFF_STRING, STATE_TO_UNIT_DICT):
     #if the meters were actually in that state, or MeterVR, MeterII raw
     return formatUnit(StateVariable,StateDict,STATE_TO_UNIT_DICT)
 
-
 def formatUnit(StateVariable, StateDict, STATE_TO_UNIT_DICT):
     #FIXME this is SUPER slow if we have many rows, should just make and return a dict of multiples!
     if StateVariable == 'MeterVoltage' or StateVariable == 'MeterResist':
