@@ -22,6 +22,8 @@ Todo
 
 16) add an optional pause via PAUSE_AFTER_LOAD
 
+17) adjust for clampex 9 filenaming scheme by looking for [], or not? was the bug just with 0000? nope, just with certain scope types?!? just strip('[') all the things
+
 
 Done
 ----

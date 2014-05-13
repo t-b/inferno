@@ -54,9 +54,11 @@ def ClampexGetFilename():
     name=getClampexWinName()
     if name is None:
         raise IOError('Clampex is not on!')
-    #print(name)
-    name=name[11:30] #FIXME should not hardcode this, also first run may not have full 30...
-    #print(name)
+    print(name)
+    name=name.strip('[')
+    print(name)
+    name=name[10:29] #FIXME should not hardcode this, also first run may not have full 30...
+    print(name)
     return name
 
 def getClampexWinName():
