@@ -20,6 +20,8 @@ Todo
 
 15) define meter naming schemes in mcc.py explicitly
 
+16) add an optional pause via PAUSE_AFTER_LOAD
+
 
 Done
 ----
