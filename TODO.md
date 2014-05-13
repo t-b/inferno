@@ -22,11 +22,12 @@ Todo
 
 16) add an optional pause via PAUSE_AFTER_LOAD
 
-17) adjust for clampex 9 filenaming scheme by looking for [], or not? was the bug just with 0000? nope, just with certain scope types?!? just strip('[') all the things
 
 
 Done
 ----
+x) adjust for clampex 9 filenaming scheme by looking for [], or not? was the bug just with 0000? nope, just with certain scope types?!? just replace('[','') all the things
+
 x) FIXME the structure of the makecsv options is not correct, you should be able to spec a csv file without having to spec a binary file!
 
 x) make it possible to easily extend inferno with new modules for acquisition programs other than Clampex10, eg Clampex9...

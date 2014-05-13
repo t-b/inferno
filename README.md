@@ -21,7 +21,7 @@ for using Inferno from source.
 
 Supported Programs
 ------------------
-* pClamp10 (Clampex)
+* pClamp9, pClamp10 (Clampex)
 * MultiClampCommander (so far only tested with MultiClamp 700B)
 
 Dependencies
