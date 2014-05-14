@@ -1,23 +1,29 @@
 v0.0.5
 ------
-Added the ability to pause Inferno after loading a protocol incase the user
-needs to tweak the protocol for that particular cell. This option can be set
-globally via config.ini or on the command line with `-s` or `--stop`. Unless
-`PAUSE ON LOAD = True` is added to the options section of the config or -s is
-set on the command line Iferno will click record immediately after loading the
-protocol. While this feature can be quite useful there is a nasty side effect
-from having to use the GUI to click the buttons: the terminal window loses focus.
-Therefore you can click the terminal window to advance. Hopefully clicking the
+Added the ability to pause Inferno after loading a protocol in case the user
+needs to tweak the protocol for that particular cell.
+
+This option can be set globally via config.ini or on the command line with `-s` or `--stop`.
+
+Unless `PAUSE ON LOAD = True` is added to the `[OPTIONS]` section of the config
+or `-s` is set on the command line Inferno will click record immediately after
+loading the protocol.
+
+While this feature can be quite useful there is a nasty side effect from using
+the GUI to click the buttons: the terminal window loses focus.
+Therefore you can __click the terminal window to advance__. Hopefully clicking the
 mouse will not cause problems later when it needs to move to click record.
 
-The OPTIONS section is optional, default values are show in the example config.
+The [OPTIONS] section is optional, default values are shown in the example config.
 
 #### New config sections
+```
 [OPTIONS]
 PAUSE ON Load = False
+```
 
 #### New command line options
--s --stop
+`-s --stop`
 
 
 v0.0.4
