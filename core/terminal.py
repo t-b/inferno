@@ -72,21 +72,15 @@ def GetTerminalEvent():
                 # params: handler, buffer, length, eventsnum
                 ctypes.windll.kernel32.ReadConsoleInputW(ch, ctypes.byref(inbuf), 2, ctypes.byref(eventread))
                 EVENT_TYPE = EVENTS[inbuf[0].eventType]
-                if EVENT_TYPE != 'KEY_EVENT':
-                    print(EVENTS[inbuf[0].eventType])
-                    pass
-                elif EVENT_TYPE != 'MOUSE_EVENT':
-                    print(EVENTS[inbuf[0].eventType])
-                    pass
-                elif EVENT_TYPE != 'FOCUS_EVENT':
-                    print(EVENTS[inbuf[0].eventType])
-                    pass
+                if EVENT_TYPE == 'KEY_EVENT':
+                    stopflag = 1
+                elif EVENT_TYPE == 'MOUSE_EVENT':
+                    stopflag = 1
+                elif EVENT_TYPE == 'FOCUS_EVENT':
+                    stopflag = 1
                 else:
-                    keyEvent = inbuf[0].event.keyEvent
-                    if not keyEvent.keyDown:
-                        continue
-                    else:
-                        stopflag = 1
+                    print(EVENTS[inbuf[0].eventType])
+
         else:
             print("Warning: Unknown return value '%s'" % ret)
 
