@@ -66,9 +66,7 @@ def parseConfig(PATH):
         string = cfg[_OPTIONS][_PAUSE_ON_LOAD]
         if string == 'True' or string == '1' or string == 'true':
             PAUSE_ON_LOAD = True
-        elif string == 'False' or string == '0' or string == 'false':
-            PAUSE_ON_LOAD = False
-        else:
+        else: #anything else will be treated as false
             PAUSE_ON_LOAD = False
     except KeyError:
         PAUSE_ON_LOAD = False

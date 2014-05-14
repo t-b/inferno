@@ -42,7 +42,7 @@ from clampex import ClampexLoadProtocol as LoadProtocol
 from clampex import ClampexRecord as Record
 from clampex import ClampexGetFilename as GetFilename
 
-from key import GetKey
+from terminal import GetTerminalEvent
 
 from output import makeText
 
@@ -91,9 +91,9 @@ def main():
 
     #seee if we have a protocol
     if args['--protocol'] is not None:
-        if type(args['--protocol']) == int:
+        try:
             protocolNumber = int(args['--protocol'])
-        else:
+        except TypeError:
             print( 'Protocol %s is not defined! Exiting.'%args['--protocol'] )
             return None
 
@@ -138,19 +138,19 @@ def main():
                     if hs <= nHeadstages: #pop hs not on cmd line
                         HS_TO_UID_DICT.pop(hs)
 
-            UID_TO_HS_DICT= { v:k for k,v in HS_TO_UID_DICT.items() }
+            UID_TO_HS_DICT = { v:k for k,v in HS_TO_UID_DICT.items() }
 
             #save the state of each headstage and which cell is associated with it
-            uidStateDict=mccF.getMCCState(UID_TO_HS_DICT) #give it the uids in the form of keys type magic
+            uidStateDict = mccF.getMCCState(UID_TO_HS_DICT) #give it the uids in the form of keys type magic
 
             hsStateDict = makeHeadstageStateDict(uidStateDict,UID_TO_HS_DICT) #this is our data
 
             addCellToHeadStage(hsToCellDict,hsStateDict)
             
             #if we need a pause, from command line or from the config...
-            if PAUSE_ON_LOAD:
-                print('Hit any key to record.')
-                GetKey()
+            if PAUSE_ON_LOAD or args['--stop']:
+                print('Click the terminal or hit any key to record.')
+                GetTerminalEvent()
 
             #run  the protocol
             Record()

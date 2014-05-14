@@ -1,8 +1,10 @@
 """
     Blocking, low cpu key listener
 """
+import ctypes.wintypes
+import ctypes
 
-def GetKey():
+def GetTerminalEvent():
     #http://techtonik.rainforce.org
     STD_INPUT_HANDLE = -10
     # Constant for infinite timeout in WaitForMultipleObjects()
@@ -69,7 +71,9 @@ def GetKey():
             for i in range(eventnum.value):
                 # params: handler, buffer, length, eventsnum
                 ctypes.windll.kernel32.ReadConsoleInputW(ch, ctypes.byref(inbuf), 2, ctypes.byref(eventread))
-                if EVENTS[inbuf[0].eventType] != 'KEY_EVENT':
+                EVENT_TYPE = EVENTS[inbuf[0].eventType]
+                if EVENT_TYPE != 'KEY_EVENT' and EVENT_TYPE != 'MOUSE_EVENT':
+                    print(EVENTS[inbuf[0].eventType])
                     pass
                 else:
                     keyEvent = inbuf[0].event.keyEvent
