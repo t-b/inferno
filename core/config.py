@@ -5,7 +5,7 @@
 
 import os
 import configparser
-from mcc import MCC_MODE_DICT
+from core.mcc import MCC_MODE_DICT
 
 #definitions of the strings as they will appear in config.ini
 _PATHS = 'PATHS'

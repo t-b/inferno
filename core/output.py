@@ -2,7 +2,7 @@
     This is the code for formatting text output to terminal or CSV
 """
 
-from mcc import MCC_MODE_DICT
+from core.mcc import MCC_MODE_DICT
 
 #hrm, the number of functions I have to pass STATE_TO_UNIT_DICT through really suggests there might be some use in having shared state?
 

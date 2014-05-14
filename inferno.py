@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.3
 from __init__ import __version__
-from config import DEFAULT_USER_DIR
+from core.config import DEFAULT_USER_DIR
 __doc__ = """
 
 Inferno: electrophysiology with Clampex in a shell.
@@ -28,25 +28,26 @@ args=docopt( __doc__ , version = 'Inferno '+__version__ )
 #print(args)
 
 from time import sleep
-from mcc import mccControl
-from functions import mccFuncs
 
-from config import parseConfig, firstRun
+from core.mcc import mccControl
+from core.functions import mccFuncs
 
-from funcs import makeUIDModeDict
-from funcs import makeHeadstageStateDict
-from funcs import addCellToHeadStage
-from funcs import MCCsetModes
+from core.config import parseConfig, firstRun
 
-from clampex import ClampexLoadProtocol as LoadProtocol
-from clampex import ClampexRecord as Record
-from clampex import ClampexGetFilename as GetFilename
+from core.funcs import makeUIDModeDict
+from core.funcs import makeHeadstageStateDict
+from core.funcs import addCellToHeadStage
+from core.funcs import MCCsetModes
 
-from terminal import GetTerminalEvent
+from core.clampex import ClampexLoadProtocol as LoadProtocol
+from core.clampex import ClampexRecord as Record
+from core.clampex import ClampexGetFilename as GetFilename
 
-from output import makeText
+from core.terminal import GetTerminalEvent
 
-from dataio import dataio
+from core.output import makeText
+
+from core.dataio import dataio
 
 def main():
     #import and check config settings

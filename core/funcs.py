@@ -3,7 +3,7 @@
     with MultiClampCommander and assigning cells to headstages.
 """
 from time import sleep
-from mcc import MCC_MODE_DICT
+from core.mcc import MCC_MODE_DICT
 
 def makeUIDModeDict(protocolNumber,PROTOCOL_MODE_DICT,HS_TO_UID_DICT):
     try: 

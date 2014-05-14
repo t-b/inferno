@@ -1,5 +1,5 @@
 from time import sleep
-from gui import getWindows, getWindowFromName, getLeftTop, clickButton
+from core.gui import getWindows, getWindowFromName, getLeftTop, clickButton
  
 #empirically determined offsets from the top left corner of the clampex window
 def make_offsets():
