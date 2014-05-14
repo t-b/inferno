@@ -22,6 +22,8 @@ Todo
 
 16) add an optional pause via PAUSE_AFTER_LOAD
 
+17) sanitize/properly handle type errors from the cli
+
 
 
 Done
