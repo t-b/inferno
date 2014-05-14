@@ -1,5 +1,7 @@
 v0.0.5
 ------
+Clampex verion 9 now supported.
+
 Added the ability to pause Inferno after loading a protocol in case the user
 needs to tweak the protocol for that particular cell.
 
@@ -12,9 +14,9 @@ loading the protocol.
 While this feature can be quite useful there is a nasty side effect from using
 the GUI to click the buttons: the terminal window loses focus.
 Therefore you can __click the terminal window to advance__. Hopefully clicking the
-mouse will not cause problems later when it needs to move to click record.
+mouse will not cause problems later when it needs to move to click the record button.
 
-The [OPTIONS] section is optional, default values are shown in the example config.
+The `[OPTIONS]` section is optional, default values are shown in the example config.
 
 #### New config sections
 ```

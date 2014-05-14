@@ -16,15 +16,15 @@ Todo
 
 13) make it possible to choose how to format the filename data and the protocol name data
 
-14) use folders to make the source more readable
-
 15) define meter naming schemes in mcc.py explicitly
 
-
+16) some users might find an optional stop flag for specific protocols to be more useful that a global flag, query them!
 
 
 Done
 ----
+x) use folders to make the source more readable
+
 x) sanitize/properly handle type errors from the cli
 
 x) add an optional pause via PAUSE_AFTER_LOAD
