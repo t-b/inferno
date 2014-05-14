@@ -53,7 +53,7 @@ def main():
     if firstRun(args['--config']):
         return None
     elif args['setup']:
-        print('Setup already complete!')
+        print('Setup already complete! You can find your config in ~/inferno/')
         return None
     configTuple = parseConfig(args['--config'])
     PICKLEPATH, CSVPATH, MCC_DLLPATH, PAUSE_ON_LOAD, NO_CELL_STRING, OFF_STRING, ROW_ORDER, ROW_NAMES, HS_TO_UID_DICT, PROTOCOL_MODE_DICT, STATE_TO_UNIT_DICT = configTuple
