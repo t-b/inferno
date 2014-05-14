@@ -3,6 +3,9 @@ PICKLEPATH  = ~/inferno/patch_experiment_data.pickle
 CSVPATH     = ~/inferno/patch_experiment_data.csv
 MCC_DLLPATH = C:/Program Files (x86)/Molecular Devices/MultiClamp 700B Commander/3rd Party Support/AxMultiClampMsg
 
+[OPTIONS]
+PAUSE ON LOAD = False
+
 # ***CHANGE ME!!!!!*** #
 [HEADSTAGE TO UNIQUE ID]
 1 = 12345678_1 
@@ -39,7 +42,7 @@ OFF STRING = OFF
 ROW ORDER = Cell
             Mode
             Holding
-	    Meter
+            Meter
             BridgeBalResist 
 
 [ROW NAMES] #all the rows in the state dict, probs should validate

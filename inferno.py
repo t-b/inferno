@@ -5,7 +5,7 @@ __doc__ = """
 
 Inferno: electrophysiology with Clampex in a shell.
 Usage:
-    inferno.py run <HSn_cell_id>... [ --protocol=<id> --config=<path> --csvpath=<path> ]
+    inferno.py run <HSn_cell_id>... [ --protocol=<id> --config=<path> --csvpath=<path> --stop ]
     inferno.py makecsv [ --csvpath=<path> --pikpath=<path> --config=<path> ]
     inferno.py setup
     inferno.py --help
@@ -16,6 +16,7 @@ Options:
     -c --config=<path>  set config file to use [default: %sconfig.ini]
     -f --csvpath=<path> set csv file to write, default: CSVPATH from config
     -k --pikpath=<path> set pickle file to use, default: PICKLEPATH from config
+    -s --stop           stop/pause between loading protocol and recording
     -v --version        show version
 
 """%DEFAULT_USER_DIR
@@ -41,6 +42,8 @@ from clampex import ClampexLoadProtocol as LoadProtocol
 from clampex import ClampexRecord as Record
 from clampex import ClampexGetFilename as GetFilename
 
+from key import GetKey
+
 from output import makeText
 
 from dataio import dataio
@@ -53,7 +56,7 @@ def main():
         print('Setup already complete!')
         return None
     configTuple = parseConfig(args['--config'])
-    PICKLEPATH, CSVPATH, MCC_DLLPATH, NO_CELL_STRING, OFF_STRING, ROW_ORDER, ROW_NAMES, HS_TO_UID_DICT, PROTOCOL_MODE_DICT, STATE_TO_UNIT_DICT = configTuple
+    PICKLEPATH, CSVPATH, MCC_DLLPATH, PAUSE_ON_LOAD, NO_CELL_STRING, OFF_STRING, ROW_ORDER, ROW_NAMES, HS_TO_UID_DICT, PROTOCOL_MODE_DICT, STATE_TO_UNIT_DICT = configTuple
 
     #get the total number of headstages
     nHeadstages = len(HS_TO_UID_DICT)
@@ -88,7 +91,11 @@ def main():
 
     #seee if we have a protocol
     if args['--protocol'] is not None:
-        protocolNumber = int(args['--protocol'])
+        if type(args['--protocol']) == int:
+            protocolNumber = int(args['--protocol'])
+        else:
+            print( 'Protocol %s is not defined! Exiting.'%args['--protocol'] )
+            return None
 
         #make the mode dict for the headstages
         uidModeDict=makeUIDModeDict(protocolNumber,PROTOCOL_MODE_DICT,HS_TO_UID_DICT)
@@ -140,6 +147,11 @@ def main():
 
             addCellToHeadStage(hsToCellDict,hsStateDict)
             
+            #if we need a pause, from command line or from the config...
+            if PAUSE_ON_LOAD:
+                print('Hit any key to record.')
+                GetKey()
+
             #run  the protocol
             Record()
 

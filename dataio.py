@@ -110,7 +110,7 @@ def main():
     #from IPython import embed
     from output import makeText #bloodly pywin32 being pulled in by this
     from config import parseConfig
-    PICKLEPATH, CSVPATH, MCC_DLLPATH, NO_CELL_STRING, OFF_STRING, ROW_ORDER, ROW_NAMES, HS_TO_UID_DICT, PROTOCOL_MODE_DICT, STATE_TO_UNIT_DICT = parseConfig('config.ini.example')
+    PICKLEPATH, CSVPATH, MCC_DLLPATH, PAUSE_ON_LOAD, NO_CELL_STRING, OFF_STRING, ROW_ORDER, ROW_NAMES, HS_TO_UID_DICT, PROTOCOL_MODE_DICT, STATE_TO_UNIT_DICT = parseConfig('config.ini.example')
 
     #d=dataio('pickletest.pickle','csvtest.csv')
 

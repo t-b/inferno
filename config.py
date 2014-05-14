@@ -13,6 +13,9 @@ _PICKLEPATH = 'PICKLEPATH'
 _CSVPATH = 'CSVPATH'
 _MCC_DLLPATH = 'MCC_DLLPATH'
 
+_OPTIONS = 'OPTIONS'
+_PAUSE_ON_LOAD = 'PAUSE ON LOAD'
+
 _FORMATTING = 'FORMATTING'
 _NO_CELL_STRING = 'NO CELL STRING'
 _OFF_STRING = 'OFF STRING'
@@ -58,6 +61,17 @@ def parseConfig(PATH):
     PICKLEPATH = os.path.expanduser(cfg[_PATHS][_PICKLEPATH])
     CSVPATH = os.path.expanduser(cfg[_PATHS][_CSVPATH])
     MCC_DLLPATH = cfg[_PATHS][_MCC_DLLPATH]
+
+    try:
+        string = cfg[_OPTIONS][_PAUSE_ON_LOAD]
+        if string == 'True' or string == '1' or string == 'true':
+            PAUSE_ON_LOAD = True
+        elif string == 'False' or string == '0' or string == 'false':
+            PAUSE_ON_LOAD = False
+        else:
+            PAUSE_ON_LOAD = False
+    except KeyError:
+        PAUSE_ON_LOAD = False
 
     NO_CELL_STRING = cfg[_FORMATTING][_NO_CELL_STRING]
     OFF_STRING = cfg[_FORMATTING][_OFF_STRING]
@@ -107,7 +121,7 @@ def parseConfig(PATH):
 
 
 
-    return PICKLEPATH, CSVPATH, MCC_DLLPATH, NO_CELL_STRING, OFF_STRING, ROW_ORDER, ROW_NAMES, HS_TO_UID_DICT, PROTOCOL_MODE_DICT, STATE_TO_UNIT_DICT
+    return PICKLEPATH, CSVPATH, MCC_DLLPATH, PAUSE_ON_LOAD, NO_CELL_STRING, OFF_STRING, ROW_ORDER, ROW_NAMES, HS_TO_UID_DICT, PROTOCOL_MODE_DICT, STATE_TO_UNIT_DICT
 
 def makeConfig(configdict,PATH):
     path = os.path.expanduser(PATH)
@@ -129,6 +143,10 @@ _PATHS : {
         _CSVPATH       : DEFAULT_USER_DIR+'patch_experiment_data.csv', 
         _MCC_DLLPATH   : 'C:/Program Files (x86)/Molecular Devices/MultiClamp 700B Commander/3rd Party Support/AxMultiClampMsg', 
         }, 
+
+_OPTIONS : {
+    _PAUSE_ON_LOAD:'False'
+},
 
 _HS_TO_UID_DICT :    {
                     1:'12345678_1',
