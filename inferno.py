@@ -94,7 +94,7 @@ def main():
     if args['--protocol'] is not None:
         try:
             protocolNumber = int(args['--protocol'])
-        except TypeError:
+        except ValueError:
             print( 'Protocol %s is not defined! Exiting.'%args['--protocol'] )
             return None
 
