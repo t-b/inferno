@@ -56,7 +56,7 @@ work properly.__ The buttons in question can be seen here:
 #### The following are only needed if you want to change how Inferno prints text
 
 [FORMATTING]  
-NO CELL STRING, if you have empty headstages using this string as a cell identifier  
+NO CELL STRING, if you have empty headstages using this string as a cell identifier
 tells Inferno that there is no cell on `<HSn_cell_id>`; default = xx  
 OFF STRING, string to print  
 ROW ORDER, tells Inferno which headstage state value you want to print and in what order  
