@@ -32,9 +32,10 @@ __MCC_DLLPATH__, this is the location where MultiClampCommander is installed.
 PAUSE ON LOAD, if you want a pause between loading a protocol and recording, set to True  
 
 __[HEADSTAGE TO UNIQUE ID]__  
-`headstage number = serial_channel` is the format for each entry. Numbers 1-n
-corrispond to `inferno run <HS1_cell_id> ... <HSn_cell_id>` on the command line.
-This associates the numbers you use for your headstages 1-n to the serial number
+`headstage number = serial_channel`  
+The above is the format for each entry. Headstage numbers 1-n corrispond to
+`inferno run <HS1_cell_id> ... <HSn_cell_id>` on the command line. This
+associates the numbers you use for your headstages 1-n to the serial number
 (8 digit number for 700B)  of the MultiClamp follow by an underscore followed
 by the channel number (1 or 2). For example 1 = 12345678_1 associates your
 headstage number 1 to the headstage plugged in to the first channel of the
@@ -66,7 +67,7 @@ This tells Inferno the title to yuse for each row from ROW ORDER so that the
 formatting is nice an everything is alighted.  
 
 [STATE TO UNITS]
-`headstage state variable = SI prefix, string formatting`  
+`headstage state variable = SI prefix, string formatting`   
 This tells Inferno how to display numbers from MultiClampCommander
 using tuples of an SI prefix and python string formatting syntax. Please see
 [the python documentation](https://docs.python.org/3.3/library/string.html#format-specification-mini-language)
