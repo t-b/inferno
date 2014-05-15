@@ -42,8 +42,8 @@ headstage number 1 to the headstage plugged in to the first channel of the
 amplifier that has the serial number 1234567. You should have one entry for each
 headstage on your rig.
 
-__[PROTOCOL MULTICLAMP MODES]__
-`protocol number = headtage 1 mode, headstage 2 mode, ... , headstage n mode`
+__[PROTOCOL MULTICLAMP MODES]__  
+`protocol number = headtage 1 mode, headstage 2 mode, ... , headstage n mode`  
 This associates a list of numbers 1-17, which represent the UI buttons moving
 from left to right in Clampex, to tuples that specify the modes (voltage clamp
 VC, current clamp IC, or current equals zero IEZ) that the protocol assigned to
