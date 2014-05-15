@@ -20,6 +20,8 @@ Todo
 
 16) some users might find an optional stop flag for specific protocols to be more useful that a global flag, query them!
 
+17) odd bug where Hit any key or click terminal to advance is left out!
+
 
 Done
 ----
