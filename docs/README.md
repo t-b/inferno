@@ -54,7 +54,7 @@ work properly.__ The buttons in question can be seen here:
 
 [FORMATTING]
 NO CELL STRING, if you have empty headstages using this string as a cell identifier
-tells Inferno that there is no cell on <HSn_cell_id>; default = xx
+tells Inferno that there is no cell on `<HSn_cell_id>`; default = xx
 OFF STRING, string to print 
 ROW ORDER, tells Inferno which headstage state value you want to print and in what order
 
