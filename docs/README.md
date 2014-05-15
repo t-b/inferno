@@ -25,13 +25,13 @@ config.ini
 ----------
 The only entries that you need to edit to match your rig are in __bold__.
 
-[PATHS]
-__MCC_DLLPATH__, this is the location where MultiClampCommander is installed.
+[PATHS]  
+__MCC_DLLPATH__, this is the location where MultiClampCommander is installed.  
 
-[OPTIONS]
-PAUSE ON LOAD, if you want a pause between loading a protocol and recording, set to True
+[OPTIONS]  
+PAUSE ON LOAD, if you want a pause between loading a protocol and recording, set to True  
 
-__[HEADSTAGE TO UNIQUE ID]__
+__[HEADSTAGE TO UNIQUE ID]__  
 `headstage number = serial_channel` is the format for each entry. Numbers 1-n
 corrispond to `inferno run <HS1_cell_id> ... <HSn_cell_id>` on the command line.
 This associates the numbers you use for your headstages 1-n to the serial number
@@ -52,19 +52,21 @@ work properly.__ The buttons in question can be seen here:
 
 ![alt text](https://raw.githubusercontent.com/tgbugs/inferno/dev/docs/clxbutts.jpg "Your clampex GUI should look like this.")
 
-[FORMATTING]
-NO CELL STRING, if you have empty headstages using this string as a cell identifier
-tells Inferno that there is no cell on `<HSn_cell_id>`; default = xx
-OFF STRING, string to print 
-ROW ORDER, tells Inferno which headstage state value you want to print and in what order
+#### The following are only needed if you want to change how Inferno prints text
+
+[FORMATTING]  
+NO CELL STRING, if you have empty headstages using this string as a cell identifier  
+tells Inferno that there is no cell on `<HSn_cell_id>`; default = xx  
+OFF STRING, string to print  
+ROW ORDER, tells Inferno which headstage state value you want to print and in what order  
 
 [ROW NAMES]
-`headstage state variable = name to print`
-This tells Inferno the title to yuse for each row from ROW ORDER so that the
-formatting is nice an everything is alighted.
+`headstage state variable = name to print`  
+This tells Inferno the title to yuse for each row from ROW ORDER so that the  
+formatting is nice an everything is alighted.  
 
 [STATE TO UNITS]
-`headstage state variable = SI prefix, string formatting`
+`headstage state variable = SI prefix, string formatting`  
 This tells Inferno how to display numbers from MultiClampCommander
 using tuples of an SI prefix and python string formatting syntax. Please see
 [the python documentation](https://docs.python.org/3.3/library/string.html#format-specification-mini-language)
@@ -73,12 +75,6 @@ formatting. Note that MultiClampCommander stores all numbers as the base unit
 (V,A, etc). Note also that IC and VC are in fact specified by checking the Mode
 setting for a headstage, however since there is no overlap of keys we keep
 them in [STATE TO UNITS].
-
-Button Offsets. In gui.py it is possible to modify the button offsets.
-Inferno is currently configured using the default Clampex UI arrangment, but
-if you have modified your settings then those button offsets will be wrong and
-you should return the Clampex GUI to the default settings (as seen above).
-All offsets are from the top left corner of the window in units of pixels.
 
 Usage
 -----
@@ -150,6 +146,11 @@ __WARNING:__ Inferno stores binary data in a python dictionary using filenames a
 keys. If you change folders from day to day and reuse filenames without changing
 which pickle file you save to (in the config), you will loose data. Inferno will
 warn you if it detects that you are overwriting existing entries in a pickle file.
+
+Button Offsets. Inferno is currently configured using the default Clampex UI
+arrangment, but if you have modified your settings then those button offsets
+will be wrong and you should return the Clampex GUI to the default settings
+(as seen above). Alternate button offsets require modifying the python source.
 
 Known Issues
 ------------
