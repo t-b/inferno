@@ -149,7 +149,6 @@ def main():
             addCellToHeadStage(hsToCellDict,hsStateDict)
             
             #if we need a pause, from command line or from the config...
-            print(PAUSE_ON_LOAD,args['--stop'])
             if PAUSE_ON_LOAD or args['--stop']:
                 print('Click the terminal or hit any key to record.')
                 GetTerminalEvent()

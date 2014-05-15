@@ -20,7 +20,7 @@ Todo
 
 16) some users might find an optional stop flag for specific protocols to be more useful that a global flag, query them!
 
-17) odd bug where Hit any key or click terminal to advance is left out!
+17) NOPE! this is known behavior for selection and cmd.exe >_< make a note, shouldnt be an issue since it should be clicking things *other* than cmd.exe
 
 
 Done
