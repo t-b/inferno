@@ -10,6 +10,9 @@ Usage:
     inferno.py setup
     inferno.py --help
 
+Where:
+    <HSn_cell_id> is the identifier of the cell on the nth headstage
+
 Options:
     -h --help           print this
     -p --protocol=<id>  set protocol to load, otherwise use current settings

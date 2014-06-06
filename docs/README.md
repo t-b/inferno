@@ -12,33 +12,63 @@ Please submit any bugs or feature requests to the github issue tracker.
 
 Configuration
 -------------
-By default Inferno looks for a configuration file in ~/inferno/config.ini.
-To create [~/inferno/config.ini.example](../config.ini.example)
+By default Inferno looks for a configuration file in %HOMEPATH%/inferno/config.ini.
+To create [%HOMEPATH%/inferno/config.ini.example](../config.ini.example)
 run `inferno setup`. You should copy config.ini.example located in the install
-folder (same place as this README), or the example created by inferno setup to
+folder (same place as this README), or the example created by `inferno setup` to
 config.ini and edit it to match your setup (the example in the install folder
-has nicer formatting). Most sections in config.ini should be self explanatory.
+has nicer formatting). Documentation of config.ini can be found below.
 All sections are required. __Please test your config settings and the general
 operation of Inferno on your rig before conducting real experiments__
 
-[HEADSTAGE TO UNIQUE ID] associates the numbers you use for your headstages 1-n
-to the serial number (8 digit number for 700B)  of the MultiClamp follow by an
-underscore followed by the channel number (1 or 2). For example 1 = 12345678_1
-associates your headstage number 1 to the headstage plugged in to the first
-channel of the amplifier that has the serial number 1234567. You should have one
-entry for each headstage on your rig.  
+config.ini
+----------
+The only entries that you need to edit to match your rig are in __bold__.
 
-[PROTOCOL MULTICLAMP MODES] associates a list of numbers 1-17, which represent
-the UI buttons moving from left to right in Clampex, to tuples that specify the
-modes (voltage clamp VC, current clamp IC, or current equals zero IEZ)
-that the protocol assigned to that button uses. The tuple should be the same
-length as the number of headstages on your rig. __You need to assign your
-protocols to the UI buttons for Inferno to work properly.__ The buttons in
-question can be seen here:
+[PATHS]  
+__MCC_DLLPATH__, this is the location where MultiClampCommander is installed.  
 
-![alt text](https://raw.githubusercontent.com/tgbugs/inferno/dev/docs/clxbutts.jpg "Yep, those")
+[OPTIONS]  
+PAUSE ON LOAD, if you want a pause between loading a protocol and recording, set to True  
 
-[STATE TO UNITS] tell Inferno how to display numbers from MultiClampCommander
+__[HEADSTAGE TO UNIQUE ID]__  
+`headstage number = serial_channel`  
+The above is the format for each entry. Headstage numbers 1-n corrispond to
+`inferno run <HS1_cell_id> ... <HSn_cell_id>` on the command line. This
+associates the numbers you use for your headstages 1-n to the serial number
+(8 digit number for 700B)  of the MultiClamp follow by an underscore followed
+by the channel number (1 or 2). For example 1 = 12345678_1 associates your
+headstage number 1 to the headstage plugged in to the first channel of the
+amplifier that has the serial number 1234567. You should have one entry for each
+headstage on your rig.
+
+__[PROTOCOL MULTICLAMP MODES]__  
+`protocol number = headtage 1 mode, headstage 2 mode, ... , headstage n mode`  
+This associates a list of numbers 1-17, which represent the UI buttons moving
+from left to right in Clampex, to tuples that specify the modes (voltage clamp
+VC, current clamp IC, or current equals zero IEZ) that the protocol assigned to
+that button uses. The tuple should be the same length as the number of headstages
+on your rig. __You need to assign your protocols to the UI buttons for Inferno to
+work properly.__ The buttons in question can be seen here:
+
+![alt text](https://raw.githubusercontent.com/tgbugs/inferno/dev/docs/clxbutts.jpg "Your clampex GUI should look like this.")
+
+#### The following are only needed if you want to change how Inferno prints text
+
+[FORMATTING]  
+NO CELL STRING, if you have empty headstages using this string as a cell identifier
+tells Inferno that there is no cell on `<HSn_cell_id>`; default = xx  
+OFF STRING, string to print if that headstage has no holding value; default = OFF  
+ROW ORDER, tells Inferno which headstage state value you want to print and in what order  
+
+[ROW NAMES]
+`headstage state variable = name to print`  
+This tells Inferno the title to yuse for each row from ROW ORDER so that the  
+formatting is nice an everything is alighted.  
+
+[STATE TO UNITS]
+`headstage state variable = SI prefix, string formatting`   
+This tells Inferno how to display numbers from MultiClampCommander
 using tuples of an SI prefix and python string formatting syntax. Please see
 [the python documentation](https://docs.python.org/3.3/library/string.html#format-specification-mini-language)
 for reference. If you do not specify a format it will default to normal string
@@ -46,12 +76,6 @@ formatting. Note that MultiClampCommander stores all numbers as the base unit
 (V,A, etc). Note also that IC and VC are in fact specified by checking the Mode
 setting for a headstage, however since there is no overlap of keys we keep
 them in [STATE TO UNITS].
-
-Button Offsets. In gui.py it is possible to modify the button offsets.
-Inferno is currently configured using the default Clampex UI arrangment, but
-if you have modified your settings then those button offsets will be wrong and
-you should return the Clampex GUI to the default settings (as seen above).
-All offsets are from the top left corner of the window in units of pixels.
 
 Usage
 -----
@@ -123,6 +147,11 @@ __WARNING:__ Inferno stores binary data in a python dictionary using filenames a
 keys. If you change folders from day to day and reuse filenames without changing
 which pickle file you save to (in the config), you will loose data. Inferno will
 warn you if it detects that you are overwriting existing entries in a pickle file.
+
+Button Offsets. Inferno is currently configured using the default Clampex UI
+arrangment, but if you have modified your settings then those button offsets
+will be wrong and you should return the Clampex GUI to the default settings
+(as seen above). Alternate button offsets require modifying the python source.
 
 Known Issues
 ------------
