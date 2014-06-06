@@ -1,5 +1,8 @@
 Todo
 ----
+-3) wtf is going on with the config file newlines in notepad!
+-2) set how the filename/date is printed, ie set the record info row
+-1) stuff from jeremey: fail before record if cannot write to csv
 0) rather irritating issue in which dataio will create a new pickle file and csv file if one does not exist when using inferno makecsv, nbd for now, but decidedly a bug
 
 6) make it posssible to parse only a subset of the config
