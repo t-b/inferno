@@ -1,3 +1,8 @@
+v0.0.6
+------
+ * Improved the usage readme found in [docs/README.md](docs/README.md).
+
+
 v0.0.5
 ------
  * Clampex verion 9 now supported.
