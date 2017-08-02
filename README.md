@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/19384518.svg)](https://zenodo.org/badge/latestdoi/19384518)  
+
 Inferno
 =======
 A command line tool for controlling MultiClampCommander and Clampex and saving data.
