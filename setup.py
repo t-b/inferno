@@ -4,11 +4,7 @@ from __init__ import __version__
 
 executables = [
     Executable('inferno.py',
-               icon = None,
-               appendScriptToExe=True,
-               appendScriptToLibrary = False,
-               excludes = ['IPython'],
-               replacePaths = [('*','')],
+               icon = None
               )
 ]
 

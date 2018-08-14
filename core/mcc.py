@@ -20,7 +20,13 @@ set functions will take only the value of the variable you want to set
 basically, switch between headstages/multiclamps and then call the functions you want
 """
 
-
+# TODO
+# remove dead code
+# cleanup __init__
+# add proper error handling including printing of the error message
+# add API version check
+# upgrade to latest API
+# flake8 clean
 
 #mode defintion
 MCC_MODE_DICT={0:'VC',1:'IC',2:'IEZ'}
@@ -84,7 +90,7 @@ class mccControl:
             return errval
         else:
             self._pnError=byref(c_int(6000))
-            printD(errdict[errval])
+            print(errdict[errval])
             return errval
 
     def getDLL(self):
@@ -186,7 +192,7 @@ class mccControl:
         except KeyError:
             print(self.mcDict.keys())
             raise KeyError('I dont know where you got uid "%s" but it wasnt from here! Check your config!'%uniqueID)
-       
+
         self.mcCurrent=None #FIXME get rid of all this list nonsense
         out = self.SelectMultiClamp(*mcTup)
         self.currentUniqueID=uniqueID
@@ -779,7 +785,7 @@ if __name__=='__main__':
 
 
 """ primary signal reference
-const UINT MCCMSG_PRI_SIGNAL_VC_MEMBCURRENT             = 0;  // 700B and 700A 
+const UINT MCCMSG_PRI_SIGNAL_VC_MEMBCURRENT             = 0;  // 700B and 700A
 const UINT MCCMSG_PRI_SIGNAL_VC_MEMBPOTENTIAL           = 1;  // 700B and 700A
 const UINT MCCMSG_PRI_SIGNAL_VC_PIPPOTENTIAL            = 2;  // 700B and 700A
 const UINT MCCMSG_PRI_SIGNAL_VC_100XACMEMBPOTENTIAL     = 3;  // 700B and 700A
@@ -796,8 +802,8 @@ const UINT MCCMSG_PRI_SIGNAL_IC_AUXILIARY1              = 12; // 700B and 700A
 const UINT MCCMSG_PRI_SIGNAL_IC_AUXILIARY2              = 13; // 700B only
 
 // Parameters for MCCMSG_GetMeterValue()
-const UINT MCCMSG_METER1                                = 0;  // 700B 
-const UINT MCCMSG_METER2                                = 1;  // 700B 
-const UINT MCCMSG_METER3                                = 2;  // 700B 
-const UINT MCCMSG_METER4                                = 3;  // 700B 
+const UINT MCCMSG_METER1                                = 0;  // 700B
+const UINT MCCMSG_METER2                                = 1;  // 700B
+const UINT MCCMSG_METER3                                = 2;  // 700B
+const UINT MCCMSG_METER4                                = 3;  // 700B
 """
