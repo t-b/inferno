@@ -162,16 +162,16 @@ class mccControl:
         # FIXME NO the problem is NOT with lossing the pointer to the SN, any pointer will do
         if type(firstMC) == tuple:
             # format for what this holds is: uModel, _pszSerialNum, uCOMPortID, uDeviceID, uChannelID
-            self.mcList=[]
-            self.mcDict={}
+            self.mcList = []
+            self.mcDict = {}
             self.mcList.append(firstMC)
-            self.mcDict[self.uniqueID(firstMC)]=firstMC
+            self.mcDict[self.uniqueID(firstMC)] = firstMC
             # printD(firstMC, val(firstMC[1],c_char_p))
             while 1:
                 nextMC = self.FindNextMultiClamp()
                 if nextMC:
                     self.mcList.append(nextMC)
-                    self.mcDict[self.uniqueID(nextMC)]=nextMC
+                    self.mcDict[self.uniqueID(nextMC)] = nextMC
                 else:
                     # print(self.mcNum,"multiclamps found!")
                     self.mcNum = len(self.mcList)
@@ -189,7 +189,7 @@ class mccControl:
             mcTup = self.mcDict[uniqueID]
         except KeyError:
             print(self.mcDict.keys())
-            raise KeyError('I dont know where you got uid "%s" but it wasnt from here! Check your config!'%uniqueID)
+            raise KeyError('I dont know where you got uid "%s" but it wasnt from here! Check your config!' % uniqueID)
 
         self.mcCurrent = None  # FIXME get rid of all this list nonsense
         out = self.SelectMultiClamp(*mcTup)
@@ -199,7 +199,7 @@ class mccControl:
     """everything below interfaces with the MCC SDK API through ctypes"""
 
     # def CheckAPIVersion(self):  # FIXME
-        # self.aDLL.MCCMSG_CheckAPIVersion(LPCSTR pszQueryVersion)
+    # self.aDLL.MCCMSG_CheckAPIVersion(LPCSTR pszQueryVersion)
 
 # DLL functions
     def CreateObject(self):
@@ -221,11 +221,11 @@ class mccControl:
     def FindFirstMultiClamp(self):
         # the if statement is where most of the CPU is used, so not much we can do about that except sleep ;_;
         if self.aDLL.MCCMSG_FindFirstMultiClamp(self.hMCCmsg, self._puModel, self._pszSerialNum, self.uBufSize, self._puCOMPortID, self._puDeviceID, self._puChannelID, self._pnError):
-            outTup=(val(self._puModel, c_uint_p),
-                    self._pszSerialNum,
-                    val(self._puCOMPortID, c_uint_p),
-                    val(self._puDeviceID, c_uint_p),
-                    val(self._puChannelID, c_uint_p))
+            outTup = (val(self._puModel, c_uint_p),
+                      self._pszSerialNum,
+                      val(self._puCOMPortID, c_uint_p),
+                      val(self._puDeviceID, c_uint_p),
+                      val(self._puChannelID, c_uint_p))
             return outTup
         else:
             raise IOError
@@ -238,13 +238,11 @@ class mccControl:
         _puDeviceID = ct.byref(ct.c_uint(0))
         _puChannelID = ct.byref(ct.c_uint(0))  # head stage, need a way to switch this quickly
         if self.aDLL.MCCMSG_FindNextMultiClamp(self.hMCCmsg, _puModel, _pszSerialNum, uBufSize, _puCOMPortID, _puDeviceID, _puChannelID, self._pnError):
-            outTup=(
-                    val(_puModel, c_uint_p),
-                    _pszSerialNum,
-                    val(_puCOMPortID, c_uint_p),
-                    val(_puDeviceID, c_uint_p),
-                    val(_puChannelID, c_uint_p)
-            )
+            outTup = (val(_puModel, c_uint_p),
+                      _pszSerialNum,
+                      val(_puCOMPortID, c_uint_p),
+                      val(_puDeviceID, c_uint_p),
+                      val(_puChannelID, c_uint_p))
             return outTup
         else:
             return 0
